@@ -1,25 +1,42 @@
-html, body {
-    font-family: sans-serif;
-    padding: 0;
-    margin: 0;
-    font-size: 12pt;
-}
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap");
 
-.entry {
-    padding: 1em;
-    display: grid;
-    grid-template-columns: 50em 1fr;
-    border: 1px solid #aaa;
-    border-radius: 0.5em;
-    margin: 0.5em;
-    align-items: center;
-}
-
-.entry .id {
-    font-size: 20pt;
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-size: 12pt;
 }
 
 #app {
-    width: 70%;
-    margin: 0 auto;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.entry {
+  padding: 1.5em;
+  display: grid;
+  grid-template-columns: 1fr;
+  border: 1px solid #aaa;
+  border-radius: 0.5em;
+  margin: 0.5em;
+  align-items: center;
+}
+
+.entry .id {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-size: 20pt;
+}
+
+.entry .id::before {
+  content: "QNA ";
+  font-size: 10pt;
+}
+
+.entry .url {
+  color: #3699f0;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 12pt;
+  width: 50%;
 }
