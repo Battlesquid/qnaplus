@@ -1,0 +1,10 @@
+doctype html
+head
+    title='Q&A+'
+    link(rel='stylesheet' href='/static/style.css' type='text/css')
+body
+    div(id='app')
+        - for(let i = 0; i < data.length;i++)
+            div(class='entry')
+                div(class='id')=data[i].id
+                a(class='url' href=data[i].url)=data[i].title

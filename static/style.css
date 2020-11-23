@@ -1,0 +1,25 @@
+html, body {
+    font-family: sans-serif;
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+}
+
+.entry {
+    padding: 1em;
+    display: grid;
+    grid-template-columns: 50em 1fr;
+    border: 1px solid #aaa;
+    border-radius: 0.5em;
+    margin: 0.5em;
+    align-items: center;
+}
+
+.entry .id {
+    font-size: 20pt;
+}
+
+#app {
+    width: 70%;
+    margin: 0 auto;
+}
