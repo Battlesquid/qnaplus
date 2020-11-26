@@ -1,25 +1,43 @@
-import { search } from "../db/database"
+import { searchDB } from "../db/database"
 import type { QaQuery } from "../types"
 import type express from "express"
 
-const resolveQuery = (searchterm: any, wholeword: any): QaQuery => {
+const resolveQuery = (searchterm: any, wholeword: any, page: any): QaQuery => {
     return {
-        searchterm,
-        wholeword: wholeword === "true" ? true : false
+        searchterm: searchterm?.replace(/['/\/;]/, ""),
+        wholeword: wholeword === "true" ? true : false,
+        page: isNaN(page) ? 1 : +page
     }
 }
 
-export default (req: express.Request) => {
-    const { searchterm, wholeword } = req.query;
-    const query = resolveQuery(searchterm, wholeword);
+export default async (req: express.Request) => {
+    const { searchterm, wholeword, page } = req.query;
+    const query = resolveQuery(searchterm, wholeword, page);
 
-    const data = search({
+    const data = await searchDB({
         searchterm: query.searchterm,
-        wholeword: query.wholeword
+        wholeword: query.wholeword,
+        page: query.page
     })
 
-    const sortedData = data.sort((a, b) => +a.id - +b.id);
-    console.log(sortedData)
+    data.sort((a, b) => +a.id - +b.id);
 
-    return data
+    const pageCount = Math.ceil(data.length / 10);
+    const paginatedResults = data.slice((query.page - 1) * 10, query.page * 10)
+    const paginationStart = Math.max(Math.min(query.page - 5, pageCount - 9), 1);
+    const paginationEnd = Math.min(Math.max(query.page + 4, 10), pageCount)
+
+    console.log("Start: ", paginationStart, "\nEnd: ", paginationEnd, "\n")
+
+    return {
+        data: paginatedResults,
+        searchterm: query.searchterm,
+        wholeword: query.wholeword,
+        pages: {
+            length: pageCount,
+            current: query.page,
+            paginationStart,
+            paginationEnd
+        }
+    }
 }

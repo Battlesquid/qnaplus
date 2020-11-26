@@ -1,5 +1,41 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap");
 
+@media screen and (min-width: 321px) {
+  #app-head,
+  #app-body {
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  .page-url {
+    padding: 2vw 2vw;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  #app-head,
+  #app-body {
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  .page-url {
+    padding: 2vw 2vw;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  #app-head,
+  #app-body {
+    width: 60%;
+    margin: 0 auto;
+  }
+
+  .page-url {
+    padding: 1vw 1vw;
+  }
+}
+
 html,
 body {
   padding: 0;
@@ -7,36 +43,97 @@ body {
   font-size: 12pt;
 }
 
-#app {
-  width: 50%;
-  margin: 0 auto;
-}
-
-.entry {
-  padding: 1.5em;
-  display: grid;
-  grid-template-columns: 1fr;
+#search-bar {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.5em;
   border: 1px solid #aaa;
-  border-radius: 0.5em;
-  margin: 0.5em;
-  align-items: center;
+  font-size: 1em;
 }
 
-.entry .id {
+#app-body {
+  border-top: 1px solid #aaa;
+}
+
+#title,
+#subtitle {
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+}
+
+#title {
+  font-weight: 400;
+  font-size: 50pt;
+  margin-bottom: 0;
+}
+
+#subtitle {
+  font-weight: 300;
+  font-size: 18pt;
+  margin-top: 0;
+}
+
+.question {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5em;
+  border-bottom: 1px solid #aaa;
+}
+
+.question-id {
   font-family: "Roboto", sans-serif;
   font-weight: 300;
   font-size: 20pt;
 }
 
-.entry .id::before {
+.question-id::before {
   content: "QNA ";
   font-size: 10pt;
 }
 
-.entry .url {
+.question-url {
   color: #3699f0;
   font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-size: 12pt;
-  width: 50%;
+}
+
+#pagination {
+  list-style-type: none;
+  display: flex;
+  font-family: "Roboto", sans-serif;
+  padding: 0;
+  justify-content: center;
+}
+
+.disabled {
+  background-color: #e3e3e3;
+  color: #989898;
+}
+
+.pagination-item {
+  border-top: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+}
+
+.page-url {
+  display: block;
+  text-decoration: none;
+}
+
+.page-url,
+.page-url:visited {
+  color: #369;
+}
+
+.pagination-item a:hover {
+  background-color: whitesmoke;
+}
+
+.pagination-item:nth-child(1) {
+  border-left: 1px solid #aaa;
+}
+
+.pagination-item:nth-last-child(1) {
+  border-right: 1px solid #aaa;
 }

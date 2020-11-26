@@ -1,6 +1,7 @@
 export interface QaQuery {
     searchterm: string,
-    wholeword?: boolean
+    wholeword?: boolean,
+    page: number
 }
 
 export type QnaRow = {

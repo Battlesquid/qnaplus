@@ -6,13 +6,19 @@ import express from "express"
 import v1 from "./routes/api/v1"
 import home from "./routes/home/home"
 
-const app: express.Application = express();
-app.use("/static", express.static(path.resolve(__dirname, "../static")))
+import { runArchiver } from "./modules/archiver"
 
-app.set('view engine', 'pug')
-app.set('views', "../views")
+(async () => {
+    await runArchiver();
 
-app.use('/api/v1', v1);
-app.use('/', home)
+    const app: express.Application = express();
+    app.use("/static", express.static(path.resolve(__dirname, "../static")))
 
-app.listen(8080, () => console.log("Server Started."))
+    app.set('view engine', 'pug')
+    app.set('views', "../views")
+
+    app.use('/api/v1', v1);
+    app.use('/', home)
+
+    app.listen(8080, () => console.log("Server Started."))
+})()

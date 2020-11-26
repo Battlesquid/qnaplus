@@ -3,8 +3,38 @@ head
     title='Q&A+'
     link(rel='stylesheet' href='/static/style.css' type='text/css')
 body
-    div(id='app')
-        - for(let i = 0; i < data.length;i++)
-            div(class='entry')
-                div(class='id')=data[i].id
-                a(class='url' href=data[i].url)=data[i].title
+    header#app-head
+        h1#title: a(href="/search")="QNA+" 
+        h4#subtitle= "VEX Robotics Q&A querying system"
+            form(action="/search" method="get")
+                input#search-bar(type='text' placeholder="Search..." name="searchterm" value=`${response.searchterm || ""}` required)
+
+    main#app-body
+        each question in response.data
+            .question
+                .question-id=question.id
+                span: a.question-url(href=question.url)=question.title
+
+        if response.pages.length > 1
+            ul#pagination
+                if response.pages.current === 1
+                    li.pagination-item(class=`disabled pagination-item`)
+                        .page-url="<"
+                else
+                    li.pagination-item(class=`pagination-item`)
+                        a.page-url(href=`/search?searchterm=${response.searchterm}&wholeword=${response.wholeword}&page=1`)="<"
+
+                - for(let i = response.pages.paginationStart; i <= response.pages.paginationEnd; i++)
+                    - if(response.pages.current === i)
+                        li(class='disabled pagination-item')
+                            .page-url=i
+                    - else
+                        li.pagination-item 
+                            a.page-url(href=`/search?searchterm=${response.searchterm}&wholeword=${response.wholeword}&page=${i}`)=i
+
+                if response.pages.current === response.pages.length
+                    li.pagination-item(class=`disabled pagination-item`)
+                        .page-url=">"
+                else
+                    li.pagination-item(class=`pagination-item`)
+                        a.page-url(href=`/search?searchterm=${response.searchterm}&wholeword=${response.wholeword}&page=${response.pages.length}`)=">"
