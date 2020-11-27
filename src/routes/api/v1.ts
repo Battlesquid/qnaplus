@@ -3,8 +3,6 @@ import search from "../../modules/searcher"
 
 const api = express.Router();
 
-
-
 api.get("/", (req, res) => {
     res.send("api v1 homepage")
 })
@@ -14,13 +12,12 @@ api.get("/search", async (req, res) => {
 
     const searchResult = await search(req);
 
-    console.log(`${searchResult.data.length} results\n
-    ${Math.floor(searchResult.data.length / 10)} pages, ${searchResult.data.length % 10} left over
-    `)
+    if (searchResult.ok)
+        res.send({ ok: searchResult.ok, data: searchResult.data })
+    else
+        res.send({ ok: false })
 
-    res.send(searchResult.data)
     console.timeEnd("query time")
 })
-
 
 export default api;

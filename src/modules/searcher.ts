@@ -4,7 +4,7 @@ import type express from "express"
 
 const resolveQuery = (searchterm: any, wholeword: any, page: any): QaQuery => {
     return {
-        searchterm: searchterm?.replace(/['/\/;]/, ""),
+        searchterm: searchterm?.replace(/[\'/\/;]/g, ""),
         wholeword: wholeword === "true" ? true : false,
         page: isNaN(page) ? 1 : +page
     }
@@ -30,6 +30,7 @@ export default async (req: express.Request) => {
     console.log("Start: ", paginationStart, "\nEnd: ", paginationEnd, "\n")
 
     return {
+        ok: true,
         data: paginatedResults,
         searchterm: query.searchterm,
         wholeword: query.wholeword,

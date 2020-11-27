@@ -7,7 +7,10 @@ body
         h1#title: a(href="/search")="QNA+" 
         h4#subtitle= "VEX Robotics Q&A querying system"
             form(action="/search" method="get")
-                input#search-bar(type='text' placeholder="Search..." name="searchterm" value=`${response.searchterm || ""}` required)
+                input#search-bar(type='search' placeholder="Search..." name="searchterm" value=`${response.searchterm || ""}` required)
+                #options
+                    label(for="wholeword")="Match whole word"
+                    input(type="checkbox" name="wholeword" value="true" checked=response.wholeword)
 
     main#app-body
         each question in response.data

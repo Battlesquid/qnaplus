@@ -43,18 +43,6 @@ body {
   font-size: 12pt;
 }
 
-#search-bar {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 0.5em;
-  border: 1px solid #aaa;
-  font-size: 1em;
-}
-
-#app-body {
-  border-top: 1px solid #aaa;
-}
-
 #title,
 #subtitle {
   font-family: "Roboto", sans-serif;
@@ -73,6 +61,32 @@ body {
   margin-top: 0;
 }
 
+#search-bar {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.5em;
+  border: 1px solid #aaa;
+  font-size: 1em;
+}
+
+#options {
+  float: right;
+  font-size: 12pt;
+  font-family: "Roboto", sans-serif;
+}
+
+#app-body {
+  border-top: 1px solid #aaa;
+}
+
+#pagination {
+  list-style-type: none;
+  display: flex;
+  font-family: "Roboto", sans-serif;
+  padding: 0;
+  justify-content: center;
+}
+
 .question {
   display: flex;
   flex-direction: column;
@@ -87,7 +101,7 @@ body {
 }
 
 .question-id::before {
-  content: "QNA ";
+  content: "Q&A ";
   font-size: 10pt;
 }
 
@@ -98,16 +112,8 @@ body {
   font-size: 12pt;
 }
 
-#pagination {
-  list-style-type: none;
-  display: flex;
-  font-family: "Roboto", sans-serif;
-  padding: 0;
-  justify-content: center;
-}
-
 .disabled {
-  background-color: #e3e3e3;
+  background-color: #efefef;
   color: #989898;
 }
 
@@ -123,7 +129,7 @@ body {
 
 .page-url,
 .page-url:visited {
-  color: #369;
+  color: #444;
 }
 
 .pagination-item a:hover {
@@ -132,8 +138,14 @@ body {
 
 .pagination-item:nth-child(1) {
   border-left: 1px solid #aaa;
+  border-top-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
+  overflow: hidden;
 }
 
 .pagination-item:nth-last-child(1) {
   border-right: 1px solid #aaa;
+  border-top-right-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+  overflow: hidden;
 }

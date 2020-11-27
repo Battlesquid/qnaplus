@@ -5,7 +5,11 @@ const home = express.Router();
 
 home.get("/search", async (req, res) => {
     const response = await search(req);
-    res.render('search', { response })
+
+    if (response.ok)
+        res.render('search', { response })
+    else
+        res.send("bruh")
 })
 
 home.get("/", (req, res) => {
