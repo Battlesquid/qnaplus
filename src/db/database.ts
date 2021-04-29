@@ -3,9 +3,9 @@ import Database from "better-sqlite3"
 import type { QaQuery, QnaRow } from "../types"
 
 export const searchDB = async (query: QaQuery) => {
-    const database = new Database(path.resolve(__dirname, "../../db/qna.db"))
+    const database = new Database(path.resolve(__dirname, "../data/qna.db"))
 
-    const criteria = query.wholeword ? `MATCH '${query.searchterm}'` : `LIKE '%${query.searchterm}%'`;
+    const criteria = query.wholeword ? `MATCH '${query.query}'` : `LIKE '%${query.query}%'`;
 
     const matchingTitles: QnaRow[] = database.prepare(`SELECT * FROM QNA WHERE title ${criteria}`).all();
     const matchingQuestions: QnaRow[] = database.prepare(`SELECT * FROM QNA WHERE question ${criteria}`).all();

@@ -1,43 +1,52 @@
 doctype html
 head
     title='Q&A+'
-    link(rel='stylesheet' href='/static/style.css' type='text/css')
-body
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous")
+    meta(http-equiv='X-UA-Compatible', content='text/html', charset='UTF-8')
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+
+body.container-md
     header#app-head
-        h1#title: a(href="/search")="QNA+" 
-        h4#subtitle= "VEX Robotics Q&A querying system"
+        .container
+            div.text-center.position-relative
+                h1.display-1: a.stretched-link(href="/search")="QNA+"
+                h4.subtitle.text-muted= "VEX Robotics Q&A querying system"
             form(action="/search" method="get")
-                input#search-bar(type='search' placeholder="Search..." name="searchterm" value=`${response.searchterm || ""}` required)
+                input.form-control(type='input' placeholder="Search..." name="query" value=`${response.query || ""}` required)
                 #options
                     label(for="wholeword")="Match whole word"
-                    input(type="checkbox" name="wholeword" value="true" checked=response.wholeword)
+                    input(type="checkbox" id="wholeword" value="true" checked=response.wholeword)
 
-    main#app-body
-        each question in response.data
-            .question
-                .question-id=question.id
-                span: a.question-url(href=question.url)=question.title
+    main
+        div.row.g-2
+            each question in response.data
+                div.col-md-12.card-group
+                    .card.p-3.position-relative
+                        .card-body.text-truncate
+                            a.stretched-link.link-secondary.card-title(href=question.url)=question.title
+                            div=question.id
 
         if response.pages.length > 1
-            ul#pagination
-                if response.pages.current === 1
-                    li.pagination-item(class=`disabled pagination-item`)
-                        .page-url="<"
-                else
-                    li.pagination-item(class=`pagination-item`)
-                        a.page-url(href=`/search?searchterm=${response.searchterm}&wholeword=${response.wholeword}&page=1`)="<"
+            nav.d-flex.justify-content-center.p-3
+                ul.pagination
+                    if response.pages.current === 1
+                        li.page-item(class=`disabled`)
+                            .page-link="«"
+                    else
+                        li.page-item
+                            a.page-link(href=`/search?query=${response.query}&wholeword=${response.wholeword}&page=1`)="«"
 
-                - for(let i = response.pages.paginationStart; i <= response.pages.paginationEnd; i++)
-                    - if(response.pages.current === i)
-                        li(class='disabled pagination-item')
-                            .page-url=i
-                    - else
-                        li.pagination-item 
-                            a.page-url(href=`/search?searchterm=${response.searchterm}&wholeword=${response.wholeword}&page=${i}`)=i
+                    - for(let i = response.pages.paginationStart; i <= response.pages.paginationEnd; i++)
+                        - if(response.pages.current === i)
+                            li.page-item(class='disabled')
+                                .page-link=i
+                        - else
+                            li.page-item
+                                a.page-link(href=`/search?query=${response.query}&wholeword=${response.wholeword}&page=${i}`)=i
 
-                if response.pages.current === response.pages.length
-                    li.pagination-item(class=`disabled pagination-item`)
-                        .page-url=">"
-                else
-                    li.pagination-item(class=`pagination-item`)
-                        a.page-url(href=`/search?searchterm=${response.searchterm}&wholeword=${response.wholeword}&page=${response.pages.length}`)=">"
+                    if response.pages.current === response.pages.length
+                        li.page-item(class=`disabled page-item`)
+                            .page-link="»"
+                    else
+                        li.page-item(class=`page-item`)
+                            a.page-link(href=`/search?query=${response.query}&wholeword=${response.wholeword}&page=${response.pages.length}`)="»"

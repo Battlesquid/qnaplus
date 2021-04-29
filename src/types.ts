@@ -1,5 +1,5 @@
 export interface QaQuery {
-    searchterm: string,
+    query: string,
     wholeword?: boolean,
     page: number
 }
