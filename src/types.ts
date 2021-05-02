@@ -1,4 +1,4 @@
-export interface QaQuery {
+export interface Query {
     query: string,
     wholeword?: boolean,
     page: number
@@ -9,5 +9,13 @@ export type QnaRow = {
     url: string,
     title: string,
     question: string,
-    answer: string
+    answer: string,
+    tags: string
+}
+
+export type ArchiverOptions = {
+    directory: string,
+    categories: string[],
+    force?: boolean,
+    verbose?: boolean
 }

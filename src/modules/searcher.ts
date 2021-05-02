@@ -1,11 +1,11 @@
 import { searchDB } from "../db/database"
-import type { QaQuery } from "../types"
+import type { Query } from "../types"
 import type express from "express"
 
-const resolveUrlParams = (query: any, wholeword: any, page: any): QaQuery => {
+const resolveUrlParams = (query: any, wholeword: any, page: any): Query => {
     return {
         query: query?.replace(/[\'/\/;]/g, ""),
-        wholeword: wholeword === "true" ? true : false,
+        wholeword: wholeword === "true",
         page: isNaN(page) ? 1 : +page
     }
 }
@@ -26,8 +26,6 @@ export default async (req: express.Request) => {
     const paginatedResults = results.slice((params.page - 1) * 12, params.page * 12)
     const paginationStart = Math.max(Math.min(params.page - 5, pageCount - 9), 1);
     const paginationEnd = Math.min(Math.max(params.page + 4, 10), pageCount)
-
-    console.log("Start: ", paginationStart, "\nEnd: ", paginationEnd, "\n")
 
     return { 
         ok: true,

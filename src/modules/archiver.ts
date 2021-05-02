@@ -1,16 +1,13 @@
 import Archiver from "vex-qna-archiver";
-import path from "path"
+import {ArchiverOptions} from "../types";
 
-export const runArchiver = async (force?: boolean) => {
-    // console.log(process.env.ROBOT_EVENTS_KEY)
+export const runArchiver = async (options: ArchiverOptions) => {
     if (!process.env.ROBOT_EVENTS_KEY) return;
 
-    const directory = path.resolve(__dirname, "../data");
     const archiver = new Archiver(process.env.ROBOT_EVENTS_KEY, {
-        dir: directory,
-        verbose: true
+        dir: options.directory,
+        verbose: options?.verbose
     })
 
-    const categories = ["VRC", "VEXU", "VIQC", "VAIC-HS", "VAIC-U", "RADC", "Judging"];
-    await archiver.process(categories, force)
+    await archiver.process(options.categories, options?.force)
 }

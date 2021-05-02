@@ -1,8 +1,8 @@
 import path from "path";
 import Database from "better-sqlite3"
-import type { QaQuery, QnaRow } from "../types"
+import type { Query, QnaRow } from "../types"
 
-export const searchDB = async (query: QaQuery) => {
+export const searchDB = async (query: Query) => {
     const database = new Database(path.resolve(__dirname, "../data/qna.db"))
 
     const criteria = query.wholeword ? `MATCH '${query.query}'` : `LIKE '%${query.query}%'`;
