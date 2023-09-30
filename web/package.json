@@ -1,0 +1,13 @@
+{
+    "name": "web",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "private": true,
+    "author": "battlesqui_d",
+    "license": "ISC",
+    "volta": {
+        "node": "18.9.0",
+        "yarn": "1.22.19"
+    }
+}

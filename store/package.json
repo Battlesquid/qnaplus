@@ -1,0 +1,15 @@
+{
+  "name": "store",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "battlesqui_d",
+  "license": "ISC",
+  "volta": {
+    "node": "18.9.0",
+    "yarn": "1.22.19"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.11.0"
+  }
+}

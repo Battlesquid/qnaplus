@@ -1,0 +1,21 @@
+{
+  "name": "qnaplus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "store",
+    "bot",
+    "web"
+  ],
+  "author": "battlesqui_d",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "volta": {
+    "node": "18.9.0",
+    "yarn": "1.22.19"
+  }
+}
