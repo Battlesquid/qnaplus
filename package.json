@@ -7,7 +7,8 @@
   "workspaces": [
     "store",
     "bot",
-    "web"
+    "web",
+    "config"
   ],
   "author": "battlesqui_d",
   "license": "ISC",

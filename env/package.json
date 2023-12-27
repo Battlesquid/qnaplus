@@ -1,0 +1,19 @@
+{
+    "name": "@qnaplus/env",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "private": true,
+    "author": "battlesqui_d",
+    "license": "ISC",
+    "scripts": {
+        "build": "npx tsc"
+    },
+    "volta": {
+        "node": "18.9.0",
+        "yarn": "1.22.19"
+    },
+    "dependencies": {
+        "dotenv": "^16.3.1"
+    }
+}

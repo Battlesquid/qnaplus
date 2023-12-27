@@ -1,8 +1,8 @@
 {
-  "name": "store",
+  "name": "@qnaplus/store",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "author": "battlesqui_d",
   "license": "ISC",
   "volta": {
@@ -10,6 +10,10 @@
     "yarn": "1.22.19"
   },
   "dependencies": {
-    "firebase-admin": "^11.11.0"
+    "firebase": "^10.7.1",
+    "vex-qna-archiver": "^7.0.0"
+  },
+  "devDependencies": {
+    "@qnaplus/env": "^1.0.0"
   }
 }
