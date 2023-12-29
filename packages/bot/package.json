@@ -2,7 +2,7 @@
   "name": "@qnaplus/bot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "author": "battlesqui_d",
   "license": "ISC",
   "volta": {
@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@sapphire/framework": "^4.6.0",
-    "discord.js": "^14.13.0",
-    "dotenv": "^16.3.1"
+    "discord.js": "^14.13.0"
   }
 }
