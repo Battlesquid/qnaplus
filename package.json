@@ -5,10 +5,7 @@
   "main": "index.js",
   "private": true,
   "workspaces": [
-    "store",
-    "bot",
-    "web",
-    "config"
+    "packages/*"
   ],
   "author": "battlesqui_d",
   "license": "ISC",
