@@ -1,5 +1,5 @@
 {
-    "name": "web",
+    "name": "@qnaplus/web",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
