@@ -10,8 +10,9 @@
     "yarn": "1.22.19"
   },
   "dependencies": {
+    "@qnaplus/env": "1.0.0",
     "firebase": "^10.7.1",
-    "vex-qna-archiver": "^7.0.0",
-    "@qnaplus/env": "1.0.0"
+    "pino": "^8.17.2",
+    "vex-qna-archiver": "^7.0.0"
   }
 }
