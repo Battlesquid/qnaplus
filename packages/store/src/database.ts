@@ -1,6 +1,6 @@
 import config from "@qnaplus/env";
 import { initializeApp } from 'firebase/app';
-import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc, writeBatch } from 'firebase/firestore';
+import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc, where, writeBatch } from 'firebase/firestore';
 import { Logger } from "pino";
 import { partitionSettledPromises } from "./util";
 
@@ -78,6 +78,7 @@ export type RefStrategy<T> = {
 }
 
 export const addDocuments = async <T extends DocumentData>(data: T[], refStrategy: RefStrategy<T>, opts?: Options) => {
+    const logger = opts?.logger;
     const batch = writeBatch(firestore);
 
     const jobs = data.map(async d => {
@@ -89,6 +90,7 @@ export const addDocuments = async <T extends DocumentData>(data: T[], refStrateg
     });
 
     const results = await Promise.allSettled(jobs);
-    partitionSettledPromises(data, results);
+    partitionSettledPromises(data, results, logger);
+
     return batch.commit();
 }
