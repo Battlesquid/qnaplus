@@ -1,6 +1,7 @@
 import { Logger } from "pino";
 
 export const partitionSettledPromises = <ResolvedType, OriginalType>(original: OriginalType[], settled: PromiseSettledResult<ResolvedType>[], logger?: Logger): [ResolvedType[], OriginalType[]] => {
+    const childLogger = logger?.child({ label: "partitionSettledPromises" });
     const resolved: ResolvedType[] = [];
     const rejected: OriginalType[] = [];
     for (let i = 0; i < settled.length; i++) {
@@ -11,6 +12,6 @@ export const partitionSettledPromises = <ResolvedType, OriginalType>(original: O
             rejected.push(original[i]);
         }
     }
-    logger?.trace(`${resolved.length} succeeded, ${rejected.length} failed.`)
+    childLogger?.trace(`${resolved.length} succeeded, ${rejected.length} failed.`);
     return [resolved, rejected];
 }

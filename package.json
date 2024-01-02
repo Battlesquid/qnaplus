@@ -9,7 +9,10 @@
   "author": "battlesqui_d",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2" 
+  },
+  "scripts": {
+    "build": "yarn tsc --build"
   },
   "volta": {
     "node": "18.9.0",
