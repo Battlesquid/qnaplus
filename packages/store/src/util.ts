@@ -15,3 +15,19 @@ export const partitionSettledPromises = <ResolvedType, OriginalType>(original: O
     childLogger?.trace(`${resolved.length} succeeded, ${rejected.length} failed.`);
     return [resolved, rejected];
 }
+
+export type Category = {
+    value: string;
+    count: number;
+}
+
+export const categorize = <T extends string>(items: T[]) => {
+    const results: Category[] = [];
+    items.forEach(item => {
+        const index = results.findIndex(r => r.value === item);
+        index === -1
+            ? results.push({ value: item, count: 1 })
+            : results[index].count++
+    });
+    return results;
+}

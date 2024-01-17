@@ -1,8 +1,8 @@
 import config from "@qnaplus/env";
 import { initializeApp } from 'firebase/app';
-import { DocumentData, WhereFilterOp, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc, where, writeBatch } from 'firebase/firestore';
+import { DocumentChangeType, DocumentData, WhereFilterOp, collection, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, where, writeBatch } from 'firebase/firestore';
 import { Logger } from "pino";
-import { partitionSettledPromises } from "./util";
+import { categorize, partitionSettledPromises } from "./util";
 
 
 const firebaseConfig = JSON.parse(config.getenv("FIREBASE_CONFIG"));
@@ -13,52 +13,15 @@ type Options = {
     logger?: Logger;
 }
 
-type CollectionList = {
-    values: string[];
-}
-
-const updateCollectionList = async (collectionName: string, opts?: Options): Promise<void> => {
-    const logger = opts?.logger?.child({ label: "updateCollectionList" });
-
-    await updateDoc(doc(firestore, "metadata", "collections"), {
-        values: arrayUnion(collectionName)
-    });
-
-    logger?.trace({ collectionName }, "Collection list updated.");
-
-}
-
-const getCollectionList = async (opts?: Options): Promise<string[] | null> => {
-    const logger = opts?.logger?.child({ label: "getCollectionList" });
-    const result = await getDocument<CollectionList>("metadata", "collections");
-    if (result === null) {
-        logger?.warn("No collections list found")
+export const getDocumentsFromCollection = async (collectionName: string, opts?: Options): Promise<DocumentData[] | null> => {
+    const logger = opts?.logger?.child({ label: "getCollectionDocuments" });
+    const ref = collection(firestore, collectionName);
+    const snapshot = await getDocs(collection(firestore, collectionName));
+    if (snapshot.empty) {
+        logger?.warn(`No collection found at ${ref.path}`)
         return null;
     }
-    return result.values;
-}
-
-export const getAllDocuments = async (opts?: Options): Promise<DocumentData[] | null> => {
-    const logger = opts?.logger?.child({ label: "getAllDocuments" });
-
-    const collections = await getCollectionList();
-
-    if (collections === null) {
-        logger?.warn("No collections list found")
-        return null;
-    }
-
-    const jobs = collections.map(async collectionName => {
-        const snapshot = await getDocs(collection(firestore, collectionName));
-        return snapshot.docs;
-    });
-
-    const results = await Promise.allSettled(jobs);
-    const [resolved] = partitionSettledPromises(collections, results, logger);
-    const docs = resolved.flat().map(d => d.data());
-
-    logger?.trace(`Fetched ${docs.length} documents.`);
-    return docs;
+    return snapshot.docs;
 }
 
 export const getDocument = async <T extends DocumentData = DocumentData>(collectionName: string, documentName: string, opts?: Options): Promise<T | null> => {
@@ -73,7 +36,6 @@ export const getDocument = async <T extends DocumentData = DocumentData>(collect
 }
 
 export const addDocument = async <T extends DocumentData>(collectionName: string, documentName: string, data: T, opts?: Options) => {
-    await updateCollectionList(collectionName, { logger: opts?.logger });
     return setDoc(doc(firestore, collectionName, documentName), data);
 }
 
@@ -90,8 +52,7 @@ export const addDocuments = async <T extends DocumentData>(data: T[], refStrateg
         const collectionName = refStrategy.collectionName(d);
         const documentName = refStrategy.documentName(d);
         const ref = doc(firestore, collectionName, documentName);
-        await updateCollectionList(collectionName);
-        batch.set(ref, d)
+        batch.set(ref, d);
     });
 
     const results = await Promise.allSettled(jobs);
@@ -100,21 +61,41 @@ export const addDocuments = async <T extends DocumentData>(data: T[], refStrateg
     return batch.commit();
 }
 
-export type OnModifiedOptions<T extends DocumentData> = {
+export type OnChangeOptions<T extends DocumentData> = {
+    collectionName: string;
+    where: {
+        field: string;
+        op: WhereFilterOp;
+        value: unknown;
+    }
+    event: DocumentChangeType;
+    ignoreInitial?: boolean;
+    logger?: Logger;
     condition?: (doc: T) => boolean;
     callback: (docs: T[]) => void
 }
 
-const DEFAULT_MODIFIED_OPTIONS_CONDITION: OnModifiedOptions<DocumentData>["condition"] = () => true;
+const DEFAULT_MODIFIED_OPTIONS_CONDITION: OnChangeOptions<DocumentData>["condition"] = () => true;
 
-export const onModified = <T extends DocumentData>(collectionName: string, field: string, op: WhereFilterOp, value: string, options: OnModifiedOptions<T>) => {
+export const onChange = <T extends DocumentData>(options: OnChangeOptions<T>) => {
+    const { collectionName, where: { field, op, value }, event, ignoreInitial, logger } = options;
+    let initialized = false;
     const condition = options.condition ?? DEFAULT_MODIFIED_OPTIONS_CONDITION;
     const callback = options.callback;
-
     const q = query(collection(firestore, collectionName), where(field, op, value));
     return onSnapshot(q, snapshot => {
+        if (ignoreInitial && !initialized) {
+            logger?.trace("Skipping initial snapshot event");
+            initialized = true;
+            return;
+        }
+        const changes = categorize(snapshot.docChanges().map(c => c.type))
+            .map(c => `${c.count} ${c.value}`)
+            .join();
+        logger?.trace(`${snapshot.docChanges().length} changes occurred on ${collectionName}`);
+        logger?.trace(changes);
         const modified = snapshot.docChanges()
-            .filter(change => change.type === "modified" && condition(change.doc.data() as T))
+            .filter(change => change.type === event && condition(change.doc.data() as T))
             .map(change => change.doc.data() as T);
         callback(modified);
     });

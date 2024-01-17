@@ -6,11 +6,20 @@
   "author": "battlesqui_d",
   "license": "ISC",
   "volta": {
-    "node": "18.9.0",
+    "node": "20.11.0",
     "yarn": "1.22.19"
   },
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/index.js | yarn pino-pretty"
+  },
   "dependencies": {
+    "@qnaplus/store": "1.0.0",
     "@sapphire/framework": "^4.6.0",
-    "discord.js": "^14.13.0"
+    "discord.js": "^14.13.0",
+    "pino": "^8.17.2"
+  },
+  "devDependencies": {
+    "pino-pretty": "^10.3.1"
   }
 }

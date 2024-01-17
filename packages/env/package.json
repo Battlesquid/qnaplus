@@ -9,7 +9,7 @@
         "build": "npx tsc"
     },
     "volta": {
-        "node": "18.9.0",
+        "node": "20.11.0",
         "yarn": "1.22.19"
     },
     "dependencies": {
