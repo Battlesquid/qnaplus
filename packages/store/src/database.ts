@@ -64,7 +64,7 @@ export const addDocuments = async <T extends DocumentData>(data: T[], refStrateg
 export type OnChangeOptions<T extends DocumentData> = {
     collectionName: string;
     where: {
-        field: string;
+        field: keyof T;
         op: WhereFilterOp;
         value: unknown;
     }
@@ -82,7 +82,7 @@ export const onChange = <T extends DocumentData>(options: OnChangeOptions<T>) =>
     let initialized = false;
     const condition = options.condition ?? DEFAULT_MODIFIED_OPTIONS_CONDITION;
     const callback = options.callback;
-    const q = query(collection(firestore, collectionName), where(field, op, value));
+    const q = query(collection(firestore, collectionName), where(field as string, op, value));
     return onSnapshot(q, snapshot => {
         if (ignoreInitial && !initialized) {
             logger?.trace("Skipping initial snapshot event");
