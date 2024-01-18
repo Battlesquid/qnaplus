@@ -1,18 +1,19 @@
 import { config as configenv } from "dotenv"
 import * as path from "path";
 
-const VARIABLES = [
+const ENV_VARIABLES = [
     "FIREBASE_CONFIG",
-    "DISCORD_TOKEN"
+    "DISCORD_TOKEN",
+    "NODE_ENV"
 ] as const;
 
-type ConfigVariable = typeof VARIABLES[number];
+type ConfigVariable = typeof ENV_VARIABLES[number];
 
 const loadConfig = () => {
     configenv({ path: path.resolve(__dirname, "../.env") });
 
     const loaded: Record<string, string> = {};
-    VARIABLES.forEach((v) => {
+    ENV_VARIABLES.forEach((v) => {
         const value = process.env[v];
         if (value === undefined) {
             throw Error(`Environment variable '${v}' missing, exiting.`);

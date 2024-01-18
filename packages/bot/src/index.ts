@@ -1,18 +1,6 @@
-import { onAnswered } from "@qnaplus/store";
 import { LogLevel, SapphireClient } from "@sapphire/framework";
-import { GatewayIntentBits, Partials, ActivityType } from "discord.js";
-import pino from "pino";
+import { ActivityType, GatewayIntentBits, Partials } from "discord.js";
 
-(async () => {
-    const logger = pino({ level: "trace" });
-    const unsubscribe = await onAnswered(
-        (docs) => {
-            console.log(docs);
-        },
-        true,
-        logger
-    );
-})();
 
 const client = new SapphireClient({
     intents: [
@@ -34,5 +22,4 @@ const client = new SapphireClient({
             },
         ],
     },
-
 });

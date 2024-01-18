@@ -1,4 +1,4 @@
-import config from "@qnaplus/env";
+import config from "@qnaplus/config";
 import { initializeApp } from 'firebase/app';
 import { DocumentChangeType, DocumentData, WhereFilterOp, collection, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, where, writeBatch } from 'firebase/firestore';
 import { Logger } from "pino";
