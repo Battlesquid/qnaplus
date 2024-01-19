@@ -4,7 +4,8 @@ import * as path from "path";
 const ENV_VARIABLES = [
     "FIREBASE_CONFIG",
     "DISCORD_TOKEN",
-    "NODE_ENV"
+    "NODE_ENV",
+    "BROADCASTER_CHANNELS"
 ] as const;
 
 type ConfigVariable = typeof ENV_VARIABLES[number];
