@@ -4,7 +4,7 @@ import { container } from "@sapphire/framework"
 import { ChannelType, ColorResolvable, EmbedBuilder, channelMention, hyperlink } from "discord.js"
 import { Logger } from "pino"
 import { Question } from "vex-qna-archiver"
-import { dividearray } from "./util/dividearray"
+import { chunk } from "./util/chunk"
 import { groupby } from "./util/groupby"
 
 const channels = JSON.parse(config.getenv("BROADCASTER_CHANNELS"))
@@ -37,7 +37,7 @@ const handleProgramBroadcast = async (program: string, questions: Question[]) =>
             .setDescription(`Asked by ${author} on ${askedTimestamp}`)
             .addFields({ name: "Question: ", value: hyperlink(title, url) })
             .setFooter({ text: `${tags.length ? "🏷️ " + tags.join(", ") : "No tags"}` }));
-    const embedSlices = dividearray(embeds, MAX_EMBEDS_PER_MESSAGE);
+    const embedSlices = chunk(embeds, MAX_EMBEDS_PER_MESSAGE);
     for (const embeds of embedSlices) {
         channel.send({ embeds });
     }

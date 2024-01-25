@@ -21,7 +21,7 @@ export type Category = {
     count: number;
 }
 
-export const categorize = <T extends string>(items: T[]) => {
+export const categorize = <T extends string>(items: T[], categoryFn: (item: T) => any) => {
     const results: Category[] = [];
     items.forEach(item => {
         const index = results.findIndex(r => r.value === item);

@@ -3,6 +3,8 @@ import * as path from "path";
 
 const ENV_VARIABLES = [
     "FIREBASE_CONFIG",
+    "SUPABASE_URL",
+    "SUPABASE_KEY",
     "DISCORD_TOKEN",
     "NODE_ENV",
     "BROADCASTER_CHANNELS"
