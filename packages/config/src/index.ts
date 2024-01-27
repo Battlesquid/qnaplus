@@ -1,10 +1,10 @@
-import { config as configenv } from "dotenv"
+import { config as configenv } from "dotenv";
 import * as path from "path";
 
 const ENV_VARIABLES = [
     "FIREBASE_CONFIG",
     "SUPABASE_URL",
-    "SUPABASE_KEY",
+    "SUPABASE_KEY", // TODO figure out RLS or how to get the correct permissions to access the database
     "DISCORD_TOKEN",
     "NODE_ENV",
     "BROADCASTER_CHANNELS"

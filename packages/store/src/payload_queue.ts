@@ -1,4 +1,4 @@
-export type PayloadQueueFlushCallback<T> = (items: T[]) => void | Promise<void>;
+export type OnPayloadQueueFlush<T> = (items: T[]) => void | Promise<void>;
 
 export interface PayloadQueueOptions<T> {
     /**
@@ -10,7 +10,7 @@ export interface PayloadQueueOptions<T> {
      * The callback function to call when items are flished
      * @param items The items that were flushed
      */
-    onFlush: PayloadQueueFlushCallback<T>
+    onFlush: OnPayloadQueueFlush<T>
 }
 
 export class PayloadQueue<T> {
@@ -31,7 +31,7 @@ export class PayloadQueue<T> {
         this.timeout = setTimeout(() => this.flush(), this.options.flushTimeout);
     }
 
-    flush() {
+    private flush() {
         this.options.onFlush([...this.queue]);
         this.queue = [];
     }

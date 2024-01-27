@@ -1,9 +1,9 @@
 import config from "@qnaplus/config";
 import { LogLevel, SapphireClient, container } from "@sapphire/framework";
 import { ActivityType, GatewayIntentBits, Partials } from "discord.js";
-import { PinoLoggerAdapter } from "./logger";
-import { startBroadcaster } from "./broadcaster";
 import pino from "pino";
+import { startBroadcaster } from "./broadcaster";
+import { PinoLoggerAdapter } from "./logger";
 
 const pinoLogger = pino();
 
@@ -22,8 +22,8 @@ const client = new SapphireClient({
         status: "online",
         activities: [
             {
-                type: ActivityType.Watching,
-                name: 'the GDC with great interest.',
+                type: ActivityType.Listening,
+                name: 'for Q&A changes',
             },
         ],
     },
@@ -31,8 +31,8 @@ const client = new SapphireClient({
 
 const start = async () => {
     await client.login(config.getenv("DISCORD_TOKEN"));
-    startBroadcaster(pinoLogger);
+    startBroadcaster();
 }
 
 start()
-    .catch(e => container.logger.error(e))
+    .catch(e => container.logger.error(e));
