@@ -12,7 +12,13 @@
     "typescript": "^5.2.2" 
   },
   "scripts": {
-    "build": "yarn tsc --build"
+    "build": "yarn tsc --build",
+    "setup": "yarn tsc --build --force",
+    "clean:dist": "rm -rf ./packages/**/dist",
+    "clean:packages": "rm -rf packages/**/node_modules node_modules",
+    "clean:all": "yarn clean:dist && yarn clean:packages",
+    "postinstall": "yarn setup",
+    "bot": "yarn workspace @qnaplus/bot run start"
   },
   "volta": {
     "node": "20.11.0",
