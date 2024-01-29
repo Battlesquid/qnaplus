@@ -9,7 +9,7 @@
   "author": "battlesqui_d",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^5.2.2" 
+    "typescript": "^5.2.2"
   },
   "scripts": {
     "build": "yarn tsc --build",
@@ -18,7 +18,8 @@
     "clean:packages": "rm -rf packages/**/node_modules node_modules",
     "clean:all": "yarn clean:dist && yarn clean:packages",
     "postinstall": "yarn setup",
-    "bot": "yarn workspace @qnaplus/bot run start"
+    "bot": "yarn workspace @qnaplus/bot run start",
+    "updater": "yarn workspace @qnaplus/store run start_updater"
   },
   "volta": {
     "node": "20.11.0",

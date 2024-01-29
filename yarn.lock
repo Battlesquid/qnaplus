@@ -1369,10 +1369,10 @@ vali-date@^1.0.0:
   resolved "https://registry.yarnpkg.com/vali-date/-/vali-date-1.0.0.tgz#1b904a59609fb328ef078138420934f6b86709a6"
   integrity sha512-sgECfZthyaCKW10N0fm27cg8HYTFK5qMWgypqkXMQ4Wbl/zZKx7xZICgcoxIIE+WFAP/MBL2EFwC/YvLxw3Zeg==
 
-vex-qna-archiver@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-8.0.1.tgz#ee863e35acf4a6c84ba7a8c6625fe547148bb8cb"
-  integrity sha512-I+AmrwtK41IIWkvJ6tCntmS7b6fssbCNBz3cn19s6RxXMkgRepo1uTyK3g5dSdMUM/51y0J2kDaEoHR6/FNDRQ==
+vex-qna-archiver@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-8.1.1.tgz#08b0bb51fd2842cc0799502b8c3750225f030a76"
+  integrity sha512-3E3f1oU0MdrN/8m8hLxAVfSAlgGzp191GAOE0dO1lqUKITM42l4fbGeBZAg9nw0694Y8R3MiECyMYe/bX/U95w==
   dependencies:
     "@crawlee/core" "^3.7.2"
     cheerio "^1.0.0-rc.3"

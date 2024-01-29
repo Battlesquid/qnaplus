@@ -13,7 +13,7 @@ export type StoreOptions = {
 }
 
 export const populate = async (logger?: Logger) => {
-    const questions = await getAllQuestions(logger);
+    const { questions } = await getAllQuestions(logger);
     return insertQuestions(questions, { logger });
 }
 
@@ -40,8 +40,12 @@ export const insertQuestions = async (data: Question[], opts?: StoreOptions) => 
 
 export const upsertQuestions = async (data: Question[], opts?: StoreOptions) => {
     const logger = opts?.logger?.child({ label: "upsertQuestions" });
+    logger?.info(`Upserting ${data.length} questions`)
     const { error, status } = await supabase.from("questions").upsert(data, { ignoreDuplicates: false });
-    logger?.trace({ error, status });
+    if (error !== null) {
+        logger?.warn({ error, status })
+    }
+    return error === null;
 }
 
 const CHANGE_EVENTS = ["answered", "answer_edited"] as const;
@@ -140,11 +144,12 @@ export const update = async (logger?: Logger) => {
     const season = await fetchCurrentSeason(logger);
     const { error, data: question } = await supabase
         .from("questions")
-        .select()
+        .select("*")
         .eq("season", season)
         .eq("answered", false)
         .not("title", "like", "[archived]%")
         .order("askedTimestampMs", { ascending: true })
+        .limit(1)
         .single();
     if (error) {
         logger?.error({ error }, "Could not find oldest unanswered Q&A, exiting");
@@ -152,6 +157,8 @@ export const update = async (logger?: Logger) => {
     }
     logger?.info(`Starting update from Q&A ${question.id}`);
     const { questions } = await fetchQuestionsIterative({ logger, start: parseInt(question.id) });
-    await upsertQuestions(questions);
-    logger?.info(`Updated ${questions.length} questions.`);
+    const success = await upsertQuestions(questions, { logger });
+    if (success) {
+        logger?.info(`Updated ${questions.length} questions.`);
+    }
 }
