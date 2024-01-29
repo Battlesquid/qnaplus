@@ -2,12 +2,12 @@ import { config as configenv } from "dotenv";
 import * as path from "path";
 
 const ENV_VARIABLES = [
-    "FIREBASE_CONFIG",
     "SUPABASE_URL",
     "SUPABASE_KEY", // TODO figure out RLS or how to get the correct permissions to access the database
     "DISCORD_TOKEN",
     "NODE_ENV",
-    "BROADCASTER_CHANNELS"
+    "BROADCASTER_CHANNELS",
+    "UPDATE_INTERVAL"
 ] as const;
 
 type ConfigVariable = typeof ENV_VARIABLES[number];

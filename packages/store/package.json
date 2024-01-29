@@ -10,14 +10,15 @@
     "yarn": "1.22.19"
   },
   "scripts": {
-    "build": "npx tsc"
+    "build": "yarn tsc --build",
+    "start_updater": "node dist/update_service.js"
   },
   "dependencies": {
     "@qnaplus/config": "1.0.0",
     "@supabase/supabase-js": "^2.39.3",
     "diff": "^5.1.0",
     "pino": "^8.17.2",
-    "vex-qna-archiver": "^8.0.1"
+    "vex-qna-archiver": "^8.1.0"
   },
   "devDependencies": {
     "@types/diff": "^5.0.9"

@@ -2,7 +2,7 @@ import config from "@qnaplus/config";
 import { RealtimePostgresUpdatePayload, createClient } from "@supabase/supabase-js";
 import { Change, diffSentences } from "diff";
 import { Logger } from "pino";
-import { Question } from "vex-qna-archiver";
+import { Question, fetchCurrentSeason, fetchQuestionsIterative, getAllQuestions } from "vex-qna-archiver";
 import { OnPayloadQueueFlush, PayloadQueue } from "./payload_queue";
 import { Database } from "./supabase";
 
@@ -10,6 +10,11 @@ const supabase = createClient<Database>(config.getenv("SUPABASE_URL"), config.ge
 
 export type StoreOptions = {
     logger?: Logger;
+}
+
+export const populate = async (logger?: Logger) => {
+    const questions = await getAllQuestions(logger);
+    return insertQuestions(questions, { logger });
 }
 
 export const getQuestion = async (id: Question["id"], opts?: StoreOptions): Promise<Question | null> => {
@@ -129,4 +134,24 @@ export const onChange = (callback: ChangeCallback) => {
             payload => queue.push(payload)
         )
         .subscribe();
+}
+
+export const update = async (logger?: Logger) => {
+    const season = await fetchCurrentSeason(logger);
+    const { error, data: question } = await supabase
+        .from("questions")
+        .select()
+        .eq("season", season)
+        .eq("answered", false)
+        .not("title", "like", "[archived]%")
+        .order("askedTimestampMs", { ascending: true })
+        .single();
+    if (error) {
+        logger?.error({ error }, "Could not find oldest unanswered Q&A, exiting");
+        return;
+    }
+    logger?.info(`Starting update from Q&A ${question.id}`);
+    const { questions } = await fetchQuestionsIterative({ logger, start: parseInt(question.id) });
+    await upsertQuestions(questions);
+    logger?.info(`Updated ${questions.length} questions.`);
 }
