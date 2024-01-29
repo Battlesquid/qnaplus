@@ -13,7 +13,7 @@ const ENV_VARIABLES = [
 type ConfigVariable = typeof ENV_VARIABLES[number];
 
 const loadConfig = () => {
-    configenv({ path: path.resolve(__dirname, "../.env") });
+    configenv({ path: path.resolve(__dirname, "../../../.env") });
 
     const loaded: Record<string, string> = {};
     ENV_VARIABLES.forEach((v) => {

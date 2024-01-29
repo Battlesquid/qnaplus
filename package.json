@@ -9,6 +9,7 @@
   "author": "battlesqui_d",
   "license": "ISC",
   "devDependencies": {
+    "dotenv-vault": "^1.26.0",
     "typescript": "^5.2.2"
   },
   "scripts": {
@@ -18,6 +19,7 @@
     "clean:packages": "rm -rf packages/**/node_modules node_modules",
     "clean:all": "yarn clean:dist && yarn clean:packages",
     "postinstall": "yarn setup",
+    "pull_env": "yarn dotenv-vault pull",
     "bot": "yarn workspace @qnaplus/bot run start",
     "updater": "yarn workspace @qnaplus/store run start_updater"
   },

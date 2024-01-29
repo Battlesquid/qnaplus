@@ -38,3 +38,9 @@ Thumbs.db
 
 # Ignore built ts files
 dist
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
+!.env.template
