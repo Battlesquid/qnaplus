@@ -19,9 +19,10 @@
     "clean:packages": "rm -rf packages/**/node_modules node_modules",
     "clean:all": "yarn clean:dist && yarn clean:packages",
     "postinstall": "yarn setup",
-    "pull_env": "yarn dotenv-vault pull",
-    "bot": "yarn workspace @qnaplus/bot run start",
-    "updater": "yarn workspace @qnaplus/store run start_updater"
+    "bot:start": "yarn workspace @qnaplus/bot run start",
+    "bot:dev": "yarn workspace @qnaplus/bot run dev",
+    "store:updater": "yarn workspace @qnaplus/store run updater",
+    "store:populate": "yarn workspace @qnaplus/store run populate"
   },
   "volta": {
     "node": "20.11.0",
