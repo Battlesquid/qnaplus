@@ -13,8 +13,11 @@ const ENV_VARIABLES = [
 type ConfigVariable = typeof ENV_VARIABLES[number];
 
 const loadConfig = () => {
-    configenv({ path: path.resolve(__dirname, "../../../.env") });
-
+    const { error } = configenv({ path: path.resolve(__dirname, "../../../.env") });
+    if (error) {
+        console.error(error);
+        throw Error(`Environment variables could not be loaded, exiting`);
+    }
     const loaded: Record<string, string> = {};
     ENV_VARIABLES.forEach((v) => {
         const value = process.env[v];
