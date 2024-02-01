@@ -1,10 +1,11 @@
 {
-  "name": "qnaplus",
+  "name": "@qnaplus/root",
   "version": "1.0.0",
   "description": "",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "services/*"
   ],
   "author": "battlesqui_d",
   "license": "ISC",
@@ -18,10 +19,10 @@
     "clean:dist": "rm -rf ./packages/**/dist",
     "clean:packages": "rm -rf packages/**/node_modules node_modules",
     "clean:all": "yarn clean:dist && yarn clean:packages",
-    "postinstall": "yarn setup",
     "bot:start": "yarn workspace @qnaplus/bot run start",
     "bot:dev": "yarn workspace @qnaplus/bot run dev",
-    "store:updater": "yarn workspace @qnaplus/store run updater",
+    "updater:start": "yarn workspace @qnaplus/updater run start",
+    "updater:dev": "yarn workspace @qnaplus/updater run dev",
     "store:populate": "yarn workspace @qnaplus/store run populate"
   },
   "volta": {

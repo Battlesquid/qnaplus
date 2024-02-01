@@ -1,8 +1,7 @@
-import config from "@qnaplus/config"
-import { update } from "./database";
 import pino from "pino";
+import { config, update } from "qnaplus";
 
-const startUpdater = async () => {
+(async () => {
     const logger = pino();
     logger.info("Starting updater service");
     const interval = parseInt(config.getenv("UPDATE_INTERVAL"));
@@ -10,6 +9,4 @@ const startUpdater = async () => {
     return setInterval(() => {
         update(logger);
     }, interval);
-}
-
-startUpdater();
+})();

@@ -1,4 +1,4 @@
-import config from "@qnaplus/config";
+import {config} from "qnaplus";
 import { LogLevel, SapphireClient, container } from "@sapphire/framework";
 import { ActivityType, GatewayIntentBits, Partials } from "discord.js";
 import pino from "pino";

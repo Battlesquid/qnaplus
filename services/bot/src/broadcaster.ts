@@ -1,4 +1,4 @@
-import config from "@qnaplus/config"
+import { config } from "@qnaplus/config"
 import { ChangeQuestion, onChange } from "@qnaplus/store"
 import { container } from "@sapphire/framework"
 import { ChannelType, channelMention } from "discord.js"

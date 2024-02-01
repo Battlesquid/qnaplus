@@ -1,4 +1,4 @@
-import config from "@qnaplus/config";
+import {config} from "@qnaplus/config";
 import { RealtimePostgresUpdatePayload, createClient } from "@supabase/supabase-js";
 import { Change, diffSentences } from "diff";
 import { Logger } from "pino";

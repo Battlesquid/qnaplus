@@ -1,0 +1,19 @@
+{
+    "name": "qnaplus",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "author": "battlesqui_d",
+    "license": "ISC",
+    "scripts": {
+        "build": "npx tsc"
+    },
+    "volta": {
+        "node": "20.11.0",
+        "yarn": "1.22.19"
+    },
+    "dependencies": {
+        "@qnaplus/store": "1.0.0",
+        "@qnaplus/config": "1.0.0"
+    }
+}

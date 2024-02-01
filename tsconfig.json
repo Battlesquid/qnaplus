@@ -1,11 +1,8 @@
 {
   "references": [
     {
-      "path": "./packages/bot/"
+      "path": "./packages/qnaplus"
     },
-    {
-      "path": "./packages/store/"
-    }
   ],
   "files": [],
   "include": [],

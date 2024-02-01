@@ -11,7 +11,8 @@
   },
   "scripts": {
     "build": "yarn tsc --build",
-    "start_updater": "node dist/update_service.js"
+    "updater": "node dist/services/update_service.js",
+    "populate": "node dist/services/populate_service.js"
   },
   "dependencies": {
     "@qnaplus/config": "1.0.0",

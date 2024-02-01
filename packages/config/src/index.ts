@@ -31,7 +31,7 @@ const loadConfig = () => {
 
 let CONFIG: Record<string, string> | null = null;
 
-export default {
+export const config = {
     getenv(key: ConfigVariable) {
         if (CONFIG === null) {
             CONFIG = loadConfig();
