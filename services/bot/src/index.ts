@@ -22,8 +22,8 @@ const client = new SapphireClient({
         status: "online",
         activities: [
             {
-                type: ActivityType.Listening,
-                name: 'for Q&A changes',
+                type: ActivityType.Watching,
+                name: 'for Q&A changes 👀',
             },
         ],
     },

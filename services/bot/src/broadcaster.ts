@@ -19,15 +19,15 @@ const handleProgramBroadcast = async (program: string, questions: ChangeQuestion
         return;
     }
     const channel = await container.client.channels.fetch(channelId);
-    if (channel === null || channel.type !== ChannelType.GuildText) {
-        logger.warn(`Channel ${channelMention(channelId)} (${channelId}) is missing or is not a text channel, skipping broadcast.`);
+    if (channel === null || channel.type !== ChannelType.GuildAnnouncement) {
+        logger.warn(`Channel ${channelMention(channelId)} (${channelId}) is missing or is not an announcement channel, skipping broadcast.`);
         return;
     }
 
     const embeds = questions.map(buildQuestionEmbed);
     const embedSlices = chunk(embeds, MAX_EMBEDS_PER_MESSAGE);
     for (const embeds of embedSlices) {
-        channel.send({ embeds });
+        channel.send({ embeds })
     }
 }
 
