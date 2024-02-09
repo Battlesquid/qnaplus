@@ -19,6 +19,7 @@ COPY .env.vault .
 RUN yarn install \
 && yarn setup \
 && rm -rf node_modules \
-&& yarn install --production
+&& yarn install --production \
+&& yarn setup
 
 CMD yarn updater:start
