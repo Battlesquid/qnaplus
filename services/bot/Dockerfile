@@ -18,8 +18,8 @@ COPY .env.vault .
 
 RUN yarn install \
 && yarn setup \
+&& yarn workspace @qnaplus/bot run build \
 && rm -rf node_modules \
-&& yarn install --production \
-&& yarn setup
+&& yarn install --production
 
 CMD yarn bot:start
