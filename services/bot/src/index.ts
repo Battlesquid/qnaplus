@@ -31,7 +31,7 @@ const client = new SapphireClient({
 
 const start = async () => {
     await client.login(config.getenv("DISCORD_TOKEN"));
-    startBroadcaster();
+    startBroadcaster(pinoLogger);
 }
 
 start()

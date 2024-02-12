@@ -1,4 +1,4 @@
-import {config} from "@qnaplus/config";
+import { config } from "@qnaplus/config";
 import { RealtimePostgresUpdatePayload, createClient } from "@supabase/supabase-js";
 import { Change, diffSentences } from "diff";
 import { Logger } from "pino";
@@ -119,10 +119,15 @@ export type OnChangeOptions = {
 
 export type ChangeCallback = (items: ChangeQuestion[]) => void | Promise<void>;
 
-export const onChange = (callback: ChangeCallback) => {
+export const onChange = (callback: ChangeCallback, logger?: Logger) => {
     const queue = new PayloadQueue<RealtimePostgresUpdatePayload<Question>>({
         onFlush(items) {
             const changes = classifyChanges(items);
+            if (changes.length < 1) {
+                logger?.info("No changes detected.");
+                return;
+            }
+            logger?.info(`${changes.length} changes detected.`);
             callback(changes);
         }
     });

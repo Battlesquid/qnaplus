@@ -6,6 +6,7 @@ import { buildQuestionEmbed } from "./formatting"
 import { PinoLoggerAdapter } from "./logger"
 import { chunk } from "./util/chunk"
 import { groupby } from "./util/groupby"
+import { Logger } from "pino"
 
 const channels = JSON.parse(config.getenv("BROADCASTER_CHANNELS"));
 
@@ -40,6 +41,6 @@ const handleOnChange = async (docs: ChangeQuestion[]) => {
     }
 }
 
-export const startBroadcaster = async () => {
-    onChange(handleOnChange);
+export const startBroadcaster = async (logger?: Logger) => {
+    onChange(handleOnChange, logger);
 }
