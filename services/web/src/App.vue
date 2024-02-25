@@ -1,26 +1,14 @@
 <script setup lang="ts">
+import Header from "./components/Header.vue";
 </script>
 
 <template>
-  <div class="w-full h-full flex">
-    test
-    <router-view></router-view>
-  </div>
+    <div class="flex flex-column w-full h-screen">
+        <Header />
+        <router-view class="w-full"></router-view>
+    </div>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+<style lang="scss">
+@import "styles";
 </style>
