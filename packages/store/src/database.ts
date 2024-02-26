@@ -2,7 +2,7 @@ import {config} from "@qnaplus/config";
 import { RealtimePostgresUpdatePayload, createClient } from "@supabase/supabase-js";
 import { Change, diffSentences } from "diff";
 import { Logger } from "pino";
-import { Question, fetchCurrentSeason, fetchQuestionsIterative, getAllQuestions } from "vex-qna-archiver";
+import { Question, fetchCurrentSeason, fetchQuestionsIterative, getAllQuestions as archiverGetAllQuestions } from "vex-qna-archiver";
 import { OnPayloadQueueFlush, PayloadQueue } from "./payload_queue";
 import { Database } from "./supabase";
 
@@ -13,7 +13,7 @@ export type StoreOptions = {
 }
 
 export const populate = async (logger?: Logger) => {
-    const { questions } = await getAllQuestions(logger);
+    const { questions } = await archiverGetAllQuestions(logger);
     return insertQuestions(questions, { logger });
 }
 
@@ -24,6 +24,15 @@ export const getQuestion = async (id: Question["id"], opts?: StoreOptions): Prom
         logger?.trace(`No question with id '${id}' found.`);
     }
     return row.data;
+}
+
+export const getAllQuestions = async (opts?: StoreOptions): Promise<Question[] | null> => {
+    const logger = opts?.logger?.child({ label: "getAllQuestions" });
+    const rows = await supabase.from("questions").select("*");
+    if (rows.error === null) {
+        logger?.trace(rows.error);
+    }
+    return rows.data;
 }
 
 export const insertQuestion = async (data: Question, opts?: StoreOptions) => {

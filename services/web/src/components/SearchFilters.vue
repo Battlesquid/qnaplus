@@ -24,7 +24,7 @@ const options = ref([
 </script>
 
 <template>
-    <Panel header="Filters" toggleable>
+    <Panel header="Filters" toggleable collapsed>
         <div class="flex flex-column gap-2">
             <div class="flex gap-2">
                 <MultiSelect placeholder="Season"/>

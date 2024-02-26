@@ -16,9 +16,11 @@
     "vue-router": "4"
   },
   "devDependencies": {
+    "@qnaplus/store": "1.0.0",
     "@vitejs/plugin-vue": "^5.0.3",
     "sass": "^1.71.1",
     "typescript": "^5.2.2",
+    "vex-qna-archiver": "^8.1.1",
     "vite": "^5.1.0",
     "vue-tsc": "^1.8.27"
   },
