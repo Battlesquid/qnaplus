@@ -1,64 +1,93 @@
 <script setup lang="ts">
-import InputText from "primevue/inputtext"
+import Calendar from "primevue/calendar";
+import Chips from "primevue/chips";
 import Divider from 'primevue/divider';
-import Chips from "primevue/chips"
-import Calendar from "primevue/calendar"
-import SelectButton from 'primevue/selectbutton';
+import IconField from "primevue/iconfield";
+import InputGroup from "primevue/inputgroup";
+import InputGroupAddon from 'primevue/inputgroupaddon';
+import InputText from "primevue/inputtext";
 import MultiSelect from 'primevue/multiselect';
 import Panel from "primevue/panel";
-import InputGroup from "primevue/inputgroup";
-import IconField from "primevue/iconfield";
-import InputGroupAddon from 'primevue/inputgroupaddon';
-import { ref } from "vue";
+import SelectButton from 'primevue/selectbutton';
+import Button from 'primevue/button';
+import { ref, watch } from "vue";
+import { QuestionState, clearFilters, filters } from "../composable/useSearchFilter";
 
-const beforeAnswerDate = ref<Date | null>(null);
-const afterAnswerDate = ref<Date | null>(null);
-const beforeAskedDate = ref<Date | null>(null);
-const afterAskedDate = ref<Date | null>(null);
-
-const value = ref(null);
-const tags = ref<string[]>([]);
 const options = ref([
-    { name: "All", value: "All" },
-    { name: 'Answered', value: 1 },
-    { name: 'Unanswered', value: 2 }
+    { name: "All", value: QuestionState.All },
+    { name: 'Answered', value: QuestionState.Answered },
+    { name: 'Unanswered', value: QuestionState.Unanswered }
 ]);
+
+watch(filters, async (_old, _new) => {
+    console.log(_new);
+})
+
 </script>
 
 <template>
     <Panel header="Filters" toggleable collapsed>
-        <div class="flex flex-column gap-2">
+        <div class="flex flex-column gap-3">
             <div class="flex flex-wrap gap-2">
-                <MultiSelect placeholder="Season" />
-                <MultiSelect placeholder="Program" />
-                <IconField class="flex-1" icon-position="left">
-                    <i class="pi pi-user"></i>
-                    <InputText class="w-full" placeholder="Author" />
-                </IconField>
-                <SelectButton v-model="value" :options="options" optionLabel="name" aria-labelledby="multiple" />
+                <div class="flex flex-column gap-1">
+                    <label for="season">Season</label>
+                    <MultiSelect id="season" v-model="filters.season" placeholder="Season" />
+                </div>
+                <div class="flex flex-column gap-1">
+                    <label for="program">Program</label>
+                    <MultiSelect id="program" v-model="filters.program" placeholder="Program" />
+                </div>
+                <div class="flex flex-1 flex-column gap-1">
+                    <label for="author">Author</label>
+                    <IconField class="flex-1" icon-position="left">
+                        <i class="pi pi-user"></i>
+                        <InputText id="author" class="w-full" v-model="filters.author" placeholder="Author" />
+                    </IconField>
+                </div>
+                <div class="flex flex-column gap-1">
+                    <label for="Question State">Question State</label>
+                    <SelectButton :allow-empty="false" v-model="filters.state" :options="options" option-label="name"
+                        aria-labelledby="multiple" />
+                </div>
             </div>
             <div class="flex">
-                <div class="flex flex-1 gap-2">
-                    <Calendar class="flex-1" v-model="beforeAskedDate" placeholder="Asked Before" show-icon
-                        icon-display="input" />
-                    <Calendar class="flex-1" v-model="afterAskedDate" placeholder="Asked After" show-icon
-                        icon-display="input" />
+                <div class="flex flex-1 flex-1 gap-2">
+                    <div class="flex flex-column flex-1 gap-1">
+                        <label for="askedBefore">Asked Before</label>
+                        <Calendar id="askedBefore" v-model="filters.askedBefore" placeholder="Asked Before" show-icon
+                            show-button-bar icon-display="input" />
+                    </div>
+                    <div class="flex flex-column flex-1 gap-1">
+                        <label for="askedAfter">Asked After</label>
+                        <Calendar id="askedAfter" v-model="filters.askedAfter" placeholder="Asked After" show-icon
+                            show-button-bar icon-display="input" />
+                    </div>
                 </div>
                 <Divider layout="vertical" />
                 <div class="flex flex-1 gap-2">
-                    <Calendar class="flex-1" v-model="beforeAnswerDate" placeholder="Answered Before" show-icon
-                        icon-display="input" />
-                    <Calendar class="flex-1" v-model="afterAnswerDate" placeholder="Answered After" show-icon
-                        icon-display="input" />
+                    <div class="flex flex-column flex-1 gap-1">
+                        <label for="answeredBefore">Asked Before</label>
+                        <Calendar id="answeredBefore" v-model="filters.answeredBefore" placeholder="Answered Before"
+                            show-icon show-button-bar icon-display="input" />
+                    </div>
+                    <div class="flex flex-column flex-1 gap-1">
+                        <label for="answeredAfter">Asked Before</label>
+                        <Calendar id="answeredAfter" v-model="filters.answeredAfter" placeholder="Answered After" show-icon
+                            show-button-bar icon-display="input" />
+                    </div>
                 </div>
             </div>
-            <div class="flex gap-2">
-                <InputGroup>
+            <div class="flex flex-column flex-1 gap-2">
+                <label for="tags">Tags</label>
+                <InputGroup id="tags">
                     <InputGroupAddon>
                         <i class="pi pi-tags" aria-label="Search" />
                     </InputGroupAddon>
-                    <Chips v-model="tags" class="flex-1" aria-label="Tags" placeholder="Tags" />
+                    <Chips v-model="filters.tags" class="flex-1" aria-label="Tags" placeholder="Tags" />
                 </InputGroup>
+            </div>
+            <div>
+                <Button @click="clearFilters()">Clear Filters</Button>
             </div>
         </div>
     </Panel>
