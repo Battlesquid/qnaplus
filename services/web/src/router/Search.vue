@@ -14,7 +14,7 @@ import questions from "../data.json";
                 <SearchFilters/>
             </div>
             <div class="h-full flex flex-column gap-2">
-                <div v-for="question in questions">
+                <div v-for="question in questions.slice(-10, -1)">
                     <QuestionCard :id="question.id" :title="question.title" :question="question.question"
                                   :answered="question.answered" :author="question.author"
                                   :asked-timestamp-ms="question.askedTimestampMs" :program="question.program"
