@@ -1,30 +1,27 @@
 <script setup lang="ts">
+import { useEventListener } from "@vueuse/core";
 import Button from 'primevue/button';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { ref } from 'vue';
 const header = ref<HTMLDivElement | null>(null);
 const filler = ref<HTMLDivElement | null>(null);
-onMounted(() => {
-    const update = () => {
-        if (window.scrollY !== 0) {
-            header.value?.classList.add("header-sticky", "border-bottom-1", "border-blue-800");
-            header.value?.classList.remove("surface-border")
-            filler.value?.classList.remove("hidden")
-        } else {
-            header.value?.classList.remove("header-sticky", "border-bottom-1", "border-blue-800");
-            header.value?.classList.add("surface-border")
-            filler.value?.classList.add("hidden")
-        }
+const update = () => {
+    if (window.scrollY !== 0) {
+        header.value?.classList.add("header-sticky", "border-bottom-1", "border-blue-800");
+        header.value?.classList.remove("surface-border")
+        filler.value?.classList.remove("hidden")
+    } else {
+        header.value?.classList.remove("header-sticky", "border-bottom-1", "border-blue-800");
+        header.value?.classList.add("surface-border")
+        filler.value?.classList.add("hidden")
     }
-    update();
-    window.addEventListener("scroll", () => update());
-})
-onUnmounted(() => {
-    window.removeEventListener("scroll", () => { });
-})
+}
+update();
+useEventListener(document, "scroll", () => update());
+
 </script>
 
 <template>
-    <div ref="filler" class="filler p-3 border-transparent border-bottom-1 hidden">
+    <div ref="filler" class="filler p-3 border-bottom-1 hidden">
         <div class="p-3"></div>
     </div>
     <div ref="header"

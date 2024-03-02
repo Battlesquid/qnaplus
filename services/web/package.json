@@ -9,13 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vueuse/core": "^10.9.0",
     "@vueuse/integrations": "^10.8.0",
     "fuse.js": "^7.0.0",
     "primeflex": "^3.3.1",
     "primeicons": "^6.0.1",
     "primevue": "^3.48.1",
     "vue": "^3.4.15",
-    "vue-router": "4"
+    "vue-router": "4",
+    "vue-virtual-scroller": "^2.0.0-beta.8"
   },
   "devDependencies": {
     "@qnaplus/store": "1.0.0",

@@ -92,12 +92,12 @@ export const clearFilters = () => {
     Object.assign(filters, getInitialFilterState());
 }
 
-export const useSearchFilter = (questions: Question[], filters: SearchFilters) => {
+export const filters = reactive<SearchFilters>(getInitialFilterState());
+
+export const useSearchFilter = (questions: Question[]) => {
     const keys = Object.keys(filters) as Array<keyof SearchFilters>;
     const applicableFilters = keys
         .filter(k => filters[k] !== undefined && filters[k] !== null)
         .map(k => FILTER_MAP[k]);
     return questions.filter(q => applicableFilters.every(f => f(q, filters)))
 }
-
-export const filters = reactive<SearchFilters>(getInitialFilterState());
