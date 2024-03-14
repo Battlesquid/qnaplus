@@ -1,5 +1,6 @@
 export const applyWordLimit = (content: string | undefined | null, limit: number): string => {
-    return content?.split(" ").slice(0, limit).join(" ") ?? "";
+    const limitedContent = content?.split(" ").slice(0, limit).join(" ");
+    return limitedContent ? `${limitedContent}...` : "";
 }
 
 export const isEmpty = (content: string | undefined | null) => {
