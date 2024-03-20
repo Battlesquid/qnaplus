@@ -57,12 +57,12 @@ defineProps<Omit<SearchFilterComposable, "filteredQuestions">>();
                 <Divider layout="vertical" />
                 <div class="flex flex-1 gap-2">
                     <div class="flex flex-column flex-1 gap-1">
-                        <label for="answeredBefore">Answered Before</label>
+                        <label for="answeredBefore" aria-label="Answered Before">Answered Before</label>
                         <Calendar id="answeredBefore" v-model="filters.answeredBefore" placeholder="Answered Before"
                             show-icon show-button-bar icon-display="input" />
                     </div>
                     <div class="flex flex-column flex-1 gap-1">
-                        <label for="answeredAfter">Answered After</label>
+                        <label for="answeredAfter" aria-label="Answered After">Answered After</label>
                         <Calendar id="answeredAfter" v-model="filters.answeredAfter" placeholder="Answered After"
                             show-icon show-button-bar icon-display="input" />
                     </div>
