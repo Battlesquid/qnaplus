@@ -1,18 +1,18 @@
 <script setup lang="ts">
 
 import InputText from "primevue/inputtext";
-import Button from "primevue/button";
-import InputGroup from "primevue/inputgroup";
+import IconField from "primevue/iconfield";
 
 const query = defineModel<string>();
 
 </script>
 
 <template>
-    <InputGroup icon-position="left">
+    <IconField iconPosition="left">
+        <i class="pi pi-search"> </i>
         <InputText class="w-full" v-model:model-value="query" placeholder="Search" aria-label="Search Query" />
-        <Button icon="pi pi-search" aria-label="Search" />
-    </InputGroup>
+    </IconField>
+
 </template>
 
 <style scoped></style>

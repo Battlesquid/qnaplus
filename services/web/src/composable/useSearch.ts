@@ -45,7 +45,7 @@ export const useSearch = (query: MaybeRefOrGetter<string>) => {
         if (isEmpty(value)) {
             questions.value = allQuestions;
         } else {
-            const results = minisearch.search(value, { fuzzy: 0.2 }) as QuestionSearchResult[];
+            const results = minisearch.search(value, { fuzzy: 0.5 }) as QuestionSearchResult[];
             questions.value = results;
         }
     }

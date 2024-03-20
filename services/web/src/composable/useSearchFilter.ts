@@ -87,7 +87,7 @@ const FILTER_MAP: FilterMap = {
         return new Date(q.askedTimestampMs) > f.answeredAfter!;
     },
     tags(q, f) {
-        return f.tags!.every(t => q.tags.includes(t));
+        return f.tags.every(t => q.tags.includes(t));
     }
 }
 
