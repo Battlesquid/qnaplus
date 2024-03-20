@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Button from 'primevue/button';
 import Calendar from "primevue/calendar";
 import Chips from "primevue/chips";
 import Divider from 'primevue/divider';
@@ -9,19 +10,9 @@ import InputText from "primevue/inputtext";
 import MultiSelect from 'primevue/multiselect';
 import Panel from "primevue/panel";
 import SelectButton from 'primevue/selectbutton';
-import Button from 'primevue/button';
-import { ref, watch } from "vue";
-import { QuestionState, clearFilters, filters } from "../composable/useSearchFilter";
+import { SearchFilterComposable, questionStates as options } from "../composable/useSearchFilter";
 
-const options = ref([
-    { name: "All", value: QuestionState.All },
-    { name: 'Answered', value: QuestionState.Answered },
-    { name: 'Unanswered', value: QuestionState.Unanswered }
-]);
-
-watch(filters, async (_old, _new) => {
-    console.log(_new);
-})
+defineProps<Omit<SearchFilterComposable, "filteredQuestions">>();
 
 </script>
 
@@ -66,14 +57,14 @@ watch(filters, async (_old, _new) => {
                 <Divider layout="vertical" />
                 <div class="flex flex-1 gap-2">
                     <div class="flex flex-column flex-1 gap-1">
-                        <label for="answeredBefore">Asked Before</label>
+                        <label for="answeredBefore">Answered Before</label>
                         <Calendar id="answeredBefore" v-model="filters.answeredBefore" placeholder="Answered Before"
                             show-icon show-button-bar icon-display="input" />
                     </div>
                     <div class="flex flex-column flex-1 gap-1">
-                        <label for="answeredAfter">Asked Before</label>
-                        <Calendar id="answeredAfter" v-model="filters.answeredAfter" placeholder="Answered After" show-icon
-                            show-button-bar icon-display="input" />
+                        <label for="answeredAfter">Answered After</label>
+                        <Calendar id="answeredAfter" v-model="filters.answeredAfter" placeholder="Answered After"
+                            show-icon show-button-bar icon-display="input" />
                     </div>
                 </div>
             </div>

@@ -11,6 +11,7 @@
   "dependencies": {
     "@vueuse/core": "^10.9.0",
     "@vueuse/integrations": "^10.8.0",
+    "deep-equal": "^2.2.3",
     "minisearch": "^6.3.0",
     "primeflex": "^3.3.1",
     "primeicons": "^6.0.1",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@qnaplus/store": "1.0.0",
+    "@types/deep-equal": "^1.0.4",
     "@vitejs/plugin-vue": "^5.0.3",
     "sass": "^1.71.1",
     "typescript": "^5.2.2",

@@ -5,9 +5,11 @@ import SearchFilters from "../components/SearchFilters.vue";
 import SearchInput from "../components/SearchInput.vue";
 import { useSearch } from "../composable/useSearch";
 import Root from "./Root.vue";
+import { useSearchFilter } from "../composable/useSearchFilter";
 
 const query = ref("");
 const { questions } = useSearch(query);
+const { filteredQuestions, filters, clearFilters } = useSearchFilter(questions);
 
 </script>
 
@@ -16,10 +18,10 @@ const { questions } = useSearch(query);
         <div class="h-full flex flex-column gap-2 p-2">
             <div class="flex flex-column gap-2">
                 <SearchInput v-model="query" />
-                <SearchFilters />
+                <SearchFilters :filters="filters" :clear-filters="clearFilters" />
             </div>
             <div class="h-full flex flex-column gap-2">
-                <QuestionList :questions="questions" />
+                <QuestionList :questions="filteredQuestions" />
             </div>
         </div>
     </Root>

@@ -2,10 +2,11 @@ import MiniSearch, { SearchResult } from "minisearch";
 import { Question } from "vex-qna-archiver";
 import { MaybeRefOrGetter, ref, toValue, watchEffect } from 'vue';
 import data from "../data.json";
+import { isEmpty } from "../util/strings";
 
 type QuestionSearchResult = Question & SearchResult;
 
-const allQuestions = data as Question[];
+export const allQuestions = data as Question[];
 
 const minisearch = new MiniSearch<Question>({
     fields: ["title", "question", "answer"],
@@ -31,14 +32,17 @@ const minisearch = new MiniSearch<Question>({
 
 minisearch.addAll(allQuestions);
 
-export const useSearch = (query: MaybeRefOrGetter) => {
+export const useSearch = (query: MaybeRefOrGetter<string>) => {
     const questions = ref<Question[]>([]);
 
-    // const filteredQuestions = useSearchFilter(allQuestions);
     const search = () => {
         const value = toValue(query);
-        const results = minisearch.search(value) as QuestionSearchResult[];
-        questions.value = results;
+        if (isEmpty(value)) {
+            questions.value = allQuestions;
+        } else {
+            const results = minisearch.search(value, { fuzzy: 0.2 }) as QuestionSearchResult[];
+            questions.value = results;
+        }
     }
 
     watchEffect(() => {

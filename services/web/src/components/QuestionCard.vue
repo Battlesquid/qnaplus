@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import Card from 'primevue/card';
 import Tag from 'primevue/tag';
+import Divider from 'primevue/divider';
 import { Question } from "vex-qna-archiver";
 import { applyWordLimit, isEmpty } from "../util/strings";
-defineProps<Question>();
+
+const props = defineProps<Question>();
+
+const limitedQuestion = applyWordLimit(props.question, 100);
+const limitedAnswer = applyWordLimit(props.answer, 100);
 
 </script>
 
@@ -25,14 +30,15 @@ defineProps<Question>();
         </template>
         <template #content>
             <div class="flex flex-column gap-2">
-                <!-- <div class="flex flex-column gap-1">
+                <div class="flex flex-column gap-1">
                     <span class="font-bold">Question</span>
-                    <span>{{ applyWordLimit(question, 100) }}</span>
-                </div> -->
+                    <span>{{ limitedQuestion.content }}</span>
+                </div>
                 <div v-if="answered" class="flex flex-column gap-1">
                     <span class="font-bold">Answer</span>
-                    <span>{{ applyWordLimit(answer, 100) }}</span>
+                    <span>{{ limitedAnswer.content }}</span>
                 </div>
+                <a v-if="limitedAnswer.applied" :href="url">Read More</a>
             </div>
         </template>
         <template #footer v-if="tags.length > 0">
@@ -41,6 +47,7 @@ defineProps<Question>();
             </div>
         </template>
     </Card>
+    <Divider />
 </template>
 
 <style scoped></style>
