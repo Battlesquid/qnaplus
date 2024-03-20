@@ -3,10 +3,11 @@ import { ref } from "vue";
 import QuestionList from "../components/QuestionList.vue";
 import SearchFilters from "../components/SearchFilters.vue";
 import SearchInput from "../components/SearchInput.vue";
-import { useSearch } from "../composable/useSearch";
+import { useLoadResources, useSearch } from "../composable/useSearch";
 import Root from "./Root.vue";
 import { useSearchFilter } from "../composable/useSearchFilter";
 
+const { loading } = useLoadResources();
 const query = ref("");
 const { questions } = useSearch(query);
 const { filteredQuestions, filters, clearFilters } = useSearchFilter(questions);

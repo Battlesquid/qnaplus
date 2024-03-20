@@ -1,16 +1,17 @@
 import { Question } from 'vex-qna-archiver';
 import { MaybeRefOrGetter, Ref, reactive, ref, toValue, watchEffect } from 'vue';
+import { allQuestions } from './useSearch';
 
-export type QuestionState = {
-    name: string,
-    value: QuestionStateValue
+export type Option<T> = {
+    name: string;
+    value: T;
 }
 
 export type SearchFilters = {
-    season: Question["season"][];
-    program: Question["program"][];
+    season: Option<Question["season"]>[];
+    program: Option<Question["program"]>[];
     author: Question["author"] | null;
-    state: QuestionState;
+    state: Option<QuestionStateValue>;
     askedBefore: Date | null;
     askedAfter: Date | null;
     answeredBefore: Date | null;
@@ -24,11 +25,22 @@ export enum QuestionStateValue {
     Unanswered
 }
 
-export const questionStates: QuestionState[] = [
+export const questionStates: Option<QuestionStateValue>[] = [
     { name: "All", value: QuestionStateValue.All },
     { name: 'Answered', value: QuestionStateValue.Answered },
     { name: 'Unanswered', value: QuestionStateValue.Unanswered }
 ]
+
+export const seasons: Option<string>[] = allQuestions
+    .map(q => q.season)
+    .sort((a, b) => parseInt(b.split("-")[1]) - parseInt(a.split("-")[1]))
+    .filter((season, index, array) => array.indexOf(season) === index)
+    .map(season => ({ name: season, value: season }));
+
+export const programs: Option<string>[] = allQuestions
+    .map(q => q.program)
+    .filter((program, index, array) => array.indexOf(program) === index)
+    .map(program => ({ name: program, value: program }));
 
 type FilterMap = {
     [K in keyof SearchFilters]: (question: Question, filters: SearchFilters) => boolean;
@@ -36,10 +48,10 @@ type FilterMap = {
 
 const FILTER_MAP: FilterMap = {
     season(q, f) {
-        return f.season?.includes(q.season) ?? false;
+        return f.season.find(s => s.value === q.season) !== undefined;
     },
     program(q, f) {
-        return f.program?.includes(q.program) ?? false;
+        return f.program.find(p => p.value === q.program) !== undefined;
     },
     author(q, f) {
         return q.author.startsWith(f.author ?? "");
@@ -81,7 +93,7 @@ const FILTER_MAP: FilterMap = {
 
 const getInitialFilterState = () => {
     return {
-        season: [],
+        season: [seasons[0]],
         program: [],
         author: null,
         state: {
@@ -125,8 +137,6 @@ export const useSearchFilter = (questions: MaybeRefOrGetter<Question[]>): Search
         const applicableFilters = keys
             .filter(k => !isEmptyFilterValue(filters[k]))
             .map(k => FILTER_MAP[k]);
-
-        console.log(applicableFilters);
         filteredQuestions.value = value.filter(q => applicableFilters.every(f => f(q, filters)));
     }
 

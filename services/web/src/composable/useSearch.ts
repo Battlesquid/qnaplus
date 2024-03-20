@@ -30,7 +30,12 @@ const minisearch = new MiniSearch<Question>({
     ]
 });
 
-minisearch.addAll(allQuestions);
+export const useLoadResources = () => {
+    const loading = ref<boolean>(true);
+    minisearch.addAllAsync(allQuestions)
+        .finally(() => loading.value = false);
+    return { loading };
+}
 
 export const useSearch = (query: MaybeRefOrGetter<string>) => {
     const questions = ref<Question[]>([]);
@@ -45,9 +50,7 @@ export const useSearch = (query: MaybeRefOrGetter<string>) => {
         }
     }
 
-    watchEffect(() => {
-        search();
-    });
+    watchEffect(() => search());
 
     return { questions };
 }
