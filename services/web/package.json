@@ -21,7 +21,6 @@
     "vue-router": "4"
   },
   "devDependencies": {
-    "@qnaplus/store": "1.0.0",
     "@types/deep-equal": "^1.0.4",
     "@vitejs/plugin-vue": "^5.0.3",
     "sass": "^1.71.1",
