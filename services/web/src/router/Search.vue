@@ -7,7 +7,7 @@ import { useLoadResources, useSearch } from "../composable/useSearch";
 import Root from "./Root.vue";
 import { useSearchFilter } from "../composable/useSearchFilter";
 
-const { loading } = useLoadResources();
+useLoadResources();
 const query = ref("");
 const { questions } = useSearch(query);
 const { filteredQuestions, filters, clearFilters } = useSearchFilter(questions);
