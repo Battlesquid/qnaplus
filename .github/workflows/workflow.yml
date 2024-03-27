@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ['main']
+    branches: ['master']
     paths:
       - services/web
   # Allows you to run this workflow manually from the Actions tab
@@ -24,7 +24,7 @@ concurrency:
 defaults:
   run:
     working-directory: services/web
-    
+
 jobs:
   # Single deploy job since we're just deploying
   deploy: 
@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload dist folder
-          path: './dist'
+          path: 'dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
