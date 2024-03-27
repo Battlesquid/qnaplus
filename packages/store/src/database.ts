@@ -2,7 +2,7 @@ import { config } from "@qnaplus/config";
 import { RealtimePostgresUpdatePayload, createClient } from "@supabase/supabase-js";
 import { Change, diffSentences } from "diff";
 import { Logger } from "pino";
-import { Question, fetchCurrentSeason, fetchQuestionsIterative, getAllQuestions } from "vex-qna-archiver";
+import { Question, fetchCurrentSeason, fetchQuestionsIterative, getAllQuestions as archiverGetAllQuestions } from "vex-qna-archiver";
 import { OnPayloadQueueFlush, PayloadQueue } from "./payload_queue";
 import { Database } from "./supabase";
 
@@ -13,17 +13,42 @@ export type StoreOptions = {
 }
 
 export const populate = async (logger?: Logger) => {
-    const { questions } = await getAllQuestions(logger);
+    const { questions } = await archiverGetAllQuestions(logger);
     return insertQuestions(questions, { logger });
 }
 
 export const getQuestion = async (id: Question["id"], opts?: StoreOptions): Promise<Question | null> => {
     const logger = opts?.logger?.child({ label: "getDocument" });
     const row = await supabase.from("questions").select().eq("id", id).single();
-    if (row.error === null) {
+    if (row.error !== null) {
         logger?.trace(`No question with id '${id}' found.`);
     }
     return row.data;
+}
+
+export const getAllQuestions = async (opts?: StoreOptions): Promise<Question[]> => {
+    const logger = opts?.logger?.child({ label: "getAllQuestions" });
+    let hasRows = true;
+    let page = 0;
+    const LIMIT = 1000;
+    const data: Question[] = [];
+    while (hasRows) {
+        const from = page * LIMIT;
+        const to = from + LIMIT;
+        const rows = await supabase
+            .from("questions")
+            .select("*", { count: "exact" })
+            .range(from, to);
+        if (rows.error !== null) {
+            logger?.error(rows.error);
+            continue;
+        }
+        data.push(...rows.data);
+        page++;
+        hasRows = rows.data.length === LIMIT;
+    }
+    logger?.info(`Retreived all questions (${data.length}) from database.`);
+    return data;
 }
 
 export const insertQuestion = async (data: Question, opts?: StoreOptions) => {

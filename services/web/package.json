@@ -1,13 +1,36 @@
 {
-    "name": "@qnaplus/web",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "private": true,
-    "author": "battlesqui_d",
-    "license": "ISC",
-    "volta": {
-        "node": "20.11.0",
-        "yarn": "1.22.19"
-    }
+  "name": "@qnaplus/web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.9.0",
+    "@vueuse/integrations": "^10.8.0",
+    "deep-equal": "^2.2.3",
+    "minisearch": "^6.3.0",
+    "primeflex": "^3.3.1",
+    "primeicons": "^6.0.1",
+    "primevue": "^3.48.1",
+    "virtua": "^0.28.0",
+    "vue": "^3.4.15",
+    "vue-router": "4"
+  },
+  "devDependencies": {
+    "@types/deep-equal": "^1.0.4",
+    "@vitejs/plugin-vue": "^5.0.3",
+    "sass": "^1.71.1",
+    "typescript": "^5.2.2",
+    "vex-qna-archiver": "^8.1.1",
+    "vite": "^5.1.0",
+    "vue-tsc": "^1.8.27"
+  },
+  "volta": {
+    "node": "20.11.0",
+    "yarn": "1.22.19"
+  }
 }
