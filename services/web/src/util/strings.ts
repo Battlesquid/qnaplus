@@ -19,5 +19,7 @@ export const applyWordLimit = (content: string | undefined | null, limit: number
 }
 
 export const isEmpty = (content: string | undefined | null) => {
-    return content?.trim() === "";
+    return content === undefined
+        || content === null
+        || content.trim() === "";
 }
