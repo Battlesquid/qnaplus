@@ -15,10 +15,12 @@
     "dev": "node dist/index.js | yarn pino-pretty"
   },
   "dependencies": {
-    "qnaplus": "1.0.0",
-    "pino": "^8.17.2"
+    "node-cron": "^3.0.3",
+    "pino": "^8.17.2",
+    "qnaplus": "1.0.0"
   },
   "devDependencies": {
+    "@types/node-cron": "^3.0.11",
     "pino-pretty": "^10.3.1"
-    }
+  }
 }

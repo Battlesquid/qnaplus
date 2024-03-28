@@ -1,12 +1,12 @@
+import { schedule } from "node-cron";
 import pino from "pino";
 import { config, update } from "qnaplus";
 
 (async () => {
     const logger = pino();
     logger.info("Starting updater service");
-    const interval = parseInt(config.getenv("UPDATE_INTERVAL"));
     await update(logger);
-    return setInterval(() => {
+    schedule(config.getenv("UPDATE_INTERVAL"), () => {
         update(logger);
-    }, interval);
+    });
 })();
