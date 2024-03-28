@@ -1282,7 +1282,7 @@ cheerio-select@^2.1.0:
     domhandler "^5.0.3"
     domutils "^3.0.1"
 
-cheerio@^1.0.0-rc.12, cheerio@^1.0.0-rc.3:
+cheerio@^1.0.0-rc.12:
   version "1.0.0-rc.12"
   resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-1.0.0-rc.12.tgz#788bf7466506b1c6bf5fae51d24a2c4d62e47683"
   integrity sha512-VqR8m68vM46BNnuZ5NtnGBKIE/DfN0cRIzg9n40EIq9NOv90ayxLBXA8fXC5gquFRGJSTRqBq25Jt2ECLR431Q==
@@ -3452,13 +3452,13 @@ vali-date@^1.0.0:
   resolved "https://registry.yarnpkg.com/vali-date/-/vali-date-1.0.0.tgz#1b904a59609fb328ef078138420934f6b86709a6"
   integrity sha512-sgECfZthyaCKW10N0fm27cg8HYTFK5qMWgypqkXMQ4Wbl/zZKx7xZICgcoxIIE+WFAP/MBL2EFwC/YvLxw3Zeg==
 
-vex-qna-archiver@^8.1.1:
-  version "8.1.1"
-  resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-8.1.1.tgz#08b0bb51fd2842cc0799502b8c3750225f030a76"
-  integrity sha512-3E3f1oU0MdrN/8m8hLxAVfSAlgGzp191GAOE0dO1lqUKITM42l4fbGeBZAg9nw0694Y8R3MiECyMYe/bX/U95w==
+vex-qna-archiver@^8.1.3:
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-8.1.3.tgz#838c8791a9edc2183e029f485a79ba5a86588deb"
+  integrity sha512-LshAQxSpG+yiy7q93meQ9L8983lUMLR0QReyUbHszQgCI2xxC8Gnf0fcyb26K8CPNDvXUb7c1bHg7zUGVK2iVA==
   dependencies:
     "@crawlee/core" "^3.7.2"
-    cheerio "^1.0.0-rc.3"
+    cheerio "^1.0.0-rc.12"
     got-scraping "^4.0.3"
     pino "^8.17.2"
 
