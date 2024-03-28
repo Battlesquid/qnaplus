@@ -7,6 +7,7 @@ on:
     branches:
       - master
     paths:
+      - .github/workflows/workflow.yml
       - services/web
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -50,9 +51,9 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          working-directory: services/web
-          # Upload dist folder
-          path: './dist'
+          working-directory: 
+          # https://github.com/actions/upload-pages-artifact/issues/74
+          path: 'services/web/dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
