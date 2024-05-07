@@ -15,8 +15,8 @@
     "dev": "node dist/index.js | yarn pino-pretty"
   },
   "dependencies": {
+    "@qnaplus/logger": "1.0.0",
     "node-cron": "^3.0.3",
-    "pino": "^8.17.2",
     "qnaplus": "1.0.0"
   },
   "devDependencies": {

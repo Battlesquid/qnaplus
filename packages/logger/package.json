@@ -1,0 +1,20 @@
+{
+    "name": "@qnaplus/logger",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "author": "battlesqui_d",
+    "license": "ISC",
+    "scripts": {
+        "build": "tsc"
+    },
+    "volta": {
+        "node": "20.11.0",
+        "yarn": "1.22.19"
+    },
+    "dependencies": {
+        "@qnaplus/config": "1.0.0",
+        "pino": "^9.0.0",
+        "pino-parseable": "^1.0.3"
+    }
+}
