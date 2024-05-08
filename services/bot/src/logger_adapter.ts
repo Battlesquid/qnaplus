@@ -1,15 +1,6 @@
 import { ILogger as ISapphireLogger, LogLevel } from "@sapphire/framework";
 import pino, { Logger, LoggerExtras } from 'pino';
 
-// enum LogLevel {
-//     Trace = 'trace',
-//     Debug = 'debug',
-//     Info = 'info',
-//     Warn = 'warn',
-//     Error = 'error',
-//     Fatal = 'fatal',
-// }
-
 export class PinoLoggerAdapter implements ISapphireLogger {
     private logger: Logger;
 
