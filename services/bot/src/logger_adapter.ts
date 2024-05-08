@@ -39,22 +39,22 @@ export class PinoLoggerAdapter implements ISapphireLogger {
     write(level: LogLevel, ...values: readonly unknown[]): void {
         switch (level) {
             case LogLevel.Trace:
-                this.logger.trace(values);
+                this.logger.trace({ values });
                 break;
             case LogLevel.Debug:
-                this.logger.debug(values);
+                this.logger.debug({ values });
                 break;
             case LogLevel.Info:
-                this.logger.info(values);
+                this.logger.info({ values });
                 break;
             case LogLevel.Warn:
-                this.logger.warn(values);
+                this.logger.warn({ values });
                 break;
             case LogLevel.Error:
-                this.logger.error(values);
+                this.logger.error({ values });
                 break;
             case LogLevel.Fatal:
-                this.logger.fatal(values);
+                this.logger.fatal({ values });
                 break;
             case LogLevel.None:
                 break;
