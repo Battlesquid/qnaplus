@@ -5,7 +5,7 @@ import { ActivityType, GatewayIntentBits, Partials } from "discord.js";
 import { startBroadcaster } from "./broadcaster";
 import { PinoLoggerAdapter } from "./logger_adapter";
 
-const pinoLogger = getLoggerInstance();
+const pinoLogger = getLoggerInstance("qnabot");
 
 const client = new SapphireClient({
     intents: [

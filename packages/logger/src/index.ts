@@ -1,7 +1,7 @@
 import { config } from "@qnaplus/config"
 import pino from "pino"
 
-export const getLoggerInstance = () => {
+export const getLoggerInstance = (stream: string) => {
     return pino({
         transport: {
             targets: [
@@ -9,7 +9,7 @@ export const getLoggerInstance = () => {
                     target: "pino-parseable",
                     options: {
                         endpoint: config.getenv("PARSEABLE_ENDPOINT"),
-                        stream: config.getenv("PARSEABLE_STREAM"),
+                        stream,
                         auth: {
                             username: config.getenv("PARSEABLE_USERNAME"),
                             password: config.getenv("PARSEABLE_PASSWORD")
