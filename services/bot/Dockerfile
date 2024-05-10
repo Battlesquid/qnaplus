@@ -17,7 +17,6 @@ COPY tsconfig.base.json .
 COPY .env.vault .
 
 RUN yarn install \
-&& yarn setup \
 && yarn workspace @qnaplus/bot run build \
 && rm -rf node_modules \
 && yarn install --production

@@ -31,4 +31,5 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
+          file: services/bot/Dockerfile
           tags: battlesquid0101/qnaplus_bot:latest
