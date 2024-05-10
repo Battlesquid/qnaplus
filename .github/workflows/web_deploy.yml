@@ -7,7 +7,7 @@ on:
     branches:
       - master
     paths:
-      - .github/workflows/workflow.yml
+      - .github/workflows/web_deploy.yml
       - services/web/**
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

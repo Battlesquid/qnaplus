@@ -1,11 +1,11 @@
+import { getLoggerInstance } from "@qnaplus/logger";
 import {config} from "qnaplus";
 import { LogLevel, SapphireClient, container } from "@sapphire/framework";
 import { ActivityType, GatewayIntentBits, Partials } from "discord.js";
-import pino from "pino";
 import { startBroadcaster } from "./broadcaster";
-import { PinoLoggerAdapter } from "./logger";
+import { PinoLoggerAdapter } from "./logger_adapter";
 
-const pinoLogger = pino();
+const pinoLogger = getLoggerInstance("qnabot");
 
 const client = new SapphireClient({
     intents: [

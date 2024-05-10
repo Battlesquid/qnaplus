@@ -8,11 +8,5 @@
     {
       "path": "../config"
     },
-    {
-      "path": "../store"
-    },
-    {
-      "path": "../logger"
-    }
   ],
 }

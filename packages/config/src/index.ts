@@ -7,7 +7,10 @@ const ENV_VARIABLES = [
     "DISCORD_TOKEN",
     "NODE_ENV",
     "BROADCASTER_CHANNELS",
-    "UPDATE_INTERVAL"
+    "UPDATE_INTERVAL",
+    "PARSEABLE_ENDPOINT",
+    "PARSEABLE_USERNAME",
+    "PARSEABLE_PASSWORD"
 ] as const;
 
 type ConfigVariable = typeof ENV_VARIABLES[number];
