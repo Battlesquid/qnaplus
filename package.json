@@ -14,9 +14,8 @@
     "typescript": "^5.2.2"
   },
   "scripts": {
-    "build": "yarn tsc --build",
-    "setup": "yarn tsc --build --force",
-    "clean:dist": "rm -rf ./packages/**/dist",
+    "build": "tsc --build",
+    "clean:dist": "rm -rf ./packages/**/dist packages/**/tsconfig.tsbuildinfo",
     "clean:packages": "rm -rf packages/**/node_modules node_modules",
     "clean:all": "yarn clean:dist && yarn clean:packages",
     "bot:start": "yarn workspace @qnaplus/bot run start",

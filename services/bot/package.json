@@ -10,9 +10,9 @@
     "yarn": "1.22.19"
   },
   "scripts": {
-    "build": "yarn tsc --build",
+    "build": "tsc --build",
     "start": "node dist/index.js",
-    "dev": "node dist/index.js | yarn pino-pretty"
+    "dev": "node dist/index.js | pino-pretty"
   },
   "dependencies": {
     "@qnaplus/logger": "1.0.0",

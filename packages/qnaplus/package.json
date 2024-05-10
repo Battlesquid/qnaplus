@@ -6,7 +6,7 @@
     "author": "battlesqui_d",
     "license": "ISC",
     "scripts": {
-        "build": "npx tsc"
+        "build": "tsc --build"
     },
     "volta": {
         "node": "20.11.0",
