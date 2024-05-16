@@ -11,15 +11,15 @@
   },
   "scripts": {
     "build": "tsc --build",
-    "updater": "node dist/services/update_service.js",
-    "populate": "node dist/services/populate_service.js"
+    "populate": "node dist/populate.js",
+    "populate_with_metadata": "node dist/populate_with_metadata.js"
   },
   "dependencies": {
     "@qnaplus/config": "1.0.0",
     "@supabase/supabase-js": "^2.39.3",
     "diff": "^5.1.0",
     "pino": "^8.17.2",
-    "vex-qna-archiver": "^9.0.0"
+    "vex-qna-archiver": "^10.0.0"
   },
   "devDependencies": {
     "@types/diff": "^5.0.9"

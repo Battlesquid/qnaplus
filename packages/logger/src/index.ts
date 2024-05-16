@@ -3,6 +3,7 @@ import pino from "pino"
 
 export const getLoggerInstance = (stream: string) => {
     return pino({
+        level: "trace",
         transport: {
             targets: [
                 {
