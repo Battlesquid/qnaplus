@@ -3,8 +3,8 @@ import { ColorResolvable, EmbedBuilder, bold, codeBlock, hyperlink } from "disco
 import { chunk } from "./util/chunk";
 
 const ProgramColorMap: Record<string, ColorResolvable> = {
-    VRC: "#f54242",
-    VEXU: "#8a42f5",
+    V5RC: "#f54242",
+    VURC: "#8a42f5",
     VAIRC: "#42f569",
     VIQRC: "#4290f5",
     judging: "#f5ad42"

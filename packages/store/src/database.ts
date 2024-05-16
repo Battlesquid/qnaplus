@@ -2,19 +2,47 @@ import { config } from "@qnaplus/config";
 import { RealtimePostgresUpdatePayload, createClient } from "@supabase/supabase-js";
 import { Change, diffSentences } from "diff";
 import { Logger } from "pino";
-import { Question, fetchCurrentSeason, fetchQuestionsIterative, getAllQuestions as archiverGetAllQuestions } from "vex-qna-archiver";
+import { Question, fetchCurrentSeason, fetchQuestionsIterative, getAllQuestions as archiverGetAllQuestions, getOldestUnansweredQuestion, Season, getOldestQuestion } from "vex-qna-archiver";
 import { OnPayloadQueueFlush, PayloadQueue } from "./payload_queue";
 import { Database } from "./supabase";
 
 const supabase = createClient<Database>(config.getenv("SUPABASE_URL"), config.getenv("SUPABASE_KEY"))
+const METADATA_ROW_ID = 0;
 
 export type StoreOptions = {
     logger?: Logger;
 }
 
 export const populate = async (logger?: Logger) => {
-    const { questions } = await archiverGetAllQuestions(logger);
+    const questions = await archiverGetAllQuestions(logger);
     return insertQuestions(questions, { logger });
+}
+
+export const populateWithMetadata = async (logger?: Logger) => {
+    const questions = await archiverGetAllQuestions(logger);
+    const currentSeason = await fetchCurrentSeason(logger);
+
+    const oldestUnansweredQuestion = getOldestUnansweredQuestion(questions, currentSeason);
+    const oldestQuestion = getOldestQuestion(questions, currentSeason);
+
+    // assert non-null since we know the scraper is starting from the beginning
+    // meaning we are practically guaranteed at least one "oldest question" 
+    const oldestQuestionId = oldestUnansweredQuestion !== undefined
+        ? oldestUnansweredQuestion.id
+        : oldestQuestion!.id;
+
+    await insertQuestions(questions, { logger });
+    logger?.info("Successfully populated database");
+
+    const { error } = await supabase
+        .from("questions_metadata")
+        .upsert({ id: METADATA_ROW_ID, current_season: currentSeason, oldest_unanswered_question: oldestQuestionId });
+
+    if (error) {
+        logger?.error({ error }, "Unable to populate question metadata");
+    } else {
+        logger?.info({ oldest_question_id: oldestQuestionId, current_season: currentSeason }, "Successfully populated metadata")
+    }
 }
 
 export const getQuestion = async (id: Question["id"], opts?: StoreOptions): Promise<Question | null> => {
@@ -171,24 +199,36 @@ export const onChange = (callback: ChangeCallback, logger?: Logger) => {
 }
 
 export const update = async (logger?: Logger) => {
-    const season = await fetchCurrentSeason(logger);
-    const { error, data: question } = await supabase
-        .from("questions")
+    const { error: metadataError, data } = await supabase.from("questions_metadata")
         .select("*")
-        .eq("season", season)
-        .eq("answered", false)
-        .not("title", "like", "[archived]%")
-        .order("askedTimestampMs", { ascending: true })
-        .limit(1)
+        .eq("id", 0)
         .single();
-    if (error) {
-        logger?.error({ error }, "Could not find oldest unanswered Q&A, exiting");
+    if (metadataError) {
+        logger?.error({ error: metadataError }, "Error retrieving question metadata, exiting");
         return;
     }
-    logger?.info(`Starting update from Q&A ${question.id}`);
-    const { questions } = await fetchQuestionsIterative({ logger, start: parseInt(question.id) });
+
+    const { current_season, oldest_unanswered_question } = data;
+    logger?.info(`Starting update from Q&A ${oldest_unanswered_question}`);
+    const questions = await fetchQuestionsIterative({ logger, start: parseInt(oldest_unanswered_question) });
     const success = await upsertQuestions(questions, { logger });
     if (success) {
         logger?.info(`Updated ${questions.length} questions.`);
+    }
+
+    const oldestUnanswered = getOldestUnansweredQuestion(questions, current_season as Season);
+    if (oldestUnanswered === undefined) {
+        logger?.info("Oldest unanswered question not found, skipping metadata update.")
+        return;
+    }
+
+    const { error } = await supabase
+        .from("questions_metadata")
+        .upsert({ id: METADATA_ROW_ID, oldest_unanswered_question: oldestUnanswered.id });
+
+    if (error) {
+        logger?.error({ error, oldest_unanswered_id: oldestUnanswered.id }, `Unable to save oldest unanswered question (${oldestUnanswered.id}) to metadata`);
+    } else {
+        logger?.info({ oldest_unanswered_id: oldestUnanswered.id }, `Successfully updated metadata with oldest unanswered question (${oldestUnanswered.id})`);
     }
 }
