@@ -1,9 +1,9 @@
 import { config } from "@qnaplus/config"
-import pino from "pino"
+import pino, { LoggerOptions } from "pino"
 
-export const getLoggerInstance = (stream: string) => {
+export const getLoggerInstance = (stream: string, options?: LoggerOptions) => {
     return pino({
-        level: "trace",
+        ...options,
         transport: {
             targets: [
                 {
