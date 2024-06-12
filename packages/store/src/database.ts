@@ -5,6 +5,8 @@ import { Logger } from "pino";
 import { Question, fetchCurrentSeason, fetchQuestionsIterative, getAllQuestions as archiverGetAllQuestions, getOldestUnansweredQuestion, Season, getOldestQuestion } from "vex-qna-archiver";
 import { OnPayloadQueueFlush, PayloadQueue } from "./payload_queue";
 import { Database } from "./supabase";
+import * as tus from "tus-js-client"
+import fs from "fs";
 
 const supabase = createClient<Database>(config.getenv("SUPABASE_URL"), config.getenv("SUPABASE_KEY"))
 const METADATA_ROW_ID = 0;
@@ -198,7 +200,8 @@ export const onChange = (callback: ChangeCallback, logger?: Logger) => {
         .subscribe();
 }
 
-export const update = async (logger?: Logger) => {
+export const doNotificationUpdate = async (_logger?: Logger) => {
+    const logger = _logger?.child({ label: "doNotificationUpdate" });
     const { error: metadataError, data } = await supabase.from("questions_metadata")
         .select("*")
         .eq("id", 0)
@@ -231,4 +234,45 @@ export const update = async (logger?: Logger) => {
     } else {
         logger?.info({ oldest_unanswered_id: oldestUnanswered.id }, `Successfully updated metadata with oldest unanswered question (${oldestUnanswered.id})`);
     }
+}
+
+export const doWebappUpdate = async (_logger?: Logger) => {
+    const logger = _logger?.child({ label: "doWebappUpdate" });
+    // const questions = await getAllQuestions({ logger });
+
+    const buffer = Buffer.from(JSON.stringify({ "hello": "world" }), "utf-8");
+    const file = fs.createReadStream(buffer);
+    return new Promise<void>((resolve, reject) => {
+        const upload = new tus.Upload(buffer, {
+            endpoint: `${config.getenv("SUPABASE_URL")}/storage/v1/upload/resumable`,
+            retryDelays: [0, 1000, 3000, 5000],
+            headers: {
+                authorization: `Bearer ${config.getenv("SUPABASE_KEY")}`,
+                'x-upsert': 'true',
+            },
+            uploadDataDuringCreation: true,
+            removeFingerprintOnSuccess: true,
+            chunkSize: 6 * 1024 * 1024,
+            metadata: {
+                bucketName: "qnaplus",
+                objectName: "questions",
+                contentType: 'application/json',
+                cacheControl: "3600",
+            },
+            onError(error) {
+                logger?.error(error)
+                reject();
+            },
+            onSuccess() {
+                logger?.info("Successfully updated questions json");
+                resolve();
+            }
+        });
+        return upload.findPreviousUploads().then(previousUploads => {
+            if (previousUploads.length) {
+                upload.resumeFromPreviousUpload(previousUploads[0])
+            }
+            upload.start()
+        })
+    })
 }
