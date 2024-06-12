@@ -16,11 +16,10 @@
   },
   "dependencies": {
     "@qnaplus/logger": "1.0.0",
-    "node-cron": "^3.0.3",
+    "croner": "^8.0.2",
     "qnaplus": "1.0.0"
   },
   "devDependencies": {
-    "@types/node-cron": "^3.0.11",
     "pino-pretty": "^10.3.1"
   }
 }

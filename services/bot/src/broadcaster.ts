@@ -31,7 +31,7 @@ const handleProgramBroadcast = async (program: string, questions: ChangeQuestion
         const embeds = embedSlices[i];
         try {
             await channel.send({ embeds });
-            logger.info(`Successfully sent chunk ${i + 1} of ${embeds.length} chunks (${embeds.length} items in chunk).`);
+            logger.info(`Successfully sent chunk ${i + 1} of ${embedSlices.length} chunks (${embeds.length} items in chunk).`);
         } catch (e) {
             logger.error({ error: e }, `Chunk ${i + 1} of ${embedSlices.length} failed to send (${embeds.length} items in chunk).`);
         }
