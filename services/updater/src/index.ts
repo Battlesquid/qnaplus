@@ -1,6 +1,6 @@
 import { getLoggerInstance } from "@qnaplus/logger";
 import Cron from "croner";
-import { config, doDatabaseUpdate, doWebappUpdate } from "qnaplus";
+import { config, doDatabaseUpdate, doStorageUpdate } from "qnaplus";
 
 (async () => {
     const logger = getLoggerInstance("qnaupdater");
@@ -14,6 +14,6 @@ import { config, doDatabaseUpdate, doWebappUpdate } from "qnaplus";
 
     logger.info("Starting webapp update job");
     Cron(config.getenv("WEBAPP_UPDATE_INTERVAL"), () => {
-        doWebappUpdate(logger);
+        doStorageUpdate(logger);
     });
 })();

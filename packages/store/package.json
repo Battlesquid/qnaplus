@@ -12,7 +12,8 @@
   "scripts": {
     "build": "tsc --build",
     "populate": "node dist/populate.js",
-    "populate_with_metadata": "node dist/populate_with_metadata.js"
+    "populate_with_metadata": "node dist/populate_with_metadata.js",
+    "update_storage": "node dist/update_storage.js"
   },
   "dependencies": {
     "@qnaplus/config": "1.0.0",

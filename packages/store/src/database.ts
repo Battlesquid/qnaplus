@@ -235,8 +235,8 @@ export const doDatabaseUpdate = async (_logger?: Logger) => {
     }
 }
 
-export const doWebappUpdate = async (_logger?: Logger) => {
-    const logger = _logger?.child({ label: "doWebappUpdate" });
+export const doStorageUpdate = async (_logger?: Logger) => {
+    const logger = _logger?.child({ label: "doStorageUpdate" });
     const questions = await getAllQuestions({ logger });
     const json = JSON.stringify(questions);
     // typed as any to address limitation in tus-js-client (https://github.com/tus/tus-js-client/issues/289)
@@ -249,6 +249,6 @@ export const doWebappUpdate = async (_logger?: Logger) => {
     try {
         await upload(buffer, metadata, logger);
     } catch (e) {
-        logger?.error({ error: e }, "Error while updating webapp json")
+        logger?.error({ error: e }, "Error while updating storage json")
     }
 }
