@@ -1,12 +1,10 @@
 import MiniSearch, { SearchResult } from "minisearch";
 import { Question } from "vex-qna-archiver";
 import { MaybeRefOrGetter, ref, toValue, watchEffect } from 'vue';
-import data from "../data.json";
+import { questions as dbQuestions } from "../database";
 import { isEmpty } from "../util/strings";
 
 type QuestionSearchResult = Question & SearchResult;
-
-export const allQuestions = data as Question[];
 
 const minisearch = new MiniSearch<Question>({
     fields: ["title", "question", "answer"],
@@ -30,9 +28,9 @@ const minisearch = new MiniSearch<Question>({
     ]
 });
 
-export const useLoadResources = () => {
+export const loadSearchResources = () => {
     const loading = ref<boolean>(true);
-    minisearch.addAllAsync(allQuestions)
+    minisearch.addAllAsync(dbQuestions.value)
         .finally(() => loading.value = false);
     return { loading };
 }
@@ -43,7 +41,7 @@ export const useSearch = (query: MaybeRefOrGetter<string>) => {
     const search = () => {
         const value = toValue(query);
         if (isEmpty(value)) {
-            questions.value = allQuestions;
+            questions.value = dbQuestions.value;
         } else {
             const results = minisearch.search(value, { fuzzy: 0.5 }) as QuestionSearchResult[];
             questions.value = results;

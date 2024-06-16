@@ -1,6 +1,6 @@
 import { Question } from 'vex-qna-archiver';
 import { MaybeRefOrGetter, Ref, reactive, ref, toValue, watchEffect } from 'vue';
-import { allQuestions } from './useSearch';
+import { questions } from '../database';
 
 export type Option<T> = {
     name: string;
@@ -31,13 +31,15 @@ export const questionStates: Option<QuestionStateValue>[] = [
     { name: 'Unanswered', value: QuestionStateValue.Unanswered }
 ]
 
-export const seasons: Option<string>[] = allQuestions
+export const seasons: Option<string>[] = questions.value
     .map(q => q.season)
     .sort((a, b) => parseInt(b.split("-")[1]) - parseInt(a.split("-")[1]))
     .filter((season, index, array) => array.indexOf(season) === index)
     .map(season => ({ name: season, value: season }));
 
-export const programs: Option<string>[] = allQuestions
+console.log(seasons);
+
+export const programs: Option<string>[] = questions.value
     .map(q => q.program)
     .filter((program, index, array) => array.indexOf(program) === index)
     .map(program => ({ name: program, value: program }));
