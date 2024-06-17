@@ -27,9 +27,15 @@ const minisearch = new MiniSearch<Question>({
     ]
 });
 
+let loaded = false;
+
 export const loadMinisearch = async (questions: Question[]) => {
+    if (loaded) {
+        return;
+    }
     try {
         await minisearch.addAllAsync(questions);
+        loaded = true;
     } catch (e) {
         console.error(e);
     }

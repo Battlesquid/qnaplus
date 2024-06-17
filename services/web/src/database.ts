@@ -1,9 +1,11 @@
 import Dexie, { EntityTable } from "dexie";
 import { Question } from "vex-qna-archiver";
+import { elapsedHours } from "./util/date";
 
-const BUCKET = "qnaplus"
+const BUCKET = "qnaplus";
 const DATA_URL = `https://ogswwijdqskurrdkbnii.supabase.co/storage/v1/object/public/${BUCKET}/questions.json`;
 const DATA_PRIMARY_KEY = "0";
+const UPDATE_INTERVAL_HOURS = 6;
 
 export interface QnaplusAppData {
     id: string;
@@ -30,43 +32,62 @@ database.version(1).stores({
     appdata: "id"
 });
 
-const populateQuestions = async (db: QnaplusDatabase) => {
+const updateQuestions = async (db: QnaplusDatabase) => {
     const response = await fetch(DATA_URL);
     if (response.status !== 200) {
-        console.error(response.status, response.statusText)
+        console.error(response.status, response.statusText);
         return; // TODO: handle
     }
     const questions = await response.json() as Question[];
     await db.questions.bulkPut(questions);
 
-    const lastUpdated = Date.now();
-    await db.metadata.put({ id: DATA_PRIMARY_KEY, lastUpdated });
+}
 
+const updateMetadata = async (db: QnaplusDatabase): Promise<QnaplusMetadata> => {
+    const lastUpdated = Date.now();
+    const data = { id: DATA_PRIMARY_KEY, lastUpdated }
+    await db.metadata.put(data);
+    return data;
+}
+
+const updateAppData = async (db: QnaplusDatabase) => {
+    const questions = await db.questions.toArray();
     const seasons = questions
         .map(q => q.season)
         .sort((a, b) => parseInt(b.split("-")[1]) - parseInt(a.split("-")[1]))
         .filter((season, index, array) => array.indexOf(season) === index)
-    // .map(season => ({ name: season, value: season }));
     const programs = questions
         .map(q => q.program)
         .filter((program, index, array) => array.indexOf(program) === index);
     await db.appdata.put({ id: DATA_PRIMARY_KEY, seasons, programs });
 }
 
-export const getDatabaseReady = async () => {
-    database.open().catch(function (e) {
-        console.error("Open failed: " + e.stack);
-    });
-    return new Promise<void>((resolve, _reject) => {
-        database.on("ready", async (_db) => {
-            const db = _db as QnaplusDatabase;
-            const count = await db.questions.count();
-            if (count === 0) {
-                await populateQuestions(db);
-            }
+const updateDatabase = async (db: QnaplusDatabase) => {
+    const metadataCount = await db.metadata.count();
+    let metadata: QnaplusMetadata;
+    if (metadataCount === 0) {
+        metadata = await updateMetadata(db);
+    } else {
+        metadata = (await getMetadata())!;
+    }
+    const outdated = elapsedHours(new Date(metadata.lastUpdated), new Date()) >= UPDATE_INTERVAL_HOURS;
+
+    const questionsCount = await db.questions.count();
+    if (questionsCount === 0 || outdated) {
+        await updateMetadata(db);
+        await updateQuestions(db);
+        await updateAppData(db);
+    }
+}
+
+export const setupDatabase = async () => {
+    return new Promise<void>((resolve, reject) => {
+        database.open().catch(e => reject(e))
+        database.on("ready", async (db) => {
+            await updateDatabase(db as QnaplusDatabase);
             resolve();
         });
-    })
+    });
 }
 
 export const getMetadata = () => {

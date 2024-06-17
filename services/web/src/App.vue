@@ -1,34 +1,40 @@
 <script setup lang="ts">
+import ProgressSpinner from 'primevue/progressspinner';
 import { provide, ref } from 'vue';
-import { database, getDatabaseReady, getAppData, QnaplusAppData } from "./database"
+import { database, setupDatabase, getAppData, QnaplusAppData } from "./database"
 import { loadMinisearch } from "./composable/useSearch"
 
 const loading = ref<boolean>(true);
 const appdata = ref<QnaplusAppData>();
 provide("appdata", appdata);
 
-Promise.resolve()
-    .then(() => getDatabaseReady())
-    .then(async () => {
+const startup = async () => {
+    try {
+        await setupDatabase();
+
         const data = await getAppData();
         appdata.value = data;
-    })
-    .then(async () => {
+
         const questions = await database.questions.toArray();
-        return loadMinisearch(questions);
-    })
-    .catch(e => console.error(e))
-    .finally(() => loading.value = false);
+        await loadMinisearch(questions);
+
+        loading.value = false
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+startup();
+
 </script>
 
 <template>
-    <div class="flex flex-column w-full h-screen">
-        <div v-if="loading">
-            loading!!1
-        </div>
-        <div v-else>
-            <router-view class="w-full"></router-view>
-        </div>
+    <div v-if="loading" class="flex flex-row h-screen justify-content-center align-items-center column-gap-3">
+        <h3>qnaplus</h3>
+        <ProgressSpinner class="w-2rem h-2rem m-0" strokeWidth="6" fill="transparent" animationDuration="0.5s" />
+    </div>
+    <div v-else class="flex flex-column w-full h-screen">
+        <router-view class="w-full"></router-view>
     </div>
 </template>
 
