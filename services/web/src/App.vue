@@ -8,6 +8,8 @@ const loading = ref<boolean>(true);
 const appdata = ref<QnaplusAppData>();
 provide("appdata", appdata);
 
+const appname = import.meta.env.VITE_APP_NAME;
+
 const startup = async () => {
     try {
         await setupDatabase();
@@ -30,7 +32,7 @@ startup();
 
 <template>
     <div v-if="loading" class="flex flex-row h-screen justify-content-center align-items-center column-gap-3">
-        <h3>qnaplus</h3>
+        <h3>{{ appname }}</h3>
         <ProgressSpinner class="w-2rem h-2rem m-0" strokeWidth="6" fill="transparent" animationDuration="0.5s" />
     </div>
     <div v-else class="flex flex-column w-full h-screen">

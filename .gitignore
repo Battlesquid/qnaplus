@@ -21,9 +21,6 @@ public/css/main.css
 # Coverage reports
 coverage
 
-# API keys and secrets
-.env
-
 # Dependency directory
 node_modules
 bower_components
@@ -39,7 +36,8 @@ Thumbs.db
 # Ignore built ts files
 dist
 
-.env*
+# API keys and secrets
+/.env*
 .flaskenv*
 !.env.project
 !.env.vault

@@ -2,10 +2,7 @@ import Dexie, { EntityTable } from "dexie";
 import { Question } from "vex-qna-archiver";
 import { elapsedHours } from "./util/date";
 
-const BUCKET = "qnaplus";
-const DATA_URL = `https://ogswwijdqskurrdkbnii.supabase.co/storage/v1/object/public/${BUCKET}/questions.json`;
 const DATA_PRIMARY_KEY = "0";
-const UPDATE_INTERVAL_HOURS = 6;
 
 export interface QnaplusAppData {
     id: string;
@@ -33,7 +30,7 @@ database.version(1).stores({
 });
 
 const updateQuestions = async (db: QnaplusDatabase) => {
-    const response = await fetch(DATA_URL);
+    const response = await fetch(import.meta.env.VITE_DATA_URL);
     if (response.status !== 200) {
         console.error(response.status, response.statusText);
         return; // TODO: handle
@@ -70,13 +67,21 @@ const updateDatabase = async (db: QnaplusDatabase) => {
     } else {
         metadata = (await getMetadata())!;
     }
+    const UPDATE_INTERVAL_HOURS = parseInt(import.meta.env.VITE_UPDATE_INTERVAL_HOURS);
     const outdated = elapsedHours(new Date(metadata.lastUpdated), new Date()) >= UPDATE_INTERVAL_HOURS;
 
     const questionsCount = await db.questions.count();
     if (questionsCount === 0 || outdated) {
+        if (outdated) {
+            console.info("Database outdated, updating.")
+        } else {
+            console.info("No data in database, populating")
+        }
         await updateMetadata(db);
         await updateQuestions(db);
         await updateAppData(db);
+    } else {
+        console.info("Database up to date.")
     }
 }
 
