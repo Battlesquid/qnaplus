@@ -15,7 +15,7 @@ const limitedAnswer = applyWordLimit(props.answer, 100);
 <template>
     <Card :class="{ 'border-primary': answered, 'border-300': !answered }">
         <template #title>
-            <a :href="url">{{ title }}</a>
+            <a :href="url" target="_blank">{{ title }}</a>
         </template>
         <template #subtitle>
             <div class="flex justify-content-between">
@@ -38,7 +38,7 @@ const limitedAnswer = applyWordLimit(props.answer, 100);
                     <span class="font-bold">Answer</span>
                     <span>{{ limitedAnswer.content }}</span>
                 </div>
-                <a v-if="limitedAnswer.applied" :href="url">Read More</a>
+                <a v-if="limitedAnswer.applied || limitedQuestion.applied" :href="url">Read More</a>
             </div>
         </template>
         <template #footer v-if="tags.length > 0">
