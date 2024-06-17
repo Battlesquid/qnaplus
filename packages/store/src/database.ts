@@ -5,6 +5,7 @@ import { Logger } from "pino";
 import { Question, fetchCurrentSeason, fetchQuestionsIterative, getAllQuestions as archiverGetAllQuestions, getOldestUnansweredQuestion, Season, getOldestQuestion } from "vex-qna-archiver";
 import { OnPayloadQueueFlush, PayloadQueue } from "./payload_queue";
 import { Database } from "./supabase";
+import { UploadMetadata, upload } from "./upload";
 
 const supabase = createClient<Database>(config.getenv("SUPABASE_URL"), config.getenv("SUPABASE_KEY"))
 const METADATA_ROW_ID = 0;
@@ -35,7 +36,7 @@ export const populateWithMetadata = async (logger?: Logger) => {
     logger?.info("Successfully populated database");
 
     const { error } = await supabase
-        .from("questions_metadata")
+        .from(config.getenv("SUPABASE_METADATA_TABLE"))
         .upsert({ id: METADATA_ROW_ID, current_season: currentSeason, oldest_unanswered_question: oldestQuestionId });
 
     if (error) {
@@ -47,7 +48,7 @@ export const populateWithMetadata = async (logger?: Logger) => {
 
 export const getQuestion = async (id: Question["id"], opts?: StoreOptions): Promise<Question | null> => {
     const logger = opts?.logger?.child({ label: "getDocument" });
-    const row = await supabase.from("questions").select().eq("id", id).single();
+    const row = await supabase.from(config.getenv("SUPABASE_QUESTIONS_TABLE")).select().eq("id", id).single();
     if (row.error !== null) {
         logger?.trace(`No question with id '${id}' found.`);
     }
@@ -64,7 +65,7 @@ export const getAllQuestions = async (opts?: StoreOptions): Promise<Question[]> 
         const from = page * LIMIT;
         const to = from + LIMIT;
         const rows = await supabase
-            .from("questions")
+            .from(config.getenv("SUPABASE_QUESTIONS_TABLE"))
             .select("*", { count: "exact" })
             .range(from, to);
         if (rows.error !== null) {
@@ -81,20 +82,20 @@ export const getAllQuestions = async (opts?: StoreOptions): Promise<Question[]> 
 
 export const insertQuestion = async (data: Question, opts?: StoreOptions) => {
     const logger = opts?.logger?.child({ label: "insertQuestion" });
-    const { error, status } = await supabase.from("questions").insert(data);
+    const { error, status } = await supabase.from(config.getenv("SUPABASE_QUESTIONS_TABLE")).insert(data);
     logger?.trace({ error, status });
 }
 
 export const insertQuestions = async (data: Question[], opts?: StoreOptions) => {
     const logger = opts?.logger?.child({ label: "insertQuestions" });
-    const { error, status } = await supabase.from("questions").insert(data);
+    const { error, status } = await supabase.from(config.getenv("SUPABASE_QUESTIONS_TABLE")).insert(data);
     logger?.trace({ error, status });
 }
 
 export const upsertQuestions = async (data: Question[], opts?: StoreOptions) => {
     const logger = opts?.logger?.child({ label: "upsertQuestions" });
     logger?.info(`Upserting ${data.length} questions`)
-    const { error, status } = await supabase.from("questions").upsert(data, { ignoreDuplicates: false });
+    const { error, status } = await supabase.from(config.getenv("SUPABASE_QUESTIONS_TABLE")).upsert(data, { ignoreDuplicates: false });
     if (error !== null) {
         logger?.warn({ error, status })
     }
@@ -191,17 +192,18 @@ export const onChange = (callback: ChangeCallback, logger?: Logger) => {
             {
                 event: "UPDATE",
                 schema: "public",
-                table: "questions",
+                table: config.getenv("SUPABASE_QUESTIONS_TABLE"),
             },
             payload => queue.push(payload)
         )
         .subscribe();
 }
 
-export const update = async (logger?: Logger) => {
-    const { error: metadataError, data } = await supabase.from("questions_metadata")
+export const doDatabaseUpdate = async (_logger?: Logger) => {
+    const logger = _logger?.child({ label: "doNotificationUpdate" });
+    const { error: metadataError, data } = await supabase.from(config.getenv("SUPABASE_METADATA_TABLE"))
         .select("*")
-        .eq("id", 0)
+        .eq("id", METADATA_ROW_ID)
         .single();
     if (metadataError) {
         logger?.error({ error: metadataError }, "Error retrieving question metadata, exiting");
@@ -223,12 +225,30 @@ export const update = async (logger?: Logger) => {
     }
 
     const { error } = await supabase
-        .from("questions_metadata")
+        .from(config.getenv("SUPABASE_METADATA_TABLE"))
         .upsert({ id: METADATA_ROW_ID, oldest_unanswered_question: oldestUnanswered.id });
 
     if (error) {
         logger?.error({ error, oldest_unanswered_id: oldestUnanswered.id }, `Unable to save oldest unanswered question (${oldestUnanswered.id}) to metadata`);
     } else {
         logger?.info({ oldest_unanswered_id: oldestUnanswered.id }, `Successfully updated metadata with oldest unanswered question (${oldestUnanswered.id})`);
+    }
+}
+
+export const doStorageUpdate = async (_logger?: Logger) => {
+    const logger = _logger?.child({ label: "doStorageUpdate" });
+    const questions = await getAllQuestions({ logger });
+    const json = JSON.stringify(questions);
+    // typed as any to address limitation in tus-js-client (https://github.com/tus/tus-js-client/issues/289)
+    const buffer: any = Buffer.from(json, "utf-8");
+    const metadata: UploadMetadata = {
+        bucket: config.getenv("SUPABASE_BUCKET"),
+        filename: "questions.json",
+        type: "application/json"
+    }
+    try {
+        await upload(buffer, metadata, logger);
+    } catch (e) {
+        logger?.error({ error: e }, "Error while updating storage json")
     }
 }

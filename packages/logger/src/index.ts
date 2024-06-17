@@ -1,9 +1,15 @@
 import { config } from "@qnaplus/config"
 import pino, { LoggerOptions } from "pino"
+import os from "os";
 
 export const getLoggerInstance = (stream: string, options?: LoggerOptions) => {
     return pino({
         ...options,
+        base: {
+            env: config.getenv("NODE_ENV"),
+            pid: process.pid,
+            hostname: os.hostname()
+        },
         transport: {
             targets: [
                 {
@@ -21,7 +27,7 @@ export const getLoggerInstance = (stream: string, options?: LoggerOptions) => {
                     target: 'pino/file',
                     options: { destination: 1 }
                 }
-            ]
+            ] 
         }
     })
 }

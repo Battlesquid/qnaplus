@@ -1,12 +1,9 @@
 import MiniSearch, { SearchResult } from "minisearch";
 import { Question } from "vex-qna-archiver";
-import { MaybeRefOrGetter, ref, toValue, watchEffect } from 'vue';
-import data from "../data.json";
+import { MaybeRefOrGetter, Ref, ref, toValue, watchEffect } from 'vue';
 import { isEmpty } from "../util/strings";
 
 type QuestionSearchResult = Question & SearchResult;
-
-export const allQuestions = data as Question[];
 
 const minisearch = new MiniSearch<Question>({
     fields: ["title", "question", "answer"],
@@ -30,20 +27,27 @@ const minisearch = new MiniSearch<Question>({
     ]
 });
 
-export const useLoadResources = () => {
-    const loading = ref<boolean>(true);
-    minisearch.addAllAsync(allQuestions)
-        .finally(() => loading.value = false);
-    return { loading };
+let loaded = false;
+
+export const loadMinisearch = async (questions: Question[]) => {
+    if (loaded) {
+        return;
+    }
+    try {
+        await minisearch.addAllAsync(questions);
+        loaded = true;
+    } catch (e) {
+        console.error(e);
+    }
 }
 
-export const useSearch = (query: MaybeRefOrGetter<string>) => {
+export const useSearch = (query: MaybeRefOrGetter<string>, dbQuestions: Readonly<Ref<Question[]>>) => {
     const questions = ref<Question[]>([]);
 
     const search = () => {
         const value = toValue(query);
         if (isEmpty(value)) {
-            questions.value = allQuestions;
+            questions.value = dbQuestions.value;
         } else {
             const results = minisearch.search(value, { fuzzy: 0.5 }) as QuestionSearchResult[];
             questions.value = results;

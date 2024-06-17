@@ -17,6 +17,7 @@ const update = () => {
 }
 update();
 useEventListener(document, "scroll", () => update());
+const appname = import.meta.env.VITE_APP_NAME;
 
 </script>
 
@@ -26,7 +27,7 @@ useEventListener(document, "scroll", () => update());
     </div>
     <div ref="header"
         class="flex w-full surface-card z-5 align-items-center justify-content-between gap-2 p-2 transition-duration-1000 transition-colors">
-        <div class="p-3">qnaplus</div>
+        <h3>{{ appname }}</h3>
         <div class="flex gap-2">
             <a href="https://github.com/Battlesquid/qnaplus" target="_blank">
                 <Button class="w-2rem h-2rem" icon="pi pi-github" aria-label="Github" outlined />

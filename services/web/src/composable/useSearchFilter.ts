@@ -1,6 +1,5 @@
 import { Question } from 'vex-qna-archiver';
 import { MaybeRefOrGetter, Ref, reactive, ref, toValue, watchEffect } from 'vue';
-import { allQuestions } from './useSearch';
 
 export type Option<T> = {
     name: string;
@@ -30,17 +29,6 @@ export const questionStates: Option<QuestionStateValue>[] = [
     { name: 'Answered', value: QuestionStateValue.Answered },
     { name: 'Unanswered', value: QuestionStateValue.Unanswered }
 ]
-
-export const seasons: Option<string>[] = allQuestions
-    .map(q => q.season)
-    .sort((a, b) => parseInt(b.split("-")[1]) - parseInt(a.split("-")[1]))
-    .filter((season, index, array) => array.indexOf(season) === index)
-    .map(season => ({ name: season, value: season }));
-
-export const programs: Option<string>[] = allQuestions
-    .map(q => q.program)
-    .filter((program, index, array) => array.indexOf(program) === index)
-    .map(program => ({ name: program, value: program }));
 
 type FilterMap = {
     [K in keyof SearchFilters]: (question: Question, filters: SearchFilters) => boolean;
@@ -91,23 +79,6 @@ const FILTER_MAP: FilterMap = {
     }
 }
 
-const getInitialFilterState = () => {
-    return {
-        season: [seasons[0]],
-        program: [],
-        author: null,
-        state: {
-            name: "All",
-            value: QuestionStateValue.All
-        },
-        askedBefore: null,
-        askedAfter: null,
-        answeredBefore: null,
-        answeredAfter: null,
-        tags: []
-    };
-}
-
 const isEmptyFilterValue = (filterValue: SearchFilters[keyof SearchFilters]): boolean => {
     if (typeof filterValue === "string") {
         return filterValue.trim() === "";
@@ -121,9 +92,36 @@ export type SearchFilterComposable = {
     filters: SearchFilters;
     filteredQuestions: Ref<Question[]>;
     clearFilters(): void;
+    seasons: Option<string>[];
+    programs: Option<string>[];
 }
 
-export const useSearchFilter = (questions: MaybeRefOrGetter<Question[]>): SearchFilterComposable => {
+export type FilterData = {
+    programs: string[];
+    seasons: string[];
+}
+
+export const useSearchFilter = (questions: MaybeRefOrGetter<Question[]>, filterData: FilterData): SearchFilterComposable => {
+    const seasons = filterData.seasons.map(season => ({ name: season, value: season }));
+    const programs = filterData.programs.map(program => ({ name: program, value: program }));
+
+    const getInitialFilterState = () => {
+        return {
+            season: [seasons[0]],
+            program: [],
+            author: null,
+            state: {
+                name: "All",
+                value: QuestionStateValue.All
+            },
+            askedBefore: null,
+            askedAfter: null,
+            answeredBefore: null,
+            answeredAfter: null,
+            tags: []
+        };
+    }
+
     const clearFilters = () => {
         Object.assign(filters, getInitialFilterState());
     }
@@ -142,5 +140,5 @@ export const useSearchFilter = (questions: MaybeRefOrGetter<Question[]>): Search
 
     watchEffect(() => applyFilters());
 
-    return { filters, filteredQuestions, clearFilters };
+    return { filters, filteredQuestions, clearFilters, seasons, programs };
 }
