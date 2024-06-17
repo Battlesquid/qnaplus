@@ -1,7 +1,6 @@
 import MiniSearch, { SearchResult } from "minisearch";
 import { Question } from "vex-qna-archiver";
-import { MaybeRefOrGetter, ref, toValue, watchEffect } from 'vue';
-import { questions as dbQuestions } from "../database";
+import { MaybeRefOrGetter, Ref, ref, toValue, watchEffect } from 'vue';
 import { isEmpty } from "../util/strings";
 
 type QuestionSearchResult = Question & SearchResult;
@@ -28,14 +27,15 @@ const minisearch = new MiniSearch<Question>({
     ]
 });
 
-export const loadSearchResources = () => {
-    const loading = ref<boolean>(true);
-    minisearch.addAllAsync(dbQuestions.value)
-        .finally(() => loading.value = false);
-    return { loading };
+export const loadMinisearch = async (questions: Question[]) => {
+    try {
+        await minisearch.addAllAsync(questions);
+    } catch (e) {
+        console.error(e);
+    }
 }
 
-export const useSearch = (query: MaybeRefOrGetter<string>) => {
+export const useSearch = (query: MaybeRefOrGetter<string>, dbQuestions: Readonly<Ref<Question[]>>) => {
     const questions = ref<Question[]>([]);
 
     const search = () => {

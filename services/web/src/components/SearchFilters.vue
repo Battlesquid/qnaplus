@@ -10,9 +10,14 @@ import InputText from "primevue/inputtext";
 import MultiSelect from 'primevue/multiselect';
 import Panel from "primevue/panel";
 import SelectButton from 'primevue/selectbutton';
-import { SearchFilterComposable, questionStates as options, programs, seasons } from "../composable/useSearchFilter";
+import { SearchFilters, questionStates as options, Option } from "../composable/useSearchFilter";
 
-defineProps<Omit<SearchFilterComposable, "filteredQuestions">>();
+defineProps<{
+    filters: SearchFilters;
+    clearFilters(): void;
+    seasons: Option<string>[];
+    programs: Option<string>[];
+}>();
 
 </script>
 
@@ -22,11 +27,13 @@ defineProps<Omit<SearchFilterComposable, "filteredQuestions">>();
             <div class="flex flex-wrap gap-2">
                 <div class="flex flex-column gap-1">
                     <label for="season">Season</label>
-                    <MultiSelect id="season" v-model="filters.season" placeholder="Season" :options="seasons" option-label="name" />
+                    <MultiSelect id="season" v-model="filters.season" placeholder="Season" :options="seasons"
+                        option-label="name" />
                 </div>
                 <div class="flex flex-column gap-1">
                     <label for="program">Program</label>
-                    <MultiSelect id="program" v-model="filters.program" placeholder="Program" :options="programs" option-label="name" />
+                    <MultiSelect id="program" v-model="filters.program" placeholder="Program" :options="programs"
+                        option-label="name" />
                 </div>
                 <div class="flex flex-1 flex-column gap-1">
                     <label for="author">Author</label>
