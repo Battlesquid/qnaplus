@@ -91,6 +91,7 @@ const isEmptyFilterValue = (filterValue: SearchFilters[keyof SearchFilters]): bo
 export type SearchFilterComposable = {
     filters: SearchFilters;
     filteredQuestions: Ref<Question[]>;
+    appliedFilterCount: Ref<number>;
     clearFilters(): void;
     seasons: Option<string>[];
     programs: Option<string>[];
@@ -128,6 +129,7 @@ export const useSearchFilter = (questions: MaybeRefOrGetter<Question[]>, filterD
 
     const filters = reactive<SearchFilters>(getInitialFilterState());
     const filteredQuestions = ref<Question[]>([]);
+    const appliedFilterCount = ref<number>(0);
 
     const applyFilters = () => {
         const value = toValue(questions);
@@ -135,10 +137,11 @@ export const useSearchFilter = (questions: MaybeRefOrGetter<Question[]>, filterD
         const applicableFilters = keys
             .filter(k => !isEmptyFilterValue(filters[k]))
             .map(k => FILTER_MAP[k]);
+        appliedFilterCount.value = applicableFilters.length;
         filteredQuestions.value = value.filter(q => applicableFilters.every(f => f(q, filters)));
     }
 
     watchEffect(() => applyFilters());
 
-    return { filters, filteredQuestions, clearFilters, seasons, programs };
+    return { filters, filteredQuestions, clearFilters, seasons, programs, appliedFilterCount };
 }
