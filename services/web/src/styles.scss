@@ -2,8 +2,14 @@
 @import "primeflex/primeflex.css";
 @import "primevue/resources/themes/aura-dark-blue/theme.css";
 
-html, body {
+html,
+body {
     width: 100%;
     margin: 0;
     padding: 0;
+}
+
+/* for SearchFilters.vue */
+.select-button-flex>div {
+    flex-grow: 1 !important;
 }
