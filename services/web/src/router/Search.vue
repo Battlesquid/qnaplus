@@ -19,7 +19,7 @@ const dbQuestions = useObservable<Question[], Question[]>(from(liveQuery(() => d
 });
 const appData = inject<Ref<QnaplusAppData | undefined>>("appdata")!;
 const { questions } = useSearch(query, dbQuestions);
-const { filteredQuestions, filters, clearFilters, seasons, programs } = useSearchFilter(questions, {
+const { filteredQuestions, filters, clearFilters, seasons, programs, appliedFilterCount } = useSearchFilter(questions, {
     programs: appData.value?.programs ?? [],
     seasons: appData.value?.seasons ?? []
 });
@@ -32,7 +32,7 @@ const { filteredQuestions, filters, clearFilters, seasons, programs } = useSearc
             <div class="flex flex-column gap-2">
                 <SearchInput v-model="query" />
                 <SearchFilters :filters="filters" :clear-filters="clearFilters" :seasons="seasons"
-                    :programs="programs" />
+                    :programs="programs" :applied-filter-count="appliedFilterCount" />
             </div>
             <div class="h-full flex flex-column gap-2">
                 <QuestionListHeader :results="filteredQuestions.length" />

@@ -137,7 +137,7 @@ export const useSearchFilter = (questions: MaybeRefOrGetter<Question[]>, filterD
         const applicableFilters = keys
             .filter(k => !isEmptyFilterValue(filters[k]))
             .map(k => FILTER_MAP[k]);
-        appliedFilterCount.value = applicableFilters.length;
+        appliedFilterCount.value = applicableFilters.length - +(filters.state.value === QuestionStateValue.All);
         filteredQuestions.value = value.filter(q => applicableFilters.every(f => f(q, filters)));
     }
 
