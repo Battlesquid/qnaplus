@@ -23,34 +23,34 @@ defineProps<{
 
 <template>
 
-    <Accordion :activeIndex="0">
+    <Accordion>
         <AccordionTab header="Filters">
             <div class="flex flex-column gap-3">
                 <div class="flex flex-wrap gap-2">
 
-                    <div class="flex gap-2 w-full">
-                        <div class="flex flex-column flex-grow-1 gap-1">
+                    <div class="flex flex-wrap gap-2 flex-1">
+                        <div class="field m-0 dropdown-flex">
                             <label for="season">Season</label>
-                            <MultiSelect id="season" v-model="filters.season" placeholder="Season" :options="seasons"
+                            <MultiSelect class="w-full" input-id="season" v-model="filters.season" placeholder="Season" :options="seasons"
                                 option-label="name" />
                         </div>
-                        <div class="flex flex-column flex-grow-1 gap-1">
+                        <div class="field m-0 dropdown-flex">
                             <label for="program">Program</label>
-                            <MultiSelect id="program" v-model="filters.program" placeholder="Program"
+                            <MultiSelect class="w-full" input-id="program" v-model="filters.program" placeholder="Program"
                                 :options="programs" option-label="name" />
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <div class="flex flex-grow-1 flex-column gap-1">
+                    <div class="flex flex-1 flex-wrap gap-2">
+                        <div class="field m-0 input-flex">
                             <label for="author">Author</label>
-                            <IconField class="flex-1" icon-position="left">
+                            <IconField icon-position="left">
                                 <i class="pi pi-user"></i>
                                 <InputText id="author" class="w-full" v-model="filters.author" placeholder="Author" />
                             </IconField>
                         </div>
 
-                        <div class="flex flex-column flex-grow-1 gap-1">
+                        <div class="field m-0 input-flex">
                             <label for="Question State">Question State</label>
                             <SelectButton class="select-button-flex" :allow-empty="false" v-model="filters.state"
                                 :options="options" option-label="name" aria-labelledby="multiple" />
@@ -59,38 +59,38 @@ defineProps<{
                 </div>
 
                 <div class="flex flex-wrap gap-2 ">
-                    <div class="flex flex-1 flex-1 min-w-fit gap-2">
-                        <div class="flex flex-column flex-1 gap-1">
+                    <div class="flex flex-1 min-w-fit gap-2">
+                        <div class="field m-0 flex-1">
                             <label for="askedBefore">Asked Before</label>
-                            <Calendar id="askedBefore" v-model="filters.askedBefore" placeholder="Asked Before"
+                            <Calendar class="w-full" input-id="askedBefore" v-model="filters.askedBefore" placeholder="Asked Before"
                                 show-icon show-button-bar icon-display="input" />
                         </div>
-                        <div class="flex flex-column flex-1 gap-1">
+                        <div class="field m-0 flex-1">
                             <label for="askedAfter">Asked After</label>
-                            <Calendar id="askedAfter" v-model="filters.askedAfter" placeholder="Asked After" show-icon
+                            <Calendar class="w-full" input-id="askedAfter" v-model="filters.askedAfter" placeholder="Asked After" show-icon
                                 show-button-bar icon-display="input" />
                         </div>
                     </div>
                     <div class="flex flex-1 min-w-fit gap-2">
-                        <div class="flex flex-column flex-1 gap-1">
+                        <div class="field m-0 flex-1">
                             <label for="answeredBefore" aria-label="Answered Before">Answered Before</label>
-                            <Calendar id="answeredBefore" v-model="filters.answeredBefore" placeholder="Answered Before"
+                            <Calendar class="w-full" input-id="answeredBefore" v-model="filters.answeredBefore" placeholder="Answered Before"
                                 show-icon show-button-bar icon-display="input" />
                         </div>
-                        <div class="flex flex-column flex-1 gap-1">
+                        <div class="field m-0 flex-1">
                             <label for="answeredAfter" aria-label="Answered After">Answered After</label>
-                            <Calendar id="answeredAfter" v-model="filters.answeredAfter" placeholder="Answered After"
+                            <Calendar class="w-full" input-id="answeredAfter" v-model="filters.answeredAfter" placeholder="Answered After"
                                 show-icon show-button-bar icon-display="input" />
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-column flex-1 gap-2">
+                <div class="field m-0">
                     <label for="tags">Tags</label>
-                    <InputGroup id="tags">
+                    <InputGroup>
                         <InputGroupAddon>
                             <i class="pi pi-tags" aria-label="Search" />
                         </InputGroupAddon>
-                        <Chips v-model="filters.tags" class="flex-1" aria-label="Tags" placeholder="Tags" />
+                        <Chips input-id="tags" v-model="filters.tags" class="flex-1" aria-label="Tags" placeholder="Tags" />
                     </InputGroup>
                 </div>
                 <div>
@@ -108,5 +108,13 @@ defineProps<{
 
 .select-button-flex {
     display: flex;
+}
+
+.dropdown-flex {
+    flex: 231.6px
+}
+
+.input-flex {
+    flex: 170px;
 }
 </style>
