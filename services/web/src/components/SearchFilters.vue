@@ -33,7 +33,7 @@ defineProps<{
                     <Badge :value="appliedFilterCount" />
                 </div>
             </template>
-            <div class="flex flex-column gap-3">
+            <div class="flex flex-column gap-2">
                 <div class="flex flex-wrap gap-2">
 
                     <div class="flex flex-wrap gap-2 flex-1">
