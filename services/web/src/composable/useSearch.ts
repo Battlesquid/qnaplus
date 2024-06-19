@@ -34,7 +34,9 @@ export const loadMinisearch = async (questions: Question[]) => {
         return;
     }
     try {
-        await minisearch.addAllAsync(questions);
+        await minisearch.addAllAsync(questions, {
+            chunkSize: 50
+        });
         loaded = true;
     } catch (e) {
         console.error(e);
