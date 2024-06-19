@@ -8,9 +8,8 @@ export default defineConfig({
     plugins: [
         vue(),
         VitePWA({
-            registerType: 'prompt',
+            registerType: 'autoUpdate',
             injectRegister: "inline",
-
             pwaAssets: {
                 disabled: false,
                 config: true,
@@ -24,7 +23,7 @@ export default defineConfig({
             },
 
             workbox: {
-                globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
+                globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2,eot,ttf,var}'],
                 cleanupOutdatedCaches: true,
                 clientsClaim: true,
             },
