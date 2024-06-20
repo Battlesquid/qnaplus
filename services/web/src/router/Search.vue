@@ -28,7 +28,7 @@ const { filteredQuestions, filters, clearFilters, seasons, programs, appliedFilt
 
 <template>
     <Root>
-        <div class="h-full flex flex-column gap-2 p-2">
+        <div class="h-full flex flex-column gap-2 p-3">
             <div class="flex flex-column gap-2">
                 <SearchInput v-model="query" />
                 <SearchFilters :filters="filters" :clear-filters="clearFilters" :seasons="seasons"
