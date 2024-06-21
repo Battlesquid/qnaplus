@@ -10,16 +10,40 @@ export default defineConfig({
         VitePWA({
             registerType: 'autoUpdate',
             injectRegister: "inline",
-            pwaAssets: {
-                disabled: false,
-                config: true,
-            },
-
             manifest: {
+                id: "battlesquid.qnaplus",
                 name: 'qnaplus',
                 short_name: 'qnaplus',
                 description: 'Advanced search tool for the VEX Robotics Q&A',
-                theme_color: '#1a1b26',
+                theme_color: '#18181b',
+                background_color: "#121212",
+                icons: [
+                    {
+                        src: "/icons/qnaplus-64x64.png",
+                        sizes: "64x64",
+                        type: "image/png",
+                    },
+                    {
+                        src: "/icons/qnaplus-180x180.png",
+                        sizes: "180x180",
+                        type: "image/png",
+                    },
+                    {
+                        src: "/icons/qnaplus-192x192.png",
+                        sizes: "192x192",
+                        type: "image/png",
+                    },
+                    {
+                        src: "/icons/qnaplus-512x512.png",
+                        sizes: "512x512",
+                        type: "image/png",
+                    },
+                    {
+                        src: "/icons/qnaplus.svg",
+                        sizes: "512x512",
+                        type: "image/svg+xml",
+                    },
+                ],
             },
 
             workbox: {
