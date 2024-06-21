@@ -4,9 +4,9 @@ import { liveQuery } from "dexie";
 import { from } from "rxjs";
 import { Question } from "vex-qna-archiver";
 import { Ref, inject, ref } from "vue";
+import AdvancedSearch from "../components/AdvancedSearch.vue";
 import QuestionList from "../components/QuestionList.vue";
 import QuestionListHeader from "../components/QuestionListHeader.vue";
-import SearchFilters from "../components/SearchFilters.vue";
 import SearchInput from "../components/SearchInput.vue";
 import { useSearch } from "../composable/useSearch";
 import { useSearchFilter } from "../composable/useSearchFilter";
@@ -30,9 +30,9 @@ const { filteredQuestions, filters, clearFilters, seasons, programs, appliedFilt
     <Root>
         <div class="h-full flex flex-column gap-2 p-3">
             <div class="flex flex-column gap-2">
-                <SearchInput v-model="query" />
-                <SearchFilters :filters="filters" :clear-filters="clearFilters" :seasons="seasons"
-                    :programs="programs" :applied-filter-count="appliedFilterCount" />
+                <SearchInput class="flex-1" v-model="query" />
+                <AdvancedSearch :filters="filters" :clear-filters="clearFilters" :seasons="seasons" :programs="programs"
+                    :applied-filter-count="appliedFilterCount" />
             </div>
             <div class="h-full flex flex-column gap-2">
                 <QuestionListHeader :results="filteredQuestions.length" />
