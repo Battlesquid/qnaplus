@@ -1,34 +1,37 @@
 <script setup lang="ts">
-import Button from 'primevue/button';
-import Divider from 'primevue/divider';
-import OverlayPanel from 'primevue/overlaypanel';
+import Dropdown from 'primevue/dropdown';
 import InputSwitch from 'primevue/inputswitch';
+import TabPanel from "primevue/tabpanel";
+import { SearchSortOptions, basicSortOptions } from '../composable/useSort';
 
-import { ref } from 'vue';
+defineProps<{
+    sortOptions: SearchSortOptions;
+}>();
 
-const panel = ref();
 // const advanced = ref<boolean>(false);
-
-const toggle = (e: Event) => {
-    panel.value.toggle(e);
-}
-
 </script>
 
 <template>
-    <Button label="Sort" @click="toggle"></Button>
-    <OverlayPanel ref="panel">
-        <div class="flex flex-column w-25rem">
-            <div class="flex align-items-center justify-content-between">
-                <h3 class="m-0">Sort</h3>
-                <div class="flex align-items-center">
-                    <span>Advanced</span>
-                    <InputSwitch />
+    <TabPanel header="Sort">
+        <div class="flex flex-column gap-2">
+            <div class="flex justify-content-end">
+                <div class="field m-0">
+                    <label for="advanced_toggle">Advanced Sorting</label>
+                    <InputSwitch v-model="sortOptions.advancedEnabled" input-id="advanced_toggle" />
                 </div>
             </div>
-            <Divider />
+            <div v-if="!sortOptions.advancedEnabled">
+                <div class="field m-0">
+                    <label for="basic_sort">Sort By:</label>
+                    <Dropdown class="w-full" input-id="basic_sort" v-model="sortOptions.basic.sort" :options="basicSortOptions" option-label="name"
+                        option-value="value" />
+                </div>
+            </div>
+            <div v-else>
+
+            </div>
         </div>
-    </OverlayPanel>
+    </TabPanel>
 </template>
 
 <style scoped></style>

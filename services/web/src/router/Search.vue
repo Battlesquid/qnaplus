@@ -4,12 +4,14 @@ import { liveQuery } from "dexie";
 import { from } from "rxjs";
 import { Question } from "vex-qna-archiver";
 import { Ref, inject, ref } from "vue";
-import AdvancedSearch from "../components/AdvancedSearch.vue";
 import QuestionList from "../components/QuestionList.vue";
 import QuestionListHeader from "../components/QuestionListHeader.vue";
 import SearchInput from "../components/SearchInput.vue";
+import SearchOptions from "../components/SearchOptions.vue";
+import SearchSort from "../components/SearchSort.vue";
 import { useSearch } from "../composable/useSearch";
 import { useSearchFilter } from "../composable/useSearchFilter";
+import { useSort } from "../composable/useSort";
 import { QnaplusAppData, database } from "../database";
 import Root from "./Root.vue";
 
@@ -23,6 +25,7 @@ const { filteredQuestions, filters, clearFilters, seasons, programs, appliedFilt
     programs: appData.value?.programs ?? [],
     seasons: appData.value?.seasons ?? []
 });
+const { sortedQuestions, sortOptions } = useSort(filteredQuestions)
 
 </script>
 
@@ -31,12 +34,16 @@ const { filteredQuestions, filters, clearFilters, seasons, programs, appliedFilt
         <div class="h-full flex flex-column gap-2 p-3">
             <div class="flex flex-column gap-2">
                 <SearchInput class="flex-1" v-model="query" />
-                <AdvancedSearch :filters="filters" :clear-filters="clearFilters" :seasons="seasons" :programs="programs"
-                    :applied-filter-count="appliedFilterCount" />
+                <SearchOptions :filters="filters" :clear-filters="clearFilters" :seasons="seasons"
+                :programs="programs" :applied-filter-count="appliedFilterCount">
+                    <template #sorting>
+                        <SearchSort :sort-options="sortOptions" />
+                    </template>
+                </SearchOptions>
             </div>
             <div class="h-full flex flex-column gap-2">
                 <QuestionListHeader :results="filteredQuestions.length" />
-                <QuestionList :questions="filteredQuestions" />
+                <QuestionList :questions="sortedQuestions" />
             </div>
         </div>
     </Root>
