@@ -93,6 +93,8 @@ export type SearchFilterComposable = {
     programs: Option<string>[];
 }
 
+export type SearchFilterOptions = Omit<SearchFilterComposable, "filteredQuestions">;
+
 export type FilterData = {
     programs: string[];
     seasons: string[];

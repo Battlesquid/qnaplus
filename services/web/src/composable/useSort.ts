@@ -4,117 +4,91 @@ import { Option } from "./types";
 import { SortFunction, SortRule, multisortrules } from '../util/sorting';
 
 export enum SortOptions {
-    RELEVANCE,
-    SEASON,
-    AUTHOR,
-    QUESTION_STATE,
-    ASK_DATE,
-    ANSWER_DATE
+    Season,
+    Author,
+    QuestionState,
+    AskDate,
+    AnswerDate
+}
+
+export enum SortOrder {
+    Ascending,
+    Descending
 }
 
 export type SortOption = Option<SortOptions> & {
     asc: boolean;
 };
 
-export const getSortOptions = (): SortOption[] => {
-    return [
-        {
-            name: "Relevance",
-            value: SortOptions.RELEVANCE,
-            asc: false
-        },
-        {
-            name: "Season",
-            value: SortOptions.SEASON,
-            asc: false
-        },
-        {
-            name: "Author",
-            value: SortOptions.AUTHOR,
-            asc: false
-        },
-        {
-            name: "Question State",
-            value: SortOptions.QUESTION_STATE,
-            asc: false
-        },
-        {
-            name: "Ask Date",
-            value: SortOptions.ASK_DATE,
-            asc: false
-        },
-        {
-            name: "Answer Date",
-            value: SortOptions.ANSWER_DATE,
-            asc: false
-        },
-    ];
-}
-
-export type AdvancedSortOption<T> = Option<Exclude<SortOptions, SortOptions.RELEVANCE>> & Omit<SortRule<T>, "sort">;
+export type AdvancedSortOption<T> = Option<SortOptions> & Omit<SortRule<T>, "sort">;
 
 export interface SearchSortOptions {
     basic: {
         sort: Option<SortOptions>;
-        asc: boolean;
+        asc: Option<SortOrder>;
     },
     advanced: AdvancedSortOption<Question>[],
     advancedEnabled: boolean;
 }
-
-export const advancedSortOptions = [
-    {
-        name: "Season",
-        value: SortOptions.SEASON,
-    },
-    {
-        name: "Author",
-        value: SortOptions.AUTHOR,
-    },
-    {
-        name: "Question State",
-        value: SortOptions.QUESTION_STATE,
-    },
-    {
-        name: "Ask Date",
-        value: SortOptions.ASK_DATE,
-    },
-    {
-        name: "Answer Date",
-        value: SortOptions.ANSWER_DATE,
-    },
-]
-
-export const basicSortOptions = [
-    ...advancedSortOptions,
-    {
-        name: "Relevance",
-        value: SortOptions.RELEVANCE,
-    }
-]
 
 type SortMap<T> = {
     [K in SortOptions]: SortFunction<T>;
 }
 
 const SORT_MAP: SortMap<Question> = {
-    [SortOptions.RELEVANCE]: () => 0,
-    [SortOptions.SEASON]: (a, b) => parseInt(b.season.split("-")[1]) - parseInt(a.season.split("-")[1]),
-    [SortOptions.AUTHOR]: (a, b) => a.author.localeCompare(b.author),
-    [SortOptions.QUESTION_STATE]: (a, b) => +b.answered - +a.answered,
-    [SortOptions.ASK_DATE]: (a, b) => (b.askedTimestampMs ?? 0) - (a.askedTimestampMs ?? 0),
-    [SortOptions.ANSWER_DATE]: (a, b) => (b.answeredTimestampMs ?? 0) - (a.answeredTimestampMs ?? 0)
+    [SortOptions.Season]: (a, b) => parseInt(b.season.split("-")[1]) - parseInt(a.season.split("-")[1]),
+    [SortOptions.Author]: (a, b) => b.author.localeCompare(a.author),
+    [SortOptions.QuestionState]: (a, b) => +b.answered - +a.answered,
+    [SortOptions.AskDate]: (a, b) => (b.askedTimestampMs ?? 0) - (a.askedTimestampMs ?? 0),
+    [SortOptions.AnswerDate]: (a, b) => (b.answeredTimestampMs ?? 0) - (a.answeredTimestampMs ?? 0)
 }
+
+export const sortOrderList: Option<SortOrder>[] = [
+    {
+        name: "Ascending",
+        value: SortOrder.Ascending
+    },
+    {
+        name: "Descending",
+        value: SortOrder.Descending
+    },
+]
+
+export const sortOptionsList = [
+    {
+        name: "Ask Date",
+        value: SortOptions.AskDate,
+    },
+    {
+        name: "Answer Date",
+        value: SortOptions.AnswerDate,
+    },
+    {
+        name: "Season",
+        value: SortOptions.Season,
+    },
+    {
+        name: "Author",
+        value: SortOptions.Author,
+    },
+    {
+        name: "Question State",
+        value: SortOptions.QuestionState,
+    }
+];
 
 export const useSort = (questions: MaybeRefOrGetter<Question[]>) => {
     const getDefaultSearchSortOptions = (): SearchSortOptions => {
         return {
             basic: {
                 sort: {
-                    name: "Relevance",
-                    value: SortOptions.RELEVANCE
+                    name: "Ask Date",
+                    value: SortOptions.AskDate,
                 },
-                asc: false
+                asc: {
+                    name: "Ascending",
+                    value: SortOrder.Ascending
+                },
             },
             advanced: [],
             advancedEnabled: false
@@ -128,10 +102,10 @@ export const useSort = (questions: MaybeRefOrGetter<Question[]>) => {
         const questionsCopy = [...questions];
         const sortFn = SORT_MAP[sortOptions.basic.sort.value];
         questionsCopy.sort((a, b) => {
-            if (sortOptions.basic.asc) {
-                return sortFn(a, b);
+            if (sortOptions.basic.asc.value === SortOrder.Ascending) {
+                return sortFn(b, a);
             }
-            return sortFn(b, a);
+            return sortFn(a, b);
         });
         return questionsCopy;
     }
