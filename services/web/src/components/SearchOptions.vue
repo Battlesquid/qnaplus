@@ -15,13 +15,26 @@ import MultiSelect from 'primevue/multiselect';
 import SelectButton from 'primevue/selectbutton';
 import TabPanel from "primevue/tabpanel";
 import TabView from "primevue/tabview";
+import Divider from 'primevue/divider';
+import { computed } from "vue";
 import { SearchFilterOptions, questionStateOptions } from "../composable/useSearchFilter";
-import { SearchSortOptions, sortOptionsList, sortOrderList } from "../composable/useSort";
+import { SearchSortOptions, SortOptions, sortOptionsList, sortOrderList } from "../composable/useSort";
+import { Option } from "../composable";
 
-defineProps<{
+const props = defineProps<{
     filterOptions: SearchFilterOptions;
     sortOptions: SearchSortOptions;
 }>();
+
+const remainingAdvancedOptions = computed(() => {
+    return sortOptionsList.filter(sortOption => !props.sortOptions.advanced.find(selectedSortOption => sortOption.value === selectedSortOption.value))
+});
+
+
+const updateSelectedAdvancedOption = (value: Option<SortOptions>) => {
+    props.sortOptions.advanced.push({ ...value, asc: sortOrderList[0] });
+}
+
 </script>
 
 <template>
@@ -140,8 +153,24 @@ defineProps<{
                                     :options="sortOrderList" option-label="name" />
                             </div>
                         </div>
-                        <div v-else>
-
+                        <div class="flex flex-column gap-2" v-else>
+                            <div class="field flex-1 m-0">
+                                <label for="sort_option">Sort Option</label>
+                                <Dropdown class="w-full" input-id="sort_option" :options="remainingAdvancedOptions"
+                                    option-label="name" @update:model-value="updateSelectedAdvancedOption" />
+                            </div>
+                            <div v-for="(option, index) in sortOptions.advanced">
+                                <div class="flex align-items-center">
+                                    <span class="flex-1">{{ option.name }}</span>
+                                    <div class="field flex-1 m-0">
+                                        <label :for="'advanced_sort_order_' + option.name">Order</label>
+                                        <Dropdown class="w-full" :input-id="'advanced_sort_order_' + option.name"
+                                            v-model="sortOptions.advanced[index].asc" :options="sortOrderList"
+                                            option-label="name" />
+                                    </div>
+                                </div>
+                                <Divider />
+                            </div>
                         </div>
                     </div>
                 </TabPanel>

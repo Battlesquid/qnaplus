@@ -1,7 +1,7 @@
 import { Question } from 'vex-qna-archiver';
 import { MaybeRefOrGetter, reactive, ref, toValue, watchEffect } from 'vue';
+import { SortFunction, multisortrules } from '../util/sorting';
 import { Option } from "./types";
-import { SortFunction, SortRule, multisortrules } from '../util/sorting';
 
 export enum SortOptions {
     Season,
@@ -16,18 +16,21 @@ export enum SortOrder {
     Descending
 }
 
-export type SortOption = Option<SortOptions> & {
-    asc: boolean;
-};
+export type BasicSortOption = {
+    sort: Option<SortOptions>;
+    asc: Option<SortOrder>;
+}
 
-export type AdvancedSortOption<T> = Option<SortOptions> & Omit<SortRule<T>, "sort">;
+export type AdvancedSortOption = Option<SortOptions> & {
+    asc: Option<SortOrder>;
+};
 
 export interface SearchSortOptions {
     basic: {
         sort: Option<SortOptions>;
         asc: Option<SortOrder>;
     },
-    advanced: AdvancedSortOption<Question>[],
+    advanced: AdvancedSortOption[],
     advancedEnabled: boolean;
 }
 
@@ -112,7 +115,7 @@ export const useSort = (questions: MaybeRefOrGetter<Question[]>) => {
 
     const doAdvancedSort = (questions: Question[]): Question[] => {
         const questionsCopy = [...questions];
-        const sorts: SortRule<Question>[] = sortOptions.advanced.map(s => ({ sort: SORT_MAP[s.value], asc: s.asc }));
+        const sorts = sortOptions.advanced.map(s => ({ sort: SORT_MAP[s.value], asc: s.asc.value === SortOrder.Ascending }));
         return multisortrules(questionsCopy, sorts);
     }
 

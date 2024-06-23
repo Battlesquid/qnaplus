@@ -2,7 +2,7 @@ export type SortFunction<T> = (a: T, b: T) => number;
 
 export interface SortRule<T> {
     sort: SortFunction<T>;
-    asc?: boolean;
+    asc: boolean;
 }
 
 export const multisortrules = <T>(items: T[], sorts: SortRule<T>[]) => {
