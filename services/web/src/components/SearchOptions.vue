@@ -35,6 +35,10 @@ const updateSelectedAdvancedOption = (value: Option<SortOptions>) => {
     props.sortOptions.advanced.push({ ...value, asc: sortOrderList[0] });
 }
 
+const removeSelectedAdvancedOption = (index: number) => {
+    props.sortOptions.advanced.splice(index, 1);
+}
+
 </script>
 
 <template>
@@ -154,20 +158,22 @@ const updateSelectedAdvancedOption = (value: Option<SortOptions>) => {
                             </div>
                         </div>
                         <div class="flex flex-column gap-2" v-else>
-                            <div class="field flex-1 m-0">
+                            <div class="field flex-1">
                                 <label for="sort_option">Sort Option</label>
                                 <Dropdown class="w-full" input-id="sort_option" :options="remainingAdvancedOptions"
                                     option-label="name" @update:model-value="updateSelectedAdvancedOption" />
                             </div>
                             <div v-for="(option, index) in sortOptions.advanced">
-                                <div class="flex align-items-center">
-                                    <span class="flex-1">{{ option.name }}</span>
-                                    <div class="field flex-1 m-0">
-                                        <label :for="'advanced_sort_order_' + option.name">Order</label>
-                                        <Dropdown class="w-full" :input-id="'advanced_sort_order_' + option.name"
+                                <div class="flex gap-2 align-items-center">
+                                    <em class="flex-1">{{ option.name }}</em>
+                                    <div class="flex flex-1 align-items-center gap-2 m-0">
+                                        <label :for="'advanced_sort_order_' + option.name">Order:</label>
+                                        <Dropdown class="flex-1" :input-id="'advanced_sort_order_' + option.name"
                                             v-model="sortOptions.advanced[index].asc" :options="sortOrderList"
                                             option-label="name" />
                                     </div>
+                                    <Button type="button" severity="secondary" rounded outlined aria-label="Remove Sort"
+                                        icon="pi pi-times" @click="removeSelectedAdvancedOption(index)" />
                                 </div>
                                 <Divider />
                             </div>
