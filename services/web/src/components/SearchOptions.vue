@@ -13,6 +13,7 @@ import InputSwitch from 'primevue/inputswitch';
 import InputText from "primevue/inputtext";
 import MultiSelect from 'primevue/multiselect';
 import SelectButton from 'primevue/selectbutton';
+import { VueDraggable } from "vue-draggable-plus";
 import TabPanel from "primevue/tabpanel";
 import TabView from "primevue/tabview";
 import Divider from 'primevue/divider';
@@ -163,20 +164,23 @@ const removeSelectedAdvancedOption = (index: number) => {
                                 <Dropdown class="w-full" input-id="sort_option" :options="remainingAdvancedOptions"
                                     option-label="name" @update:model-value="updateSelectedAdvancedOption" />
                             </div>
-                            <div v-for="(option, index) in sortOptions.advanced">
-                                <div class="flex gap-2 align-items-center">
-                                    <em class="flex-1">{{ option.name }}</em>
-                                    <div class="flex flex-1 align-items-center gap-2 m-0">
-                                        <label :for="'advanced_sort_order_' + option.name">Order:</label>
-                                        <Dropdown class="flex-1" :input-id="'advanced_sort_order_' + option.name"
-                                            v-model="sortOptions.advanced[index].asc" :options="sortOrderList"
-                                            option-label="name" />
+                            <VueDraggable ref="el" v-model="sortOptions.advanced">
+                                <div class="cursor-move" v-for="(option, index) in sortOptions.advanced">
+                                    <div class="flex gap-2 align-items-center">
+                                        <em class="flex-1">{{ option.name }}</em>
+                                        <div class="flex flex-1 align-items-center gap-2 m-0">
+                                            <label :for="'advanced_sort_order_' + option.name">Order:</label>
+                                            <Dropdown class="flex-1" :input-id="'advanced_sort_order_' + option.name"
+                                                v-model="sortOptions.advanced[index].asc" :options="sortOrderList"
+                                                option-label="name" />
+                                        </div>
+                                        <Button type="button" severity="secondary" rounded outlined
+                                            aria-label="Remove Sort" icon="pi pi-times"
+                                            @click="removeSelectedAdvancedOption(index)" />
                                     </div>
-                                    <Button type="button" severity="secondary" rounded outlined aria-label="Remove Sort"
-                                        icon="pi pi-times" @click="removeSelectedAdvancedOption(index)" />
+                                    <Divider />
                                 </div>
-                                <Divider />
-                            </div>
+                            </VueDraggable>
                         </div>
                     </div>
                 </TabPanel>
