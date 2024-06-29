@@ -6,6 +6,7 @@ import { Question, fetchCurrentSeason, fetchQuestionsIterative, getAllQuestions 
 import { OnPayloadQueueFlush, PayloadQueue } from "./payload_queue";
 import { Database } from "./supabase";
 import { UploadMetadata, upload } from "./upload";
+import { ChangeQuestion, UpdatePayload, classifyChanges } from "./change_classifier";
 
 const supabase = createClient<Database>(config.getenv("SUPABASE_URL"), config.getenv("SUPABASE_KEY"))
 const METADATA_ROW_ID = 0;
@@ -122,79 +123,10 @@ export const upsertQuestions = async (data: Question[], opts?: StoreOptions) => 
     return error === null;
 }
 
-const CHANGE_EVENTS = ["answered", "answer_edited"] as const;
-
-export type ChangeEvent = typeof CHANGE_EVENTS[number];
-export type ChangeCondition<T> = (newItem: T, oldItem: Partial<T>) => boolean;
-export type ChangeHandler<T, U> = (newItem: T, oldItem: Partial<T>) => U;
-
-export type ChangeQuestion = AnsweredQuestion | AnswerEditedQuestion;
-
-export interface AnsweredQuestion extends Question {
-    changeType: "answered";
-}
-
-export interface AnswerEditedQuestion extends Question {
-    changeType: "answer_edited";
-    diff: Change[];
-}
-
-type ChangeMap<T> = {
-    [P in ChangeEvent]: {
-        matches: ChangeCondition<T>;
-        format: ChangeHandler<T, ChangeTypeMap[P]>;
-    }
-}
-
-export type ChangeTypeMap = {
-    answered: AnsweredQuestion;
-    answer_edited: AnswerEditedQuestion;
-}
-
-const CHANGE_MAP: ChangeMap<Question> = {
-    answered: {
-        matches(newItem, oldItem) {
-            return oldItem.answered === false
-                && newItem.answered;
-        },
-        format(newItem, _) {
-            return { ...newItem, changeType: "answered" };
-        }
-    },
-    answer_edited: {
-        matches(newItem, oldItem) {
-            return Boolean(oldItem.answer)
-                && Boolean(newItem.answer)
-                && oldItem.answer !== newItem.answer;
-        },
-        format(newItem, oldItem) {
-            // based on the above condition, we can safely use non-null assertion
-            const diff = diffSentences(oldItem.answer!, newItem.answer!);
-            return { ...newItem, changeType: "answer_edited", diff };
-        }
-    }
-}
-
-const classifyChanges = (items: RealtimePostgresUpdatePayload<Question>[]) => {
-    const changes: ChangeQuestion[] = [];
-    for (const { old: oldQuestion, new: newQuestion } of items) {
-        for (const event of CHANGE_EVENTS) {
-            if (CHANGE_MAP[event].matches(newQuestion, oldQuestion)) {
-                changes.push(CHANGE_MAP[event].format(newQuestion, oldQuestion));
-            }
-        }
-    }
-    return changes;
-}
-
-export type OnChangeOptions = {
-    [P in ChangeEvent]?: OnPayloadQueueFlush<Question>;
-}
-
 export type ChangeCallback = (items: ChangeQuestion[]) => void | Promise<void>;
 
 export const onChange = (callback: ChangeCallback, logger?: Logger) => {
-    const queue = new PayloadQueue<RealtimePostgresUpdatePayload<Question>>({
+    const queue = new PayloadQueue<UpdatePayload<Question>>({
         onFlush(items) {
             const changes = classifyChanges(items);
             if (changes.length < 1) {
@@ -214,7 +146,15 @@ export const onChange = (callback: ChangeCallback, logger?: Logger) => {
                 schema: "public",
                 table: asEnvironmentResource(QnaplusTables.Questions),
             },
-            payload => queue.push(payload)
+            payload => queue.push({ old: payload.old, new: payload.new })
+        )
+        .on<Question[]>(
+            "broadcast",
+            { event: "renotify" },
+            ({ payload }) => {
+                const items = payload.map<UpdatePayload<Question>>(p => ({ old: { ...p, answered: false }, new: p }));
+                queue.push(...items);
+            }
         )
         .subscribe();
 }

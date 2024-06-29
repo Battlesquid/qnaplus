@@ -25,8 +25,8 @@ export class PayloadQueue<T> {
         };
     }
 
-    push(item: T) {
-        this.queue.push(item);
+    push(...items: T[]) {
+        this.queue.push(...items);
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => this.flush(), this.options.flushTimeout);
     }
