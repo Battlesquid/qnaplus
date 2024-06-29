@@ -2,7 +2,7 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 
 export const isValidDate = (date: Date, year: number, month: number, day: number) => {
     return date.getFullYear() === year
-        && date.getMonth() === month
+        && date.getMonth() + 1 === month
         && date.getDate() === day;
 }
 

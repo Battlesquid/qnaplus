@@ -1,9 +1,11 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Subcommand } from "@sapphire/plugin-subcommands";
-import { QnaplusTables, asEnvironmentResource, getDatabaseInstance, getQuestion } from "qnaplus";
+import { QnaplusTables, asEnvironmentResource, config, getDatabaseInstance, getQuestion } from "qnaplus";
 import { renotify } from "../interactions";
 import { PinoLoggerAdapter } from "../logger_adapter";
 import { formatDDMMMYYYY, isValidDate, mmmToMonthNumber } from "../util/date";
+import { LoggerSubcommand } from "../util/logger_subcommand";
+import Cron from "croner";
 
 
 @ApplyOptions<Subcommand.Options>({
@@ -30,7 +32,7 @@ import { formatDDMMMYYYY, isValidDate, mmmToMonthNumber } from "../util/date";
         },
     ]
 })
-export class Renotify extends Subcommand {
+export class Renotify extends LoggerSubcommand {
     private static readonly CHAT_INPUT_DEVELOPMENT_ID: string = "1255678004143849493";
 
     public override registerApplicationCommands(registry: Subcommand.Registry) {
@@ -43,33 +45,50 @@ export class Renotify extends Subcommand {
         const logger = (this.container.logger as PinoLoggerAdapter).child({ label: "renotifyId" });
         const id = interaction.options.getString("id", true);
         const db = getDatabaseInstance();
-        const { error } = await db.from(asEnvironmentResource(QnaplusTables.Questions))
-            .update({ answered: false })
-            .eq("id", id);
+        const { error, status, statusText } = await db.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
+            .upsert({ id });
         if (error) {
-            logger.error({ error });
-            interaction.reply(`Unable to find a question with the id '${id}' (Error Code ${error.code})`);
+            this.logErrorAndReply(
+                logger,
+                interaction,
+                `Unable to queue question with id '${id}' for renotification`,
+                { error, status, statusText }
+            );
             return;
         }
-        logger.info(`Queued question with id '${id}' for renotification.`);
+        this.logInfoAndReply(
+            logger,
+            interaction,
+            `Queued question with id '${id}' for renotification.${this.getNextRuntimeString()} Cancel anytime using /renotify cancel.`
+        );
     }
 
     public async renotifyBulkId(interaction: Subcommand.ChatInputCommandInteraction) {
-        const logger = (this.container.logger as PinoLoggerAdapter).child({ label: "rollbackBulkId" });
+        const logger = (this.container.logger as PinoLoggerAdapter).child({ label: "renotifyBulkId" });
         const id = interaction.options.getString("id", true);
         const question = await getQuestion(id);
         if (question === null) {
-            logger.warn(`No question with the id '${id}' was found, exiting`);
-            interaction.reply(`No question with the id '${id}' was found, exiting`);
+            this.logWarnAndReply(
+                logger,
+                interaction,
+                `No question with the id '${id}' was found, exiting.`
+            )
             return;
         }
         try {
             const count = await this.doRenotifyBulkDate(question.askedTimestampMs);
-            const text = `Successfully queued ${count} questions for renotification.`;
-            interaction.reply(text);
+            this.logInfoAndReply(
+                logger,
+                interaction,
+                `Successfully queued ${count} questions for renotification.${this.getNextRuntimeString()} Cancel anytime using /renotify cancel.`
+            )
         } catch (e) {
-            logger.error({ error: e });
-            interaction.reply("An error occurred");
+            this.logErrorAndReply(
+                logger,
+                interaction,
+                "An error occurred",
+                e as object
+            );
         }
     }
 
@@ -79,52 +98,97 @@ export class Renotify extends Subcommand {
         const regex = /(\d{2})-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-(\d{4})/;
         const match = date.match(regex);
         if (match === null) {
-            const text = `${date} does not match the format 'DD-MMM-YYYY', exiting.`;
-            logger.error(text);
-            interaction.reply(text);
+            this.logErrorAndReply(
+                logger,
+                interaction,
+                `${date} does not match the format 'DD-MMM-YYYY', exiting.`
+            );
             return;
         }
         const computedDate = new Date(date);
         const [, day, mmm, year] = match;
         const month = mmmToMonthNumber(mmm);
         if (!isValidDate(new Date(date), parseInt(year), month, parseInt(day))) {
-            const errorText = `Provided date is invalid (Read as '${date}', computed as '${formatDDMMMYYYY(computedDate)}').`;
-            logger.error(errorText);
-            interaction.reply(errorText);
+            this.logErrorAndReply(
+                logger,
+                interaction,
+                `Provided date is invalid (read as '${date}', computed as '${formatDDMMMYYYY(computedDate)}').`
+            );
             return;
         }
         try {
             const count = await this.doRenotifyBulkDate(computedDate.getTime());
-            const text = `Successfully queued ${count} questions for renotification.`;
-            interaction.reply(text);
+            this.logInfoAndReply(
+                logger,
+                interaction,
+                `Successfully queued ${count} questions for renotification.${this.getNextRuntimeString()} Cancel anytime using /renotify cancel.`
+            )
         } catch (e) {
-            logger.error({ error: e });
-            interaction.reply("An error occurred");
+            this.logErrorAndReply(
+                logger,
+                interaction,
+                "An error occurred",
+                e as object
+            );
         }
     }
 
     public async renotifyCancel(interaction: Subcommand.ChatInputCommandInteraction) {
-
+        const logger = (this.container.logger as PinoLoggerAdapter).child({ label: "renotifyCancel" });
+        const db = getDatabaseInstance();
+        const { count, error, status, statusText } = await db.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
+            .delete({ count: "exact" })
+            .neq("id", "0");
+        if (error) {
+            this.logErrorAndReply(
+                logger,
+                interaction,
+                "An error occurred while clearing renotify queue.",
+                { error, status, statusText }
+            );
+            return;
+        }
+        this.logInfoAndReply(
+            logger,
+            interaction,
+            `Successfully cleared ${count ?? 0} questions from the renotify queue.`
+        );
     }
 
     private async doRenotifyBulkDate(dateMs: number) {
         const db = getDatabaseInstance();
-        const { data: ids, error: questionsError } = await db.from(asEnvironmentResource(QnaplusTables.Questions))
+        const {
+            data: ids,
+            error: questionsError,
+            status: questionsStatus,
+            statusText: questionStatusText
+        } = await db.from(asEnvironmentResource(QnaplusTables.Questions))
             .select("id")
             .eq("answered", true)
-            .gte("answeredTimestampMs", dateMs)
+            .gte("askedTimestampMs", dateMs)
         if (questionsError) {
-            throw questionsError;
+            throw { error: questionsError, status: questionsStatus, statusText: questionStatusText };
         }
         if (ids.length === 0) {
             return 0;
         }
-        const { count, error: renotifyError } = await db.from(QnaplusTables.RenotifyQueue)
+        const {
+            count,
+            error: renotifyError,
+            status: renotifyStatus,
+            statusText: renotifyStatusText
+        } = await db.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
             .upsert(ids, { count: "exact", ignoreDuplicates: true });
         if (renotifyError) {
-            throw renotifyError;
+            throw { error: renotifyError, status: renotifyStatus, statusText: renotifyStatusText };
         }
         // TODO figure out what a count of 'null' means
         return count ?? 0;
+    }
+
+    private getNextRuntimeString() {
+        const nextRuntime = Cron(config.getenv("DATABASE_UPDATE_INTERVAL")).msToNext();
+        const minutes = Math.round(nextRuntime! / 1000 / 60);
+        return ` ${minutes} minutes until next run.`;
     }
 }
