@@ -9,121 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      questions: {
-        Row: {
-          answer: string | null
-          answered: boolean
-          answeredTimestamp: string | null
-          answeredTimestampMs: number | null
-          answerRaw: string | null
-          askedTimestamp: string | null
-          askedTimestampMs: number | null
-          author: string
-          id: string
-          program: string
-          question: string
-          questionRaw: string
-          season: string
-          tags: string[]
-          title: string
-          url: string
-        }
-        Insert: {
-          answer?: string | null
-          answered: boolean
-          answeredTimestamp?: string | null
-          answeredTimestampMs?: number | null
-          answerRaw?: string | null
-          askedTimestamp?: string | null
-          askedTimestampMs?: number | null
-          author: string
-          id: string
-          program: string
-          question: string
-          questionRaw: string
-          season: string
-          tags: string[]
-          title: string
-          url: string
-        }
-        Update: {
-          answer?: string | null
-          answered?: boolean
-          answeredTimestamp?: string | null
-          answeredTimestampMs?: number | null
-          answerRaw?: string | null
-          askedTimestamp?: string | null
-          askedTimestampMs?: number | null
-          author?: string
-          id?: string
-          program?: string
-          question?: string
-          questionRaw?: string
-          season?: string
-          tags?: string[]
-          title?: string
-          url?: string
-        }
-        Relationships: []
-      }
-      questions_duplicate: {
-        Row: {
-          answer: string | null
-          answered: boolean
-          answeredTimestamp: string | null
-          answeredTimestampMs: number | null
-          answerRaw: string | null
-          askedTimestamp: string | null
-          askedTimestampMs: number | null
-          author: string
-          id: string
-          program: string
-          question: string
-          questionRaw: string
-          season: string
-          tags: string[]
-          title: string
-          url: string
-        }
-        Insert: {
-          answer?: string | null
-          answered: boolean
-          answeredTimestamp?: string | null
-          answeredTimestampMs?: number | null
-          answerRaw?: string | null
-          askedTimestamp?: string | null
-          askedTimestampMs?: number | null
-          author: string
-          id: string
-          program: string
-          question: string
-          questionRaw: string
-          season: string
-          tags: string[]
-          title: string
-          url: string
-        }
-        Update: {
-          answer?: string | null
-          answered?: boolean
-          answeredTimestamp?: string | null
-          answeredTimestampMs?: number | null
-          answerRaw?: string | null
-          askedTimestamp?: string | null
-          askedTimestampMs?: number | null
-          author?: string
-          id?: string
-          program?: string
-          question?: string
-          questionRaw?: string
-          season?: string
-          tags?: string[]
-          title?: string
-          url?: string
-        }
-        Relationships: []
-      }
-      questions_metadata: {
+      "metadata.development": {
         Row: {
           current_season: string | null
           id: number
@@ -138,6 +24,138 @@ export type Database = {
           current_season?: string | null
           id?: number
           oldest_unanswered_question?: string
+        }
+        Relationships: []
+      }
+      "metadata.production": {
+        Row: {
+          current_season: string | null
+          id: number
+          oldest_unanswered_question: string
+        }
+        Insert: {
+          current_season?: string | null
+          id?: number
+          oldest_unanswered_question: string
+        }
+        Update: {
+          current_season?: string | null
+          id?: number
+          oldest_unanswered_question?: string
+        }
+        Relationships: []
+      }
+      "questions.development": {
+        Row: {
+          answer: string | null
+          answered: boolean
+          answeredTimestamp: string | null
+          answeredTimestampMs: number | null
+          answerRaw: string | null
+          askedTimestamp: string | null
+          askedTimestampMs: number | null
+          author: string
+          id: string
+          program: string
+          question: string
+          questionRaw: string
+          season: string
+          tags: string[]
+          title: string
+          url: string
+        }
+        Insert: {
+          answer?: string | null
+          answered: boolean
+          answeredTimestamp?: string | null
+          answeredTimestampMs?: number | null
+          answerRaw?: string | null
+          askedTimestamp?: string | null
+          askedTimestampMs?: number | null
+          author: string
+          id: string
+          program: string
+          question: string
+          questionRaw: string
+          season: string
+          tags: string[]
+          title: string
+          url: string
+        }
+        Update: {
+          answer?: string | null
+          answered?: boolean
+          answeredTimestamp?: string | null
+          answeredTimestampMs?: number | null
+          answerRaw?: string | null
+          askedTimestamp?: string | null
+          askedTimestampMs?: number | null
+          author?: string
+          id?: string
+          program?: string
+          question?: string
+          questionRaw?: string
+          season?: string
+          tags?: string[]
+          title?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      "questions.production": {
+        Row: {
+          answer: string | null
+          answered: boolean
+          answeredTimestamp: string | null
+          answeredTimestampMs: number | null
+          answerRaw: string | null
+          askedTimestamp: string | null
+          askedTimestampMs: number | null
+          author: string
+          id: string
+          program: string
+          question: string
+          questionRaw: string
+          season: string
+          tags: string[]
+          title: string
+          url: string
+        }
+        Insert: {
+          answer?: string | null
+          answered: boolean
+          answeredTimestamp?: string | null
+          answeredTimestampMs?: number | null
+          answerRaw?: string | null
+          askedTimestamp?: string | null
+          askedTimestampMs?: number | null
+          author: string
+          id: string
+          program: string
+          question: string
+          questionRaw: string
+          season: string
+          tags: string[]
+          title: string
+          url: string
+        }
+        Update: {
+          answer?: string | null
+          answered?: boolean
+          answeredTimestamp?: string | null
+          answeredTimestampMs?: number | null
+          answerRaw?: string | null
+          askedTimestamp?: string | null
+          askedTimestampMs?: number | null
+          author?: string
+          id?: string
+          program?: string
+          question?: string
+          questionRaw?: string
+          season?: string
+          tags?: string[]
+          title?: string
+          url?: string
         }
         Relationships: []
       }

@@ -14,6 +14,26 @@ export type StoreOptions = {
     logger?: Logger;
 }
 
+export const getDatabaseInstance = () => {
+    return supabase;
+}
+
+export const asEnvironmentResource = (resource: string) => {
+    return config.getenv("NODE_ENV") === "development"
+        ? `${resource}.development`
+        : `${resource}.production`;
+}
+
+export const QnaplusTables = {
+    Questions: "questions",
+    Metadata: "metadata",
+    RenotifyQueue: "renotify_queue",
+}
+
+export const QnaplusBuckets = {
+    Data: "data"
+}
+
 export const populate = async (logger?: Logger) => {
     const questions = await archiverGetAllQuestions(logger);
     return insertQuestions(questions, { logger });
@@ -36,7 +56,7 @@ export const populateWithMetadata = async (logger?: Logger) => {
     logger?.info("Successfully populated database");
 
     const { error } = await supabase
-        .from(config.getenv("SUPABASE_METADATA_TABLE"))
+        .from(asEnvironmentResource(QnaplusTables.Metadata))
         .upsert({ id: METADATA_ROW_ID, current_season: currentSeason, oldest_unanswered_question: oldestQuestionId });
 
     if (error) {
@@ -48,7 +68,7 @@ export const populateWithMetadata = async (logger?: Logger) => {
 
 export const getQuestion = async (id: Question["id"], opts?: StoreOptions): Promise<Question | null> => {
     const logger = opts?.logger?.child({ label: "getDocument" });
-    const row = await supabase.from(config.getenv("SUPABASE_QUESTIONS_TABLE")).select().eq("id", id).single();
+    const row = await supabase.from(asEnvironmentResource(QnaplusTables.Questions)).select().eq("id", id).single();
     if (row.error !== null) {
         logger?.trace(`No question with id '${id}' found.`);
     }
@@ -65,7 +85,7 @@ export const getAllQuestions = async (opts?: StoreOptions): Promise<Question[]> 
         const from = page * LIMIT;
         const to = from + LIMIT;
         const rows = await supabase
-            .from(config.getenv("SUPABASE_QUESTIONS_TABLE"))
+            .from(asEnvironmentResource(QnaplusTables.Questions))
             .select("*", { count: "exact" })
             .range(from, to);
         if (rows.error !== null) {
@@ -82,20 +102,20 @@ export const getAllQuestions = async (opts?: StoreOptions): Promise<Question[]> 
 
 export const insertQuestion = async (data: Question, opts?: StoreOptions) => {
     const logger = opts?.logger?.child({ label: "insertQuestion" });
-    const { error, status } = await supabase.from(config.getenv("SUPABASE_QUESTIONS_TABLE")).insert(data);
+    const { error, status } = await supabase.from(asEnvironmentResource(QnaplusTables.Questions)).insert(data);
     logger?.trace({ error, status });
 }
 
 export const insertQuestions = async (data: Question[], opts?: StoreOptions) => {
     const logger = opts?.logger?.child({ label: "insertQuestions" });
-    const { error, status } = await supabase.from(config.getenv("SUPABASE_QUESTIONS_TABLE")).insert(data);
+    const { error, status } = await supabase.from(asEnvironmentResource(QnaplusTables.Questions)).insert(data);
     logger?.trace({ error, status });
 }
 
 export const upsertQuestions = async (data: Question[], opts?: StoreOptions) => {
     const logger = opts?.logger?.child({ label: "upsertQuestions" });
     logger?.info(`Upserting ${data.length} questions`)
-    const { error, status } = await supabase.from(config.getenv("SUPABASE_QUESTIONS_TABLE")).upsert(data, { ignoreDuplicates: false });
+    const { error, status } = await supabase.from(asEnvironmentResource(QnaplusTables.Questions)).upsert(data, { ignoreDuplicates: false });
     if (error !== null) {
         logger?.warn({ error, status })
     }
@@ -192,7 +212,7 @@ export const onChange = (callback: ChangeCallback, logger?: Logger) => {
             {
                 event: "UPDATE",
                 schema: "public",
-                table: config.getenv("SUPABASE_QUESTIONS_TABLE"),
+                table: asEnvironmentResource(QnaplusTables.Questions),
             },
             payload => queue.push(payload)
         )
@@ -201,7 +221,7 @@ export const onChange = (callback: ChangeCallback, logger?: Logger) => {
 
 export const doDatabaseUpdate = async (_logger?: Logger) => {
     const logger = _logger?.child({ label: "doNotificationUpdate" });
-    const { error: metadataError, data } = await supabase.from(config.getenv("SUPABASE_METADATA_TABLE"))
+    const { error: metadataError, data } = await supabase.from(asEnvironmentResource(QnaplusTables.Metadata))
         .select("*")
         .eq("id", METADATA_ROW_ID)
         .single();
@@ -225,7 +245,7 @@ export const doDatabaseUpdate = async (_logger?: Logger) => {
     }
 
     const { error } = await supabase
-        .from(config.getenv("SUPABASE_METADATA_TABLE"))
+        .from(asEnvironmentResource(QnaplusTables.Metadata))
         .upsert({ id: METADATA_ROW_ID, oldest_unanswered_question: oldestUnanswered.id });
 
     if (error) {
@@ -242,7 +262,7 @@ export const doStorageUpdate = async (_logger?: Logger) => {
     // typed as any to address limitation in tus-js-client (https://github.com/tus/tus-js-client/issues/289)
     const buffer: any = Buffer.from(json, "utf-8");
     const metadata: UploadMetadata = {
-        bucket: config.getenv("SUPABASE_BUCKET"),
+        bucket: asEnvironmentResource(QnaplusBuckets.Data),
         filename: "questions.json",
         type: "application/json"
     }
