@@ -45,6 +45,17 @@ export class Renotify extends LoggerSubcommand {
         const logger = (this.container.logger as PinoLoggerAdapter).child({ label: "renotifyId" });
         const id = interaction.options.getString("id", true);
         const db = getDatabaseInstance();
+
+        const question = await getQuestion(id);
+        if (question === null) {
+            this.logWarnAndReply(
+                logger,
+                interaction,
+                `No question with the id '${id}' was found, exiting.`
+            )
+            return;
+        }
+
         const { error, status, statusText } = await db.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
             .upsert({ id });
         if (error) {

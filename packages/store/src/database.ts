@@ -220,7 +220,7 @@ export const onChange = (callback: ChangeCallback, logger?: Logger) => {
 }
 
 export const doDatabaseUpdate = async (_logger?: Logger) => {
-    const logger = _logger?.child({ label: "doNotificationUpdate" });
+    const logger = _logger?.child({ label: "doDatabaseUpdate" });
     const { error: metadataError, data } = await supabase.from(asEnvironmentResource(QnaplusTables.Metadata))
         .select("*")
         .eq("id", METADATA_ROW_ID)
