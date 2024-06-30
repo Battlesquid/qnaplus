@@ -1,12 +1,11 @@
 import { config } from "@qnaplus/config";
-import { RealtimePostgresUpdatePayload, createClient } from "@supabase/supabase-js";
-import { Change, diffSentences } from "diff";
+import { createClient } from "@supabase/supabase-js";
 import { Logger } from "pino";
-import { Question, fetchCurrentSeason, fetchQuestionsIterative, getAllQuestions as archiverGetAllQuestions, getOldestUnansweredQuestion, Season, getOldestQuestion } from "vex-qna-archiver";
-import { OnPayloadQueueFlush, PayloadQueue } from "./payload_queue";
+import { Question, getAllQuestions as archiverGetAllQuestions, fetchCurrentSeason, getOldestQuestion, getOldestUnansweredQuestion } from "vex-qna-archiver";
+import { ChangeQuestion, classifyChanges } from "./change_classifier";
+import { PayloadQueue, RenotifyPayload, UpdatePayload } from "./payload_queue";
+import { QnaplusChannels, QnaplusEvents, QnaplusTables, asEnvironmentResource } from "./resources";
 import { Database } from "./supabase";
-import { UploadMetadata, upload } from "./upload";
-import { ChangeQuestion, UpdatePayload, classifyChanges } from "./change_classifier";
 
 const supabase = createClient<Database>(config.getenv("SUPABASE_URL"), config.getenv("SUPABASE_KEY"))
 const METADATA_ROW_ID = 0;
@@ -15,24 +14,8 @@ export type StoreOptions = {
     logger?: Logger;
 }
 
-export const getDatabaseInstance = () => {
+export const getSupabaseInstance = () => {
     return supabase;
-}
-
-export const asEnvironmentResource = (resource: string) => {
-    return config.getenv("NODE_ENV") === "development"
-        ? `${resource}.development`
-        : `${resource}.production`;
-}
-
-export const QnaplusTables = {
-    Questions: "questions",
-    Metadata: "metadata",
-    RenotifyQueue: "renotify_queue",
-}
-
-export const QnaplusBuckets = {
-    Data: "data"
 }
 
 export const populate = async (logger?: Logger) => {
@@ -123,6 +106,13 @@ export const upsertQuestions = async (data: Question[], opts?: StoreOptions) => 
     return error === null;
 }
 
+export const getMetadata = async () => {
+    return await supabase.from(asEnvironmentResource(QnaplusTables.Metadata))
+        .select("*")
+        .eq("id", METADATA_ROW_ID)
+        .single();
+}
+
 export type ChangeCallback = (items: ChangeQuestion[]) => void | Promise<void>;
 
 export const onChange = (callback: ChangeCallback, logger?: Logger) => {
@@ -138,7 +128,7 @@ export const onChange = (callback: ChangeCallback, logger?: Logger) => {
         }
     });
     return supabase
-        .channel("db-changes")
+        .channel(asEnvironmentResource(QnaplusChannels.DbChanges))
         .on<Question>(
             "postgres_changes",
             {
@@ -148,67 +138,14 @@ export const onChange = (callback: ChangeCallback, logger?: Logger) => {
             },
             payload => queue.push({ old: payload.old, new: payload.new })
         )
-        .on<Question[]>(
+        .on<RenotifyPayload>(
             "broadcast",
-            { event: "renotify" },
+            { event: QnaplusEvents.RenotifyQueueFlush },
             ({ payload }) => {
-                const items = payload.map<UpdatePayload<Question>>(p => ({ old: { ...p, answered: false }, new: p }));
+                const { questions } = payload;
+                const items = questions.map<UpdatePayload<Question>>(p => ({ old: { ...p, answered: false }, new: p }));
                 queue.push(...items);
             }
         )
         .subscribe();
-}
-
-export const doDatabaseUpdate = async (_logger?: Logger) => {
-    const logger = _logger?.child({ label: "doDatabaseUpdate" });
-    const { error: metadataError, data } = await supabase.from(asEnvironmentResource(QnaplusTables.Metadata))
-        .select("*")
-        .eq("id", METADATA_ROW_ID)
-        .single();
-    if (metadataError) {
-        logger?.error({ error: metadataError }, "Error retrieving question metadata, exiting");
-        return;
-    }
-
-    const { current_season, oldest_unanswered_question } = data;
-    logger?.info(`Starting update from Q&A ${oldest_unanswered_question}`);
-    const questions = await fetchQuestionsIterative({ logger, start: parseInt(oldest_unanswered_question) });
-    const success = await upsertQuestions(questions, { logger });
-    if (success) {
-        logger?.info(`Updated ${questions.length} questions.`);
-    }
-
-    const oldestUnanswered = getOldestUnansweredQuestion(questions, current_season as Season);
-    if (oldestUnanswered === undefined) {
-        logger?.info("Oldest unanswered question not found, skipping metadata update.")
-        return;
-    }
-
-    const { error } = await supabase
-        .from(asEnvironmentResource(QnaplusTables.Metadata))
-        .upsert({ id: METADATA_ROW_ID, oldest_unanswered_question: oldestUnanswered.id });
-
-    if (error) {
-        logger?.error({ error, oldest_unanswered_id: oldestUnanswered.id }, `Unable to save oldest unanswered question (${oldestUnanswered.id}) to metadata`);
-    } else {
-        logger?.info({ oldest_unanswered_id: oldestUnanswered.id }, `Successfully updated metadata with oldest unanswered question (${oldestUnanswered.id})`);
-    }
-}
-
-export const doStorageUpdate = async (_logger?: Logger) => {
-    const logger = _logger?.child({ label: "doStorageUpdate" });
-    const questions = await getAllQuestions({ logger });
-    const json = JSON.stringify(questions);
-    // typed as any to address limitation in tus-js-client (https://github.com/tus/tus-js-client/issues/289)
-    const buffer: any = Buffer.from(json, "utf-8");
-    const metadata: UploadMetadata = {
-        bucket: asEnvironmentResource(QnaplusBuckets.Data),
-        filename: "questions.json",
-        type: "application/json"
-    }
-    try {
-        await upload(buffer, metadata, logger);
-    } catch (e) {
-        logger?.error({ error: e }, "Error while updating storage json")
-    }
 }

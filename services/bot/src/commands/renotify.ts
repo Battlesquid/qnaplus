@@ -1,6 +1,6 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Subcommand } from "@sapphire/plugin-subcommands";
-import { QnaplusTables, asEnvironmentResource, config, getDatabaseInstance, getQuestion } from "qnaplus";
+import { QnaplusTables, asEnvironmentResource, config, getSupabaseInstance, getQuestion } from "qnaplus";
 import { renotify } from "../interactions";
 import { PinoLoggerAdapter } from "../logger_adapter";
 import { formatDDMMMYYYY, isValidDate, mmmToMonthNumber } from "../util/date";
@@ -44,7 +44,7 @@ export class Renotify extends LoggerSubcommand {
     public async renotifyId(interaction: Subcommand.ChatInputCommandInteraction) {
         const logger = (this.container.logger as PinoLoggerAdapter).child({ label: "renotifyId" });
         const id = interaction.options.getString("id", true);
-        const db = getDatabaseInstance();
+        const db = getSupabaseInstance();
 
         const question = await getQuestion(id);
         if (question === null) {
@@ -146,7 +146,7 @@ export class Renotify extends LoggerSubcommand {
 
     public async renotifyCancel(interaction: Subcommand.ChatInputCommandInteraction) {
         const logger = (this.container.logger as PinoLoggerAdapter).child({ label: "renotifyCancel" });
-        const db = getDatabaseInstance();
+        const db = getSupabaseInstance();
         const { count, error, status, statusText } = await db.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
             .delete({ count: "exact" })
             .neq("id", "0");
@@ -167,7 +167,7 @@ export class Renotify extends LoggerSubcommand {
     }
 
     private async doRenotifyBulkDate(dateMs: number) {
-        const db = getDatabaseInstance();
+        const db = getSupabaseInstance();
         const {
             data: ids,
             error: questionsError,

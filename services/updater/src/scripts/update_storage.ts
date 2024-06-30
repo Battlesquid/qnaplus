@@ -1,5 +1,5 @@
 import pino from "pino";
-import { doStorageUpdate } from "./database";
+import { doStorageUpdate } from "../updaters/storage_update";
 
 (async () => {
     const logger = pino();

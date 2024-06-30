@@ -1,5 +1,6 @@
 import { Change, diffSentences } from "diff";
 import { Question } from "vex-qna-archiver";
+import { UpdatePayload } from "./payload_queue";
 
 const CHANGE_EVENTS = ["answered", "answer_edited"] as const;
 
@@ -52,11 +53,6 @@ const CHANGE_MAP: ChangeMap<Question> = {
             return { ...newItem, changeType: "answer_edited", diff };
         }
     }
-}
-
-export type UpdatePayload<T> = {
-    old: Partial<T>;
-    new: T;
 }
 
 export const classifyChanges = (items: UpdatePayload<Question>[]) => {

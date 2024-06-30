@@ -159,6 +159,46 @@ export type Database = {
         }
         Relationships: []
       }
+      "renotify_queue.development": {
+        Row: {
+          id: string
+        }
+        Insert: {
+          id: string
+        }
+        Update: {
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "renotify.development_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "questions.development"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      "renotify_queue.production": {
+        Row: {
+          id: string
+        }
+        Insert: {
+          id: string
+        }
+        Update: {
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "renotify_queue.production_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "questions.development"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
