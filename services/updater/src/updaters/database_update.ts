@@ -1,10 +1,9 @@
 import { Logger } from "pino";
-import { getMetadata, getSupabaseInstance, saveMetadata, upsertQuestions } from "qnaplus";
+import { getMetadata, saveMetadata, upsertQuestions } from "qnaplus";
 import { Season, fetchQuestionsIterative, getOldestUnansweredQuestion } from "vex-qna-archiver";
 
 export const doDatabaseUpdate = async (_logger?: Logger) => {
     const logger = _logger?.child({ label: "doDatabaseUpdate" });
-    const supabase = getSupabaseInstance();
     const { error: metadataError, data } = await getMetadata();
     if (metadataError) {
         logger?.error({ error: metadataError }, "Error retrieving question metadata, exiting");
