@@ -1,4 +1,4 @@
-import pino, { Logger } from "pino";
+import { Logger } from "pino";
 import { QnaplusChannels, QnaplusEvents, QnaplusTables, asEnvironmentResource, getRenotifyQueue, getSupabaseInstance } from "qnaplus";
 
 export const doRenotifyUpdate = async (_logger: Logger) => {
