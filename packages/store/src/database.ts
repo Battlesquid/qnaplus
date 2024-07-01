@@ -113,6 +113,11 @@ export const getMetadata = async () => {
         .single();
 }
 
+// TODO add better typing
+export const saveMetadata = async (metadata: object) => {
+    return await supabase.from(asEnvironmentResource(QnaplusTables.Metadata))
+        .upsert({ id: METADATA_ROW_ID, ...metadata });
+}
 export const getRenotifyQueue = async () => {
     return await supabase.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
         .select(`*, ..."${asEnvironmentResource(QnaplusTables.Questions)}" (*)`)

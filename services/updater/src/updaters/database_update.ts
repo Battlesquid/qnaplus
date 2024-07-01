@@ -1,9 +1,11 @@
+import { saveMetadata } from './../../../../packages/store/src/database';
 import { Logger } from "pino";
-import { getMetadata, upsertQuestions } from "qnaplus";
+import { getMetadata, getSupabaseInstance, upsertQuestions } from "qnaplus";
 import { Season, fetchQuestionsIterative, getOldestUnansweredQuestion } from "vex-qna-archiver";
 
 export const doDatabaseUpdate = async (_logger?: Logger) => {
     const logger = _logger?.child({ label: "doDatabaseUpdate" });
+    const supabase = getSupabaseInstance();
     const { error: metadataError, data } = await getMetadata();
     if (metadataError) {
         logger?.error({ error: metadataError }, "Error retrieving question metadata, exiting");
@@ -24,7 +26,7 @@ export const doDatabaseUpdate = async (_logger?: Logger) => {
         return;
     }
 
-    const { error } = await getMetadata();
+    const { error } = await saveMetadata({ oldest_unanswered_question: oldestUnanswered.id });
 
     if (error) {
         logger?.error({ error, oldest_unanswered_id: oldestUnanswered.id }, `Unable to save oldest unanswered question (${oldestUnanswered.id}) to metadata`);
