@@ -12,8 +12,7 @@
   "scripts": {
     "build": "tsc --build",
     "populate": "node dist/populate.js",
-    "populate_with_metadata": "node dist/populate_with_metadata.js",
-    "update_storage": "node dist/update_storage.js"
+    "populate_with_metadata": "node dist/populate_with_metadata.js"
   },
   "dependencies": {
     "@qnaplus/config": "1.0.0",
@@ -21,7 +20,7 @@
     "diff": "^5.1.0",
     "pino": "^8.17.2",
     "tus-js-client": "^4.1.0",
-    "vex-qna-archiver": "^10.0.0"
+    "vex-qna-archiver": "^10.1.0"
   },
   "devDependencies": {
     "@types/diff": "^5.0.9"
