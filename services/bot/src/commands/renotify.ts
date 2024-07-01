@@ -1,11 +1,13 @@
 import { ApplyOptions } from "@sapphire/decorators";
+import { PaginatedMessageEmbedFields } from "@sapphire/discord.js-utilities";
 import { Subcommand } from "@sapphire/plugin-subcommands";
-import { QnaplusTables, asEnvironmentResource, config, getSupabaseInstance, getQuestion } from "qnaplus";
+import Cron from "croner";
+import { EmbedBuilder, EmbedField } from "discord.js";
+import { QnaplusTables, asEnvironmentResource, config, getQuestion, getRenotifyQueue, getSupabaseInstance } from "qnaplus";
 import { renotify } from "../interactions";
 import { PinoLoggerAdapter } from "../logger_adapter";
 import { formatDDMMMYYYY, isValidDate, mmmToMonthNumber } from "../util/date";
 import { LoggerSubcommand } from "../util/logger_subcommand";
-import Cron from "croner";
 
 
 @ApplyOptions<Subcommand.Options>({
@@ -25,6 +27,10 @@ import Cron from "croner";
         {
             name: renotify.commands.bulkDate.name,
             chatInputRun: "renotifyBulkDate",
+        },
+        {
+            name: renotify.commands.list.name,
+            chatInputRun: "renotifyList",
         },
         {
             name: renotify.commands.cancel.name,
@@ -142,6 +148,48 @@ export class Renotify extends LoggerSubcommand {
                 e as object
             );
         }
+    }
+
+    public async renotifyList(interaction: Subcommand.ChatInputCommandInteraction) {
+        const logger = (this.container.logger as PinoLoggerAdapter).child({ label: "renotifyList" });
+        const { data: questions, error, status, statusText } = await getRenotifyQueue();
+        if (error !== null) {
+            this.logErrorAndReply(
+                logger,
+                interaction,
+                "Error retreiving renotify queue.",
+                { error, status, statusText }
+            );
+            return;
+        }
+
+        if (questions.length === 0) {
+            this.logInfoAndReply(
+                logger,
+                interaction,
+                "No questioned queued for renotification."
+            );
+            return;
+        }
+
+        const fields = questions.map<EmbedField>(({ title, author, askedTimestamp, url }) => {
+            return {
+                name: title,
+                value: `Asked by ${author} on ${askedTimestamp}\n${url}`,
+                inline: false
+            }
+        });
+
+        const template = new EmbedBuilder()
+            .setTitle("Renotify Queue")
+            .setColor("Blurple")
+
+        new PaginatedMessageEmbedFields()
+            .setTemplate(template)
+            .setItems(fields)
+            .setItemsPerPage(5)
+            .make()
+            .run(interaction);
     }
 
     public async renotifyCancel(interaction: Subcommand.ChatInputCommandInteraction) {

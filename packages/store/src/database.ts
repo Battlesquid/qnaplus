@@ -113,6 +113,12 @@ export const getMetadata = async () => {
         .single();
 }
 
+export const getRenotifyQueue = async () => {
+    return await supabase.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
+        .select(`*, ..."${asEnvironmentResource(QnaplusTables.Questions)}" (*)`)
+        .returns<Question[]>(); // TODO remove once spread is fixed (https://github.com/supabase/postgrest-js/pull/531)
+}
+
 export type ChangeCallback = (items: ChangeQuestion[]) => void | Promise<void>;
 
 export const onChange = (callback: ChangeCallback, logger?: Logger) => {

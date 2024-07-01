@@ -35,6 +35,10 @@ const bulkDate = new SlashCommandSubcommandBuilder()
             .setRequired(true)
     )
 
+const list = new SlashCommandSubcommandBuilder()
+    .setName("list")
+    .setDescription("Lists all questions queued for renotification, if any.")
+
 const cancel = new SlashCommandSubcommandBuilder()
     .setName("cancel")
     .setDescription("Cancels all questions queued for renotification, if any.")
@@ -46,15 +50,17 @@ const renotifyCommand = new SlashCommandBuilder()
     .addSubcommand(id)
     .addSubcommand(bulkId)
     .addSubcommand(bulkDate)
+    .addSubcommand(list)
     .addSubcommand(cancel)
 
-    
+
 export default {
     interaction: renotifyCommand,
     commands: {
         id,
         bulkId,
         bulkDate,
+        list,
         cancel
     }
 } satisfies SubcommandBundle;
