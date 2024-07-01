@@ -1,6 +1,5 @@
-import { saveMetadata } from './../../../../packages/store/src/database';
 import { Logger } from "pino";
-import { getMetadata, getSupabaseInstance, upsertQuestions } from "qnaplus";
+import { getMetadata, getSupabaseInstance, saveMetadata, upsertQuestions } from "qnaplus";
 import { Season, fetchQuestionsIterative, getOldestUnansweredQuestion } from "vex-qna-archiver";
 
 export const doDatabaseUpdate = async (_logger?: Logger) => {
