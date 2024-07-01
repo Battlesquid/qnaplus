@@ -1,9 +1,10 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { PaginatedMessageEmbedFields } from "@sapphire/discord.js-utilities";
+import { PaginatedFieldMessageEmbed, PaginatedMessage, PaginatedMessageActionButton } from "@sapphire/discord.js-utilities";
 import { Subcommand } from "@sapphire/plugin-subcommands";
 import Cron from "croner";
-import { EmbedBuilder, EmbedField } from "discord.js";
+import { EmbedBuilder, hyperlink, inlineCode } from "discord.js";
 import { QnaplusTables, asEnvironmentResource, config, getQuestion, getRenotifyQueue, getSupabaseInstance } from "qnaplus";
+import { Question } from "vex-qna-archiver";
 import { renotify } from "../interactions";
 import { PinoLoggerAdapter } from "../logger_adapter";
 import { formatDDMMMYYYY, isValidDate, mmmToMonthNumber } from "../util/date";
@@ -172,21 +173,18 @@ export class Renotify extends LoggerSubcommand {
             return;
         }
 
-        const fields = questions.map<EmbedField>(({ title, author, askedTimestamp, url }) => {
-            return {
-                name: title,
-                value: `Asked by ${author} on ${askedTimestamp}\n${url}`,
-                inline: false
-            }
-        });
-
         const template = new EmbedBuilder()
-            .setTitle("Renotify Queue")
-            .setColor("Blurple")
+            .setColor("Blurple");
+        const formatter = ({ author, askedTimestamp, title, url }: Question, index: number) => {
+            const num = ` #${index + 1} `;
+            return `${inlineCode(num)} ${hyperlink(title, url)}\nAsked by ${author} on ${askedTimestamp}\n`;
+        }
 
-        new PaginatedMessageEmbedFields()
+        new PaginatedFieldMessageEmbed<Question>()
+            .setTitleField("Renotify Queue")
             .setTemplate(template)
-            .setItems(fields)
+            .setItems(questions)
+            .formatItems(formatter)
             .setItemsPerPage(5)
             .make()
             .run(interaction);
