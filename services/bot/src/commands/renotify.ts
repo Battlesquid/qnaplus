@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { PaginatedFieldMessageEmbed, PaginatedMessage, PaginatedMessageActionButton } from "@sapphire/discord.js-utilities";
+import { PaginatedFieldMessageEmbed } from "@sapphire/discord.js-utilities";
 import { Subcommand } from "@sapphire/plugin-subcommands";
 import Cron from "croner";
 import { EmbedBuilder, hyperlink, inlineCode } from "discord.js";
