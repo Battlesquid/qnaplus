@@ -36,7 +36,3 @@ export const doRenotifyUpdate = async (_logger: Logger) => {
     }
     logger.info(`Successfully cleared ${count ?? 0} questions from the renotify queue.`);
 }
-
-(async () => {
-    await doRenotifyUpdate(pino());
-})();
