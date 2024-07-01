@@ -41,10 +41,11 @@ import { LoggerSubcommand } from "../util/logger_subcommand";
 })
 export class Renotify extends LoggerSubcommand {
     private static readonly CHAT_INPUT_DEVELOPMENT_ID: string = "1255678004143849493";
+    private static readonly CHAT_INPUT_PRODUCTION_ID: string = "1257270022372593694";
 
     public override registerApplicationCommands(registry: Subcommand.Registry) {
         registry.registerChatInputCommand(renotify.interaction, {
-            idHints: [Renotify.CHAT_INPUT_DEVELOPMENT_ID]
+            idHints: [Renotify.CHAT_INPUT_DEVELOPMENT_ID, Renotify.CHAT_INPUT_PRODUCTION_ID]
         });
     }
 
