@@ -152,10 +152,18 @@ export const onChange = (callback: ChangeCallback, logger?: Logger) => {
         .on<RenotifyPayload>(
             "broadcast",
             { event: QnaplusEvents.RenotifyQueueFlush },
-            ({ payload }) => {
+            async ({ payload }) => {
                 const { questions } = payload;
                 const items = questions.map<UpdatePayload<Question>>(p => ({ old: { ...p, answered: false }, new: p }));
                 queue.push(...items);
+                const result = await supabase
+                    .channel(asEnvironmentResource(QnaplusChannels.RenotifyQueue))
+                    .send({
+                        type: "broadcast",
+                        event: QnaplusEvents.RenotifyQueueFlushAck,
+                        payload: {}
+                    });
+                logger?.info(`Sent renotify queue acknowledgement with result '${result}'`);
             }
         )
         .subscribe();

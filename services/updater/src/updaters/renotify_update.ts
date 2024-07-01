@@ -1,6 +1,29 @@
 import { Logger } from "pino";
 import { QnaplusChannels, QnaplusEvents, QnaplusTables, asEnvironmentResource, getRenotifyQueue, getSupabaseInstance } from "qnaplus";
 
+export const onRenotifyQueueFlushAck = (_logger: Logger) => {
+    const logger = _logger.child({ label: "renotifyQueueAck" });
+    logger.info("Registering listener for RenotifyQueueFlushAck");
+
+    const supabase = getSupabaseInstance();
+    supabase.channel(asEnvironmentResource(QnaplusChannels.RenotifyQueue))
+        .on(
+            "broadcast",
+            { event: QnaplusEvents.RenotifyQueueFlushAck },
+            async () => {
+                const { count, error, status, statusText } = await supabase.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
+                    .delete({ count: "exact" })
+                    .neq("id", "0");
+                if (error) {
+                    logger.error({ error, status, statusText });
+                    return;
+                }
+                logger.info(`Successfully cleared ${count ?? 0} questions from the renotify queue.`);
+            }
+        )
+        .subscribe();
+}
+
 export const doRenotifyUpdate = async (_logger: Logger) => {
     const logger = _logger.child({ label: "doRenotifyUpdate" });
     const supabase = getSupabaseInstance();
@@ -13,12 +36,12 @@ export const doRenotifyUpdate = async (_logger: Logger) => {
         logger.info("No questions queued for renotification, skipping.");
         return;
     }
+
     const broadcastResponse = await supabase.channel(asEnvironmentResource(QnaplusChannels.DbChanges))
         .send({ type: "broadcast", event: QnaplusEvents.RenotifyQueueFlush, payload: { questions: payload } });
-
     switch (broadcastResponse) {
         case "ok":
-            logger.info("Broadcast successful, deleting queue.");
+            logger.info("Sent broadcast successfully.");
             break;
         case "error":
             logger.error("Error broadcasting message, will try again on next update.");
@@ -27,12 +50,4 @@ export const doRenotifyUpdate = async (_logger: Logger) => {
             logger.info("Broadcast timed out, will try again on next update.");
             return;
     }
-    const { count, error: clearError, status: clearStatus, statusText: clearStatusText } = await supabase.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
-        .delete({ count: "exact" })
-        .neq("id", "0");
-    if (clearError) {
-        logger.error({ error: clearError, status: clearStatus, statusText: clearStatusText });
-        return;
-    }
-    logger.info(`Successfully cleared ${count ?? 0} questions from the renotify queue.`);
 }

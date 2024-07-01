@@ -3,7 +3,7 @@ import Cron from "croner";
 import { Logger } from "pino";
 import { config } from "qnaplus";
 import { doDatabaseUpdate } from "./updaters/database_update";
-import { doRenotifyUpdate } from "./updaters/renotify_update";
+import { doRenotifyUpdate, onRenotifyQueueFlushAck } from "./updaters/renotify_update";
 import { doStorageUpdate } from "./updaters/storage_update";
 
 const startDatabaseJob = async (logger: Logger) => {
@@ -26,6 +26,7 @@ const startStorageJob = (logger: Logger) => {
 (async () => {
     const logger = getLoggerInstance("qnaupdater");
     logger.info("Starting updater service");
+    onRenotifyQueueFlushAck(logger);
     startDatabaseJob(logger);
     startStorageJob(logger);
 })();
