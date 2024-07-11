@@ -19,27 +19,27 @@ export default defineConfig({
                 background_color: "#121212",
                 icons: [
                     {
-                        src: "/icons/qnaplus-64x64.png",
+                        src: "icons/qnaplus-64x64.png",
                         sizes: "64x64",
                         type: "image/png",
                     },
                     {
-                        src: "/icons/qnaplus-180x180.png",
+                        src: "icons/qnaplus-180x180.png",
                         sizes: "180x180",
                         type: "image/png",
                     },
                     {
-                        src: "/icons/qnaplus-192x192.png",
+                        src: "icons/qnaplus-192x192.png",
                         sizes: "192x192",
                         type: "image/png",
                     },
                     {
-                        src: "/icons/qnaplus-512x512.png",
+                        src: "icons/qnaplus-512x512.png",
                         sizes: "512x512",
                         type: "image/png",
                     },
                     {
-                        src: "/icons/qnaplus.svg",
+                        src: "icons/qnaplus.svg",
                         sizes: "512x512",
                         type: "image/svg+xml",
                     },

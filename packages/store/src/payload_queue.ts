@@ -1,3 +1,5 @@
+import { Question } from "vex-qna-archiver";
+
 export type OnPayloadQueueFlush<T> = (items: T[]) => void | Promise<void>;
 
 export interface PayloadQueueOptions<T> {
@@ -25,8 +27,8 @@ export class PayloadQueue<T> {
         };
     }
 
-    push(item: T) {
-        this.queue.push(item);
+    push(...items: T[]) {
+        this.queue.push(...items);
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => this.flush(), this.options.flushTimeout);
     }
@@ -35,4 +37,13 @@ export class PayloadQueue<T> {
         this.options.onFlush([...this.queue]);
         this.queue = [];
     }
+}
+
+export interface RenotifyPayload {
+    questions: Question[];
+}
+
+export interface UpdatePayload<T> {
+    old: Partial<T>;
+    new: T;
 }
