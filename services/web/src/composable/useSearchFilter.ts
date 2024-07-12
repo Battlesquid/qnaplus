@@ -1,10 +1,6 @@
 import { Question } from 'vex-qna-archiver';
 import { MaybeRefOrGetter, Ref, reactive, ref, toValue, watchEffect } from 'vue';
-
-export type Option<T> = {
-    name: string;
-    value: T;
-}
+import { Option } from './types';
 
 export type SearchFilters = {
     season: Option<Question["season"]>[];
@@ -24,7 +20,7 @@ export enum QuestionStateValue {
     Unanswered
 }
 
-export const questionStates: Option<QuestionStateValue>[] = [
+export const questionStateOptions: Option<QuestionStateValue>[] = [
     { name: "All", value: QuestionStateValue.All },
     { name: 'Answered', value: QuestionStateValue.Answered },
     { name: 'Unanswered', value: QuestionStateValue.Unanswered }
@@ -96,6 +92,8 @@ export type SearchFilterComposable = {
     seasons: Option<string>[];
     programs: Option<string>[];
 }
+
+export type SearchFilterOptions = Omit<SearchFilterComposable, "filteredQuestions">;
 
 export type FilterData = {
     programs: string[];
