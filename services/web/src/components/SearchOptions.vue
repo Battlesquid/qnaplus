@@ -164,9 +164,11 @@ const removeSelectedAdvancedOption = (index: number) => {
                                 <Dropdown class="w-full" input-id="sort_option" :options="remainingAdvancedOptions"
                                     option-label="name" @update:model-value="updateSelectedAdvancedOption" />
                             </div>
-                            <VueDraggable ref="el" v-model="sortOptions.advanced">
-                                <div class="cursor-move" v-for="(option, index) in sortOptions.advanced">
+                            <VueDraggable ref="el" v-model="sortOptions.advanced" ghostClass="sort-ghost"
+                                dragClass="sort-drag" :animation="150" handle=".handle">
+                                <div v-for="(option, index) in sortOptions.advanced">
                                     <div class="flex gap-2 align-items-center">
+                                        <div class="handle cursor-move pi pi-list ml-2"></div>
                                         <em class="flex-1">{{ option.name }}</em>
                                         <div class="flex flex-1 align-items-center gap-2 m-0">
                                             <label :for="'advanced_sort_order_' + option.name">Order:</label>
@@ -204,5 +206,13 @@ const removeSelectedAdvancedOption = (index: number) => {
 
 .input-flex {
     flex: 170px;
+}
+
+.sort-ghost {
+    opacity: 0;
+}
+
+.sort-drag {
+    /* all: unset; */
 }
 </style>
