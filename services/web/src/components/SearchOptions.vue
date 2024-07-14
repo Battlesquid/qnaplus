@@ -167,18 +167,23 @@ const removeSelectedAdvancedOption = (index: number) => {
                             <VueDraggable ref="el" v-model="sortOptions.advanced" ghostClass="sort-ghost"
                                 dragClass="sort-drag" :animation="150" handle=".handle">
                                 <div v-for="(option, index) in sortOptions.advanced">
-                                    <div class="flex gap-2 align-items-center">
-                                        <div class="handle cursor-move pi pi-list ml-2"></div>
-                                        <em class="flex-1">{{ option.name }}</em>
-                                        <div class="flex flex-1 align-items-center gap-2 m-0">
-                                            <label :for="'advanced_sort_order_' + option.name">Order:</label>
-                                            <Dropdown class="flex-1" :input-id="'advanced_sort_order_' + option.name"
-                                                v-model="sortOptions.advanced[index].asc" :options="sortOrderList"
-                                                option-label="name" />
+                                    <div class="flex flex-wrap gap-2">
+                                        <div class="flex-1">
+                                            <div class="handle cursor-move p-2 pi pi-bars ml-2"></div>
+                                            <span class="">{{ option.name }}</span>
                                         </div>
-                                        <Button type="button" severity="secondary" rounded outlined
-                                            aria-label="Remove Sort" icon="pi pi-times"
-                                            @click="removeSelectedAdvancedOption(index)" />
+                                        <div class="flex flex-1 gap-2">
+                                            <div class="flex flex-1 flex-column gap-2 m-0">
+                                                <label :for="'advanced_sort_order_' + option.name">Order:</label>
+                                                <Dropdown class="flex-1 w-full"
+                                                    :input-id="'advanced_sort_order_' + option.name"
+                                                    v-model="sortOptions.advanced[index].asc" :options="sortOrderList"
+                                                    option-label="name" />
+                                            </div>
+                                            <Button type="button" severity="secondary" rounded outlined
+                                                aria-label="Remove Sort" icon="pi pi-times"
+                                                @click="removeSelectedAdvancedOption(index)" />
+                                        </div>
                                     </div>
                                     <Divider />
                                 </div>
