@@ -168,19 +168,19 @@ const removeSelectedAdvancedOption = (index: number) => {
                                 dragClass="sort-drag" :animation="150" handle=".handle">
                                 <div v-for="(option, index) in sortOptions.advanced">
                                     <div class="flex flex-wrap gap-2">
-                                        <div class="flex-1">
+                                        <div class="flex flex-1 align-items-center">
                                             <div class="handle cursor-move p-2 pi pi-bars ml-2"></div>
                                             <span class="">{{ option.name }}</span>
                                         </div>
-                                        <div class="flex flex-1 gap-2">
-                                            <div class="flex flex-1 flex-column gap-2 m-0">
-                                                <label :for="'advanced_sort_order_' + option.name">Order:</label>
-                                                <Dropdown class="flex-1 w-full"
+                                        <div class="flex flex-1 align-items-center gap-2">
+                                            <div class="flex flex-1 align-items-center gap-2 m-0">
+                                                <label :for="'advanced_sort_order_' + option.name">Order</label>
+                                                <Dropdown class="flex-1"
                                                     :input-id="'advanced_sort_order_' + option.name"
                                                     v-model="sortOptions.advanced[index].asc" :options="sortOrderList"
                                                     option-label="name" />
                                             </div>
-                                            <Button type="button" severity="secondary" rounded outlined
+                                            <Button class="align-self-end" type="button" severity="secondary" rounded outlined
                                                 aria-label="Remove Sort" icon="pi pi-times"
                                                 @click="removeSelectedAdvancedOption(index)" />
                                         </div>
@@ -215,9 +215,5 @@ const removeSelectedAdvancedOption = (index: number) => {
 
 .sort-ghost {
     opacity: 0;
-}
-
-.sort-drag {
-    /* all: unset; */
 }
 </style>
