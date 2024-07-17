@@ -1,6 +1,9 @@
 @import "primeicons/primeicons.css";
-@import "primeflex/primeflex.css";
-@import "primevue/resources/themes/aura-dark-blue/theme.css";
+/* @import "primevue/resources/themes/aura-dark-blue/theme.css"; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html,
 body {

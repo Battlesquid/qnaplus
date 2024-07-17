@@ -18,7 +18,7 @@ const limitedAnswer = applyWordLimit(props.answer, 100);
             <a :href="url" target="_blank">{{ title }}</a>
         </template>
         <template #subtitle>
-            <div class="flex justify-content-between">
+            <div class="flex justify-between">
                 <span>Asked by <b>{{ author }}</b> on <b>{{ askedTimestamp }}</b></span>
                 <span v-if="answered" class="flex gap-2 text-green-500">
                     <i class="pi pi-check " />
@@ -29,12 +29,12 @@ const limitedAnswer = applyWordLimit(props.answer, 100);
             </div>
         </template>
         <template #content>
-            <div class="flex flex-column gap-2">
-                <div class="flex flex-column gap-1">
+            <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-1">
                     <span class="font-bold">Question</span>
                     <span>{{ limitedQuestion.content }}</span>
                 </div>
-                <div v-if="answered" class="flex flex-column gap-1">
+                <div v-if="answered" class="flex flex-col gap-1">
                     <span class="font-bold">Answer</span>
                     <span>{{ limitedAnswer.content }}</span>
                 </div>
