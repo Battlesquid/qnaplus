@@ -164,19 +164,26 @@ const removeSelectedAdvancedOption = (index: number) => {
                                 <Dropdown class="w-full" input-id="sort_option" :options="remainingAdvancedOptions"
                                     option-label="name" @update:model-value="updateSelectedAdvancedOption" />
                             </div>
-                            <VueDraggable ref="el" v-model="sortOptions.advanced">
-                                <div class="cursor-move" v-for="(option, index) in sortOptions.advanced">
-                                    <div class="flex gap-2 align-items-center">
-                                        <em class="flex-1">{{ option.name }}</em>
-                                        <div class="flex flex-1 align-items-center gap-2 m-0">
-                                            <label :for="'advanced_sort_order_' + option.name">Order:</label>
-                                            <Dropdown class="flex-1" :input-id="'advanced_sort_order_' + option.name"
-                                                v-model="sortOptions.advanced[index].asc" :options="sortOrderList"
-                                                option-label="name" />
+                            <VueDraggable ref="el" v-model="sortOptions.advanced" ghostClass="sort-ghost"
+                                dragClass="sort-drag" :animation="150" handle=".handle">
+                                <div v-for="(option, index) in sortOptions.advanced">
+                                    <div class="flex flex-wrap gap-2">
+                                        <div class="flex flex-1 align-items-center">
+                                            <div class="handle cursor-move p-2 pi pi-bars ml-2"></div>
+                                            <span class="">{{ option.name }}</span>
                                         </div>
-                                        <Button type="button" severity="secondary" rounded outlined
-                                            aria-label="Remove Sort" icon="pi pi-times"
-                                            @click="removeSelectedAdvancedOption(index)" />
+                                        <div class="flex flex-1 align-items-center gap-2">
+                                            <div class="flex flex-1 align-items-center gap-2 m-0">
+                                                <label :for="'advanced_sort_order_' + option.name">Order</label>
+                                                <Dropdown class="flex-1"
+                                                    :input-id="'advanced_sort_order_' + option.name"
+                                                    v-model="sortOptions.advanced[index].asc" :options="sortOrderList"
+                                                    option-label="name" />
+                                            </div>
+                                            <Button class="align-self-end" type="button" severity="secondary" rounded outlined
+                                                aria-label="Remove Sort" icon="pi pi-times"
+                                                @click="removeSelectedAdvancedOption(index)" />
+                                        </div>
                                     </div>
                                     <Divider />
                                 </div>
@@ -204,5 +211,9 @@ const removeSelectedAdvancedOption = (index: number) => {
 
 .input-flex {
     flex: 170px;
+}
+
+.sort-ghost {
+    opacity: 0;
 }
 </style>
