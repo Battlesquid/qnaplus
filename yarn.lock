@@ -5164,7 +5164,7 @@ set-function-name@^2.0.1, set-function-name@^2.0.2:
     functions-have-names "^1.2.3"
     has-property-descriptors "^1.0.2"
 
-sharp-ico@0.1.5, sharp-ico@^0.1.5:
+sharp-ico@^0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/sharp-ico/-/sharp-ico-0.1.5.tgz#5d263558adfb00903313db9403e20dc66ffcfa5b"
   integrity sha512-a3jODQl82NPp1d5OYb0wY+oFaPk7AvyxipIowCHk7pBsZCWgbe0yAkU2OOXdoH0ENyANhyOQbs9xkAiRHcF02Q==
@@ -5173,7 +5173,7 @@ sharp-ico@0.1.5, sharp-ico@^0.1.5:
     ico-endec "*"
     sharp "*"
 
-sharp@*, sharp@0.32.6, sharp@^0.32.6:
+sharp@*, sharp@^0.32.6:
   version "0.32.6"
   resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.32.6.tgz#6ad30c0b7cd910df65d5f355f774aa4fce45732a"
   integrity sha512-KyLTWwgcR9Oe4d9HwCwNM2l7+J0dUQwn/yf7S0EnTtb0eVS4RxO0eUSvxPtzT4F3SY+C4K6fqdv/DO27sJ/v/w==
@@ -5869,10 +5869,10 @@ vali-date@^1.0.0:
   resolved "https://registry.yarnpkg.com/vali-date/-/vali-date-1.0.0.tgz#1b904a59609fb328ef078138420934f6b86709a6"
   integrity sha512-sgECfZthyaCKW10N0fm27cg8HYTFK5qMWgypqkXMQ4Wbl/zZKx7xZICgcoxIIE+WFAP/MBL2EFwC/YvLxw3Zeg==
 
-vex-qna-archiver@^10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-10.0.0.tgz#29e2bc2a98011e3728f62469f1f9358ba99d45b4"
-  integrity sha512-irg1GthxFF6pdAAVPZ0MOSHs2H+kys9bsrTjjXBWzOWCNGjDHRUQV9HpzLlL5idhkQW5O1RO2BfQdC4uv4N/yw==
+vex-qna-archiver@^10.1.0:
+  version "10.1.1"
+  resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-10.1.1.tgz#684d22704fbc9212f082abb6275a7b444d6baf82"
+  integrity sha512-OSZ57QU3NNgsHdSD00kRHjHMey5Ceq7VGMpLuTRMpmH1uXv4DxqQN/JbHE48g980Fe5znPFcvKJ899BEAXqPkA==
   dependencies:
     "@crawlee/core" "^3.7.2"
     cheerio "^1.0.0-rc.12"
