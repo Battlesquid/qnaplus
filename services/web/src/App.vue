@@ -36,7 +36,9 @@ startup();
         <ProgressSpinner class="w-2rem h-2rem m-0" strokeWidth="6" fill="transparent" animationDuration="0.5s" />
     </div>
     <div v-else class="flex flex-column w-full h-screen">
-        <router-view class="w-full"></router-view>
+        <Suspense>
+            <router-view class="w-full"></router-view>
+        </Suspense>
     </div>
 </template>
 
