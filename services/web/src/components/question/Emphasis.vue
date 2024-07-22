@@ -8,8 +8,8 @@ defineProps<{
 </script>
 
 <template>
-    <p>
+    <em>
         <component :is="resolveQuestionComponent(child)" v-bind="resolveQuestionComponentProps(child)"
             v-for="child in children" />
-    </p>
+    </em>
 </template>
