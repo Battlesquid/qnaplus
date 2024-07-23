@@ -17,5 +17,14 @@ const routes: RouteRecordRaw[] = [
 
 export default createRouter({
     history: createWebHashHistory(),
-    routes
+    routes,
+    scrollBehavior(_to, _from, savedPosition) {
+        if (savedPosition) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({ left: 0, top: savedPosition.top, behavior: "smooth" })
+                }, 200)
+            })
+        }
+    }
 });

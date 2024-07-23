@@ -3,7 +3,7 @@ import Header from "../components/shared/Header.vue";
 </script>
 
 <template>
-    <div>
+    <div id="app-root">
         <Header />
         <div class="content">
             <slot></slot>

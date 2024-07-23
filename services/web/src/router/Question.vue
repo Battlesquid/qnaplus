@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import { Node } from "domhandler";
 import * as htmlparser2 from "htmlparser2";
+import Divider from "primevue/divider";
+import Tag from "primevue/tag";
+import Button from "primevue/button";
+import sanitize from "sanitize-html";
 import { ref } from "vue";
 import { resolveQuestionComponent, resolveQuestionComponentProps } from "../composable/componentMap";
 import { getQuestion } from "../database";
+import { isEmpty } from "../util/strings";
 import Root from "./Root.vue";
-import sanitize from "sanitize-html";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{
   id: string;
 }>();
 
+const router = useRouter();
 const loading = ref<boolean>(true);
 const question = await getQuestion(props.id);
 loading.value = false;
@@ -31,22 +37,39 @@ const answerChildren = answerDom.children as Node[];
 
 <template>
   <Root>
-    <div v-if="question === undefined">
-      whar
-    </div>
-    <div v-else>
-      <h2>{{ question.title }}</h2>
-      <h3>Question</h3>
-      <div>
-        <component :is="resolveQuestionComponent(child)" v-bind="resolveQuestionComponentProps(child)"
-          v-for="child in questionChildren" />
+    <div class="p-4">
+      <Button label="Back" icon="pi pi-arrow-left" severity="secondary" @click="router.back()" />
+      <div class="flex flex-column align-items-center" v-if="question === undefined">
+        <h2>Uhhhhhhhhhh...</h2>
+        <h4>Couldn't find a question here.</h4>
       </div>
-
-      <div v-if="question.answered">
-        <h3>Answer</h3>
+      <div v-else>
+        <h2>{{ question.title }}</h2>
+        <div class="flex justify-content-between">
+          <span class="text-gray-400">Asked by <b>{{ question.author }}</b> on <b>{{ question.askedTimestamp }}</b></span>
+          <span v-if="question.answered" class="flex gap-2 text-green-500">
+            <i class="pi pi-check " />
+            <span v-if="!isEmpty(question.answeredTimestamp)">Answered on <b>{{ question.answeredTimestamp }}</b></span>
+            <span v-else>Answered</span>
+          </span>
+          <span v-else class="text-gray-400">Unanswered</span>
+        </div>
+        <Divider />
+        <h3>Question</h3>
         <div>
           <component :is="resolveQuestionComponent(child)" v-bind="resolveQuestionComponentProps(child)"
-            v-for="child in answerChildren" />
+            v-for="child in questionChildren" />
+        </div>
+        <div v-if="question.answered">
+          <h3>Answer</h3>
+          <div>
+            <component :is="resolveQuestionComponent(child)" v-bind="resolveQuestionComponentProps(child)"
+              v-for="child in answerChildren" />
+          </div>
+        </div>
+        <Divider />
+        <div class="flex gap-2 py-2">
+          <Tag v-for="tag in question.tags">{{ tag }}</Tag>
         </div>
       </div>
     </div>
