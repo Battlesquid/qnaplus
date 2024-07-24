@@ -41,6 +41,8 @@ const sanitizedAnswerHTML = sanitize(question?.answerRaw ?? "", sanitizeOptions)
 const answerDom = htmlparser2.parseDocument(sanitizedAnswerHTML);
 const answerChildren = answerDom.children as Node[];
 
+console.log(question?.questionRaw)
+console.log(questionDom)
 </script>
 
 <template>

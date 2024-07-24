@@ -6,6 +6,8 @@ import Link from "../components/question/Link.vue";
 import Strong from "../components/question/Strong.vue";
 import Emphasis from "../components/question/Emphasis.vue";
 import Blockquote from "../components/question/Blockquote.vue";
+import OrderedList from "../components/question/OrderedList.vue";
+import ListItem from "../components/question/ListItem.vue";
 
 export const resolveQuestionComponent = (node: Node) => {
     switch (true) {
@@ -23,6 +25,10 @@ export const resolveQuestionComponent = (node: Node) => {
             return "br";
         case node instanceof Element && node.name === "blockquote":
             return Blockquote;
+        case node instanceof Element && node.name === "ol":
+            return OrderedList;
+        case node instanceof Element && node.name === "li":
+            return ListItem;
         case node instanceof TextNode:
             return Text;
     }
@@ -32,7 +38,7 @@ export const resolveQuestionComponentProps = (node: Node) => {
     switch (true) {
         case node instanceof Element && node.name === "img":
             return { src: node.attribs.src, height: 150, preview: true };
-        case node instanceof Element && ["em", "p", "strong", "blockquote"].includes(node.name):
+        case node instanceof Element && ["em", "p", "strong", "blockquote", "ol", "li"].includes(node.name):
             return { children: node.children };
         case node instanceof Element && node.name === "a":
             return { href: node.attribs.href, children: node.children }
