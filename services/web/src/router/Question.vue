@@ -11,23 +11,28 @@ import { getQuestion } from "../database";
 import { isEmpty } from "../util/strings";
 import Root from "./Root.vue";
 import Message from "primevue/message";
+import { ref } from "vue";
 
 const props = defineProps<{
   id: string;
 }>();
 
 const router = useRouter();
+const archived = ref<boolean | null | undefined>(undefined);
 const question = await getQuestion(props.id);
-let archived: boolean | null = null;
 
-if (question !== undefined) {
-  try {
-    const fetchedQuestion = await fetch(question.url);
-    archived = fetchedQuestion.status === 404;
-  } catch (error) {
-
+const getStatus = async () => {
+  if (question !== undefined) {
+    try {
+      const fetchedQuestion = await fetch(question.url);
+      archived.value = fetchedQuestion.status === 404;
+    } catch (error) {
+      archived.value = null
+    }
   }
 }
+
+getStatus();
 
 const sanitizeOptions: sanitize.IOptions = {
   allowedTags: sanitize.defaults.allowedTags.concat("img")
@@ -40,9 +45,6 @@ const questionChildren = questionDom.children as Node[];
 const sanitizedAnswerHTML = sanitize(question?.answerRaw ?? "", sanitizeOptions);
 const answerDom = htmlparser2.parseDocument(sanitizedAnswerHTML);
 const answerChildren = answerDom.children as Node[];
-
-console.log(question?.questionRaw)
-console.log(questionDom)
 </script>
 
 <template>
@@ -54,8 +56,10 @@ console.log(questionDom)
         <h4>Couldn't find a question here.</h4>
       </div>
       <div v-else>
-        <Message v-if="archived" severity="warn" :closable="false">Archived: Question is no longer available on the Q&A.</Message>
-        <Message v-if="archived === null" severity="warn" :closable="false">Warning: Unable to check if Q&A exists.</Message>
+        <Message v-if="archived" severity="warn" :closable="false">Archived: Question is no longer available on the Q&A.
+        </Message>
+        <Message v-if="archived === null" severity="warn" :closable="false">Warning: Unable to check if Q&A exists.
+        </Message>
         <a :href="question.url" target="_blank">
           <h2>{{ question.title }}</h2>
         </a>

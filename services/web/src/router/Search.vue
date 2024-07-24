@@ -12,6 +12,8 @@ import { useSearch } from "../composable/useSearch";
 import { useSearchFilter } from "../composable/useSearchFilter";
 import { useSort } from "../composable/useSort";
 import { QnaplusAppData, database } from "../database";
+import ScrollTop from 'primevue/scrolltop';
+
 import Root from "./Root.vue";
 
 const query = ref("");
@@ -39,6 +41,7 @@ const { sortedQuestions, sortOptions } = useSort(filteredQuestions)
             </div>
             <div class="h-full flex flex-column gap-2">
                 <QuestionList :questions="sortedQuestions" />
+                <ScrollTop />
             </div>
         </div>
     </Root>
