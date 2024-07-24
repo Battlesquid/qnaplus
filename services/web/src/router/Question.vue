@@ -5,21 +5,29 @@ import Button from "primevue/button";
 import Divider from "primevue/divider";
 import Tag from "primevue/tag";
 import sanitize from "sanitize-html";
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { resolveQuestionComponent, resolveQuestionComponentProps } from "../composable/componentMap";
 import { getQuestion } from "../database";
 import { isEmpty } from "../util/strings";
 import Root from "./Root.vue";
+import Message from "primevue/message";
 
 const props = defineProps<{
   id: string;
 }>();
 
 const router = useRouter();
-const loading = ref<boolean>(true);
 const question = await getQuestion(props.id);
-loading.value = false;
+let archived: boolean | null = null;
+
+if (question !== undefined) {
+  try {
+    const fetchedQuestion = await fetch(question.url);
+    archived = fetchedQuestion.status === 404;
+  } catch (error) {
+
+  }
+}
 
 const sanitizeOptions: sanitize.IOptions = {
   allowedTags: sanitize.defaults.allowedTags.concat("img")
@@ -38,16 +46,18 @@ const answerChildren = answerDom.children as Node[];
 <template>
   <Root>
     <div class="p-4">
-      <Button label="Back" icon="pi pi-arrow-left" severity="secondary" @click="router.back()" outlined/>
+      <Button label="Back" icon="pi pi-arrow-left" severity="secondary" @click="router.back()" outlined />
       <div class="flex flex-column align-items-center" v-if="question === undefined">
         <h2>Uhhhhhhhhhh...</h2>
         <h4>Couldn't find a question here.</h4>
       </div>
       <div v-else>
+        <Message v-if="archived" severity="warn" :closable="false">Archived: Question is no longer available on the Q&A.</Message>
+        <Message v-if="archived === null" severity="warn" :closable="false">Warning: Unable to check if Q&A exists.</Message>
         <a :href="question.url" target="_blank">
           <h2>{{ question.title }}</h2>
         </a>
-        <div class="flex justify-content-between">
+        <div class="flex flex-column gap-1">
           <span class="text-gray-400">Asked by <b>{{ question.author }}</b> on <b>{{ question.askedTimestamp
               }}</b></span>
           <span v-if="question.answered" class="flex gap-2 text-green-500">

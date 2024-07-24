@@ -10,6 +10,13 @@ defineProps<{
 
 <template>
     <div>
-        <Image :src="src" :height="height" :preview="preview" />
+        <Image image-class="fit-image" :src="src" :height="height" :preview="preview" />
     </div>
 </template>
+
+<style>
+.fit-image {
+    max-width: 100%;
+    object-fit: contain;
+}
+</style>
