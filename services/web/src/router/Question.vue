@@ -50,7 +50,6 @@ const answerChildren = answerDom.children as Node[];
 <template>
   <Root>
     <div class="p-4">
-      <Button label="Back" icon="pi pi-arrow-left" severity="secondary" @click="router.back()" outlined />
       <div class="flex flex-column align-items-center" v-if="question === undefined">
         <h2>Uhhhhhhhhhh...</h2>
         <h4>Couldn't find a question here.</h4>
