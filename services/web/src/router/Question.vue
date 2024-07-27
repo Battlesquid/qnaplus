@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { Node } from "domhandler";
 import * as htmlparser2 from "htmlparser2";
-import Button from "primevue/button";
 import Divider from "primevue/divider";
 import Tag from "primevue/tag";
 import sanitize from "sanitize-html";
-import { useRouter } from "vue-router";
 import { resolveQuestionComponent, resolveQuestionComponentProps } from "../composable/componentMap";
 import { getQuestion } from "../database";
 import { isEmpty } from "../util/strings";
@@ -17,7 +15,6 @@ const props = defineProps<{
   id: string;
 }>();
 
-const router = useRouter();
 const archived = ref<boolean | null | undefined>(undefined);
 const question = await getQuestion(props.id);
 
@@ -82,6 +79,7 @@ const answerChildren = answerDom.children as Node[];
         </div>
         <div>
           <div v-if="question.answered" class="text-gray-300">
+            <div class="question-divider border-gray-400" />
             <h3>Answer</h3>
             <div>
               <component :is="resolveQuestionComponent(child)" v-bind="resolveQuestionComponentProps(child)"
@@ -98,4 +96,9 @@ const answerChildren = answerDom.children as Node[];
   </Root>
 </template>
 
-<style></style>
+<style scoped>
+.question-divider {
+  border-width: 1px;
+  border-style: dashed;
+}
+</style>
