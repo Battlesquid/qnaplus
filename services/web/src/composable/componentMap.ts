@@ -1,4 +1,4 @@
-import { Element, Node, Text as TextNode } from "domhandler";
+import { Element, Node as ParserNode, Text as TextNode } from "domhandler";
 import Image from "../components/question/Image.vue";
 import Paragraph from "../components/question/Paragraph.vue";
 import Text from "../components/question/Text.vue";
@@ -9,7 +9,7 @@ import Blockquote from "../components/question/Blockquote.vue";
 import OrderedList from "../components/question/OrderedList.vue";
 import ListItem from "../components/question/ListItem.vue";
 
-export const resolveQuestionComponent = (node: Node) => {
+export const resolveQuestionComponent = (node: ParserNode) => {
     switch (true) {
         case node instanceof Element && node.name === "img":
             return Image;
@@ -34,7 +34,7 @@ export const resolveQuestionComponent = (node: Node) => {
     }
 }
 
-export const resolveQuestionComponentProps = (node: Node) => {
+export const resolveQuestionComponentProps = (node: ParserNode) => {
     switch (true) {
         case node instanceof Element && node.name === "img":
             return { src: node.attribs.src, height: 150, preview: true };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Node } from "domhandler";
+import { Node as ParserNode } from "domhandler";
 import * as htmlparser2 from "htmlparser2";
 import Divider from "primevue/divider";
 import Tag from "primevue/tag";
@@ -37,11 +37,11 @@ const sanitizeOptions: sanitize.IOptions = {
 
 const sanitizedQuestionHTML = sanitize(question?.questionRaw ?? "", sanitizeOptions);
 const questionDom = htmlparser2.parseDocument(sanitizedQuestionHTML);
-const questionChildren = questionDom.children as Node[];
+const questionChildren = questionDom.children as ParserNode[];
 
 const sanitizedAnswerHTML = sanitize(question?.answerRaw ?? "", sanitizeOptions);
 const answerDom = htmlparser2.parseDocument(sanitizedAnswerHTML);
-const answerChildren = answerDom.children as Node[];
+const answerChildren = answerDom.children as ParserNode[];
 </script>
 
 <template>
