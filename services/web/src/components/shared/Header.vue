@@ -26,7 +26,7 @@ const appname = import.meta.env.VITE_APP_NAME;
         <div class="p-3"></div>
     </div>
     <div ref="header"
-        class="flex w-full surface-card z-5 align-items-center justify-content-between gap-2 p-2 transition-duration-1000 transition-colors">
+        class="flex w-full surface-card z-5 align-items-center justify-content-between gap-2 p-2 transition-duration-1000 transition-colors border-blue-800">
         <h3 class="ml-1">{{ appname }}</h3>
         <div class="flex gap-2">
             <a href="https://github.com/Battlesquid/qnaplus" target="_blank">

@@ -18,9 +18,9 @@ import TabPanel from "primevue/tabpanel";
 import TabView from "primevue/tabview";
 import Divider from 'primevue/divider';
 import { computed } from "vue";
-import { SearchFilterOptions, questionStateOptions } from "../composable/useSearchFilter";
-import { SearchSortOptions, SortOptions, sortOptionsList, sortOrderList } from "../composable/useSort";
-import { Option } from "../composable";
+import { SearchFilterOptions, questionStateOptions } from "../../composable/useSearchFilter";
+import { SearchSortOptions, SortOptions, sortOptionsList, sortOrderList } from "../../composable/useSort";
+import { Option } from "../../composable";
 
 const props = defineProps<{
     filterOptions: SearchFilterOptions;

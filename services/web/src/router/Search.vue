@@ -4,14 +4,16 @@ import { liveQuery } from "dexie";
 import { from } from "rxjs";
 import { Question } from "vex-qna-archiver";
 import { Ref, inject, ref } from "vue";
-import QuestionList from "../components/QuestionList.vue";
-import QuestionListHeader from "../components/QuestionListHeader.vue";
-import SearchInput from "../components/SearchInput.vue";
-import SearchOptions from "../components/SearchOptions.vue";
+import QuestionList from "../components/search/QuestionList.vue";
+import QuestionListHeader from "../components/search/QuestionListHeader.vue";
+import SearchInput from "../components/search/SearchInput.vue";
+import SearchOptions from "../components/search/SearchOptions.vue";
 import { useSearch } from "../composable/useSearch";
 import { useSearchFilter } from "../composable/useSearchFilter";
 import { useSort } from "../composable/useSort";
 import { QnaplusAppData, database } from "../database";
+import ScrollTop from 'primevue/scrolltop';
+
 import Root from "./Root.vue";
 
 const query = ref("");
@@ -39,6 +41,7 @@ const { sortedQuestions, sortOptions } = useSort(filteredQuestions)
             </div>
             <div class="h-full flex flex-column gap-2">
                 <QuestionList :questions="sortedQuestions" />
+                <ScrollTop />
             </div>
         </div>
     </Root>

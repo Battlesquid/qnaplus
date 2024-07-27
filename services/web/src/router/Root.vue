@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Header from "../components/Header.vue";
+import Header from "../components/shared/Header.vue";
 </script>
 
 <template>
-    <div>
+    <div id="app-root">
         <Header />
         <div class="content">
             <slot></slot>
