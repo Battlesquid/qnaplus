@@ -10,6 +10,7 @@ export const QnaplusTables = {
     Questions: "questions",
     Metadata: "metadata",
     RenotifyQueue: "renotify_queue",
+    Failures: "failures"
 }
 
 export const QnaplusBuckets = {

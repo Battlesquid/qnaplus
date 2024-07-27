@@ -19,12 +19,12 @@ export const getSupabaseInstance = () => {
 }
 
 export const populate = async (logger?: Logger) => {
-    const questions = await archiverGetAllQuestions(logger);
+    const { questions } = await archiverGetAllQuestions(logger);
     return insertQuestions(questions, { logger });
 }
 
 export const populateWithMetadata = async (logger?: Logger) => {
-    const questions = await archiverGetAllQuestions(logger);
+    const { questions } = await archiverGetAllQuestions(logger);
     const currentSeason = await fetchCurrentSeason(logger);
 
     const oldestUnansweredQuestion = getOldestUnansweredQuestion(questions, currentSeason);
@@ -118,10 +118,28 @@ export const saveMetadata = async (metadata: object) => {
     return await supabase.from(asEnvironmentResource(QnaplusTables.Metadata))
         .upsert({ id: METADATA_ROW_ID, ...metadata });
 }
+
 export const getRenotifyQueue = async () => {
     return await supabase.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
         .select(`*, ..."${asEnvironmentResource(QnaplusTables.Questions)}" (*)`)
         .returns<Question[]>(); // TODO remove once spread is fixed (https://github.com/supabase/postgrest-js/pull/531)
+}
+
+export const getFailures = async () => {
+    return await supabase.from(asEnvironmentResource(QnaplusTables.Failures))
+        .select("*")
+        .returns<string[]>();
+}
+
+export const updateFailures = async (failures: string[]) => {
+    return await supabase.from(asEnvironmentResource(QnaplusTables.Failures))
+        .upsert(failures, { ignoreDuplicates: false });
+}
+
+export const removeFailures = async (failures: string[]) => {
+    return await supabase.from(asEnvironmentResource(QnaplusTables.Failures))
+        .delete()
+        .in("id", failures);
 }
 
 export type ChangeCallback = (items: ChangeQuestion[]) => void | Promise<void>;
