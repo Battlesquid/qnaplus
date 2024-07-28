@@ -128,10 +128,10 @@ export const getRenotifyQueue = async () => {
 export const getFailures = async () => {
     return await supabase.from(asEnvironmentResource(QnaplusTables.Failures))
         .select("*")
-        .returns<string[]>();
+        .returns<{ id: string }[]>();
 }
 
-export const updateFailures = async (failures: string[]) => {
+export const updateFailures = async (failures: object) => {
     return await supabase.from(asEnvironmentResource(QnaplusTables.Failures))
         .upsert(failures, { ignoreDuplicates: false });
 }
