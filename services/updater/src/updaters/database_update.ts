@@ -53,7 +53,6 @@ export const doDatabaseUpdate = async (_logger?: Logger) => {
 
     const { current_season, oldest_unanswered_question } = data;
     const failureUpdateResult = await handleFailureUpdate(current_season, logger);
-    console.log(failureUpdateResult)
     logger?.info(`Oldest failure question: ${failureUpdateResult.oldest}`);
 
     const start = failureUpdateResult.oldest !== undefined
@@ -82,7 +81,6 @@ export const doDatabaseUpdate = async (_logger?: Logger) => {
     }
 
     const oldestUnansweredFromUpdate = getOldestUnansweredQuestion(questions, current_season as Season);
-    console.log(oldestUnansweredFromUpdate)
     if (oldestUnansweredFromUpdate === undefined) {
         logger?.info("Oldest unanswered question from update not found, skipping metadata update.")
         return;
