@@ -12,12 +12,6 @@ const chunk = <T>(items: T[], size: number): T[][] => {
 
 const unique = <T>(items: T[]) => items.filter((item, idx, arr) => arr.indexOf(item) === idx);
 
-const sort = <T>(items: T[], fn: (a: T, b: T) => number) => {
-    const copy = [...items];
-    copy.sort(fn);
-    return copy;
-}
-
 type FailureUpdateResult = {
     oldest: Question | undefined;
     failures: string[];

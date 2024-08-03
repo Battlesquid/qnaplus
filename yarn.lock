@@ -5938,20 +5938,20 @@ vali-date@^1.0.0:
   resolved "https://registry.yarnpkg.com/vali-date/-/vali-date-1.0.0.tgz#1b904a59609fb328ef078138420934f6b86709a6"
   integrity sha512-sgECfZthyaCKW10N0fm27cg8HYTFK5qMWgypqkXMQ4Wbl/zZKx7xZICgcoxIIE+WFAP/MBL2EFwC/YvLxw3Zeg==
 
-vex-qna-archiver@^11.0.0:
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-11.0.0.tgz#69ea30782d6c190ff940214f0a2ee4d3af98748b"
-  integrity sha512-+VAwwTfC+8SSv16YaWHtM3qdIVs7uRWEF+3K+a10BSny4mQxhzIdpJJ3QXBFc2tyGo33sdJ/3pf36IHh+2WJ0w==
+vex-qna-archiver@^11.1.0:
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-11.1.0.tgz#dd3483dd53ce3c17f03548de167e99b37927c59e"
+  integrity sha512-Y/N7l9uOOuoC04r9tocCxYtXhRLb1qsarTsh5Zu7asmgFxY5mFy977km+b9O9S5Dhgwd9ItjOYFIeRd1j2PfFg==
   dependencies:
     "@crawlee/core" "^3.7.2"
     cheerio "^1.0.0-rc.12"
     got-scraping "^4.0.3"
     pino "^8.17.2"
 
-vex-qna-archiver@^11.1.0:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-11.1.0.tgz#dd3483dd53ce3c17f03548de167e99b37927c59e"
-  integrity sha512-Y/N7l9uOOuoC04r9tocCxYtXhRLb1qsarTsh5Zu7asmgFxY5mFy977km+b9O9S5Dhgwd9ItjOYFIeRd1j2PfFg==
+vex-qna-archiver@^11.1.1:
+  version "11.1.1"
+  resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-11.1.1.tgz#887375e3d207027be2403ae04e4cc4104116a9e8"
+  integrity sha512-0C7trdCrd3kRlHbuTgFiRGY+ldFrCIaAhp9j+iSNeSQqKgwKatCYduusaxzOSiKAgoaax0Vo03nS/6XOoLiQnQ==
   dependencies:
     "@crawlee/core" "^3.7.2"
     cheerio "^1.0.0-rc.12"
