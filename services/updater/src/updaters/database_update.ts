@@ -18,11 +18,16 @@ const sort = <T>(items: T[], fn: (a: T, b: T) => number) => {
     return copy;
 }
 
-const handleFailureUpdate = async (logger?: Logger): Promise<IterativeFetchResult> => {
+type FailureUpdateResult = {
+    oldest: Question | undefined;
+    failures: string[];
+}
+
+const handleFailureUpdate = async (season: Season, logger?: Logger): Promise<FailureUpdateResult> => {
     const { error: failuresError, data: storedFailures } = await getFailures();
     if (failuresError) {
         logger?.error({ error: failuresError }, "Error retrieving failures, continuing based on oldest unanswered question");
-        return { questions: [], failures: [] };
+        return { oldest: undefined, failures: [] };
     }
     const failureNumbers = storedFailures.map(failure => parseInt(failure.id));
     const chunks = chunk(failureNumbers, ITERATIVE_BATCH_COUNT);
@@ -40,7 +45,8 @@ const handleFailureUpdate = async (logger?: Logger): Promise<IterativeFetchResul
         logger?.info(`Successfully completed failure update (${questions.length} new questions found).`);
         removeFailures(questions.map(q => q.id));
     }
-    return { questions, failures };
+    const oldest = getOldestUnansweredQuestion(questions, season);
+    return { oldest, failures };
 }
 
 export const doDatabaseUpdate = async (_logger?: Logger) => {
@@ -51,14 +57,13 @@ export const doDatabaseUpdate = async (_logger?: Logger) => {
         return;
     }
 
-    const failureUpdateResult = await handleFailureUpdate(logger);
-    console.log(failureUpdateResult)
     const { current_season, oldest_unanswered_question } = data;
-    const oldestFailureQuestion = getOldestUnansweredQuestion(failureUpdateResult.questions, current_season);
-    logger?.info(`Oldest failure question: ${oldestFailureQuestion}`);
+    const failureUpdateResult = await handleFailureUpdate(current_season, logger);
+    console.log(failureUpdateResult)
+    logger?.info(`Oldest failure question: ${failureUpdateResult.oldest}`);
 
-    const start = oldestFailureQuestion !== undefined
-        ? Math.min(parseInt(oldestFailureQuestion.id), parseInt(oldest_unanswered_question))
+    const start = failureUpdateResult.oldest !== undefined
+        ? Math.min(parseInt(failureUpdateResult.oldest.id), parseInt(oldest_unanswered_question))
         : parseInt(oldest_unanswered_question);
 
     logger?.info(`Starting update from Q&A ${start}`);
@@ -89,14 +94,15 @@ export const doDatabaseUpdate = async (_logger?: Logger) => {
         return;
     }
 
-    // TODO figure out why i wrote this
-    // const oldestUnanswered = Math.min(parseInt(oldestUnansweredFromUpdate.id), start);
-    const oldestUnanswered = oldestUnansweredFromUpdate.id;
-    const { error } = await saveMetadata({ oldest_unanswered_question: `${oldestUnanswered}` });
+    const oldest = failureUpdateResult.oldest !== undefined
+        ? getOldestUnansweredQuestion([failureUpdateResult.oldest, oldestUnansweredFromUpdate], current_season) as Question
+        : oldestUnansweredFromUpdate;
+
+    const { error } = await saveMetadata({ oldest_unanswered_question: `${oldest.id}` });
 
     if (error) {
-        logger?.error({ error, oldest_unanswered_id: oldestUnanswered }, `Unable to save oldest unanswered question (${oldestUnanswered}) to metadata`);
+        logger?.error({ error, oldest_unanswered_id: oldest.id }, `Unable to save oldest unanswered question (${oldest.id}) to metadata`);
     } else {
-        logger?.info({ oldest_unanswered_id: oldestUnanswered }, `Successfully updated metadata with oldest unanswered question (${oldestUnanswered})`);
+        logger?.info({ oldest_unanswered_id: oldest.id }, `Successfully updated metadata with oldest unanswered question (${oldest.id})`);
     }
 }
