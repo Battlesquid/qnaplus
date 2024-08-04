@@ -11,7 +11,8 @@ const ENV_VARIABLES = [
     "WEBAPP_UPDATE_INTERVAL",
     "PARSEABLE_ENDPOINT",
     "PARSEABLE_USERNAME",
-    "PARSEABLE_PASSWORD"
+    "PARSEABLE_PASSWORD",
+    "QNA_WEBSITE"
 ] as const;
 
 type ConfigVariable = typeof ENV_VARIABLES[number];

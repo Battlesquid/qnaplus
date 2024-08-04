@@ -9,6 +9,7 @@ import { renotify } from "../interactions";
 import { PinoLoggerAdapter } from "../logger_adapter";
 import { formatDDMMMYYYY, isValidDate, mmmToMonthNumber } from "../util/date";
 import { LoggerSubcommand } from "../util/logger_subcommand";
+import { buildQuestionUrl } from "../formatting";
 
 
 @ApplyOptions<Subcommand.Options>({
@@ -176,9 +177,9 @@ export class Renotify extends LoggerSubcommand {
 
         const template = new EmbedBuilder()
             .setColor("Blurple");
-        const formatter = ({ author, askedTimestamp, title, url }: Question, index: number) => {
+        const formatter = ({ author, askedTimestamp, title, id }: Question, index: number) => {
             const num = ` #${index + 1} `;
-            return `${inlineCode(num)} ${hyperlink(title, url)}\nAsked by ${author} on ${askedTimestamp}\n`;
+            return `${inlineCode(num)} ${hyperlink(title, buildQuestionUrl(id))}\nAsked by ${author} on ${askedTimestamp}\n`;
         }
 
         new PaginatedFieldMessageEmbed<Question>()

@@ -1,6 +1,7 @@
 import { ChangeEvent, ChangeQuestion, ChangeTypeMap } from "@qnaplus/store";
 import { ColorResolvable, EmbedBuilder, bold, codeBlock, hyperlink } from "discord.js";
 import { chunk } from "./util/chunk";
+import { config } from "qnaplus";
 
 const ProgramColorMap: Record<string, ColorResolvable> = {
     V5RC: "#f54242",
@@ -10,8 +11,12 @@ const ProgramColorMap: Record<string, ColorResolvable> = {
     judging: "#f5ad42"
 }
 
-const baseEmbedDescription = ({ author, askedTimestamp, title, url }: ChangeQuestion) => {
-    return `Asked by ${author} on ${askedTimestamp}\n${bold("Question")}: ${hyperlink(title, url)}`
+export const buildQuestionUrl = (id: string) => {
+    return `${config.getenv("QNA_WEBSITE")}/${id}`;
+}
+
+const baseEmbedDescription = ({ author, askedTimestamp, title, id }: ChangeQuestion) => {
+    return `Asked by ${author} on ${askedTimestamp}\n${bold("Question")}: ${hyperlink(title, buildQuestionUrl(id))}`
 }
 
 type ChangeFormatMap = {
