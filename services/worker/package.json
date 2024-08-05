@@ -1,0 +1,12 @@
+{
+  "name": "@qnaplus/worker",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^3.68.0"
+  }
+}
