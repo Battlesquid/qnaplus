@@ -20,8 +20,9 @@ const question = await getQuestion(props.id);
 
 const getStatus = async () => {
   if (question !== undefined) {
+    const url = `${import.meta.env.PRECHECK_WORKER}?program=${question.program}&season=${question.season}&id=${question.id}`
     try {
-      const fetchedQuestion = await fetch(question.url);
+      const fetchedQuestion = await fetch(url);
       archived.value = fetchedQuestion.status === 404;
     } catch (error) {
       archived.value = null

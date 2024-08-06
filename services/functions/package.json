@@ -2,14 +2,17 @@
   "name": "@qnaplus/worker",
   "version": "1.0.0",
   "scripts": {
-    "dev": "wrangler dev"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240729.0",
-    "wrangler": "^3.68.0"
+    "@types/node": "^22.1.0",
+    "supabase": "^1.187.10"
   },
   "volta": {
     "node": "20.15.1",
     "yarn": "1.22.19"
+  },
+  "dependencies": {
+    "hono": "^4.5.4",
+    "vex-qna-archiver": "^11.1.1"
   }
 }

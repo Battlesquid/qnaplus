@@ -5,6 +5,7 @@ interface ImportMetaEnv {
     readonly VITE_APP_NAME: string
     readonly VITE_DATA_URL: string
     readonly VITE_UPDATE_INTERVAL_HOURS: string
+    readonly PRECHECK_WORKER: string;
 }
 
 interface ImportMeta {
