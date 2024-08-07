@@ -19,12 +19,12 @@ export const getSupabaseInstance = () => {
 }
 
 export const populate = async (logger?: Logger) => {
-    const questions = await archiverGetAllQuestions(logger);
+    const { questions } = await archiverGetAllQuestions(logger);
     return insertQuestions(questions, { logger });
 }
 
 export const populateWithMetadata = async (logger?: Logger) => {
-    const questions = await archiverGetAllQuestions(logger);
+    const { questions } = await archiverGetAllQuestions(logger);
     const currentSeason = await fetchCurrentSeason(logger);
 
     const oldestUnansweredQuestion = getOldestUnansweredQuestion(questions, currentSeason);
