@@ -12,7 +12,7 @@ export const doDatabaseUpdate = async (_logger?: Logger) => {
 
     const { current_season, oldest_unanswered_question } = data;
     logger?.info(`Starting update from Q&A ${oldest_unanswered_question}`);
-    const { questions, failures } = await fetchQuestionsIterative({ logger, start: parseInt(oldest_unanswered_question) });
+    const { questions, failures } = await fetchQuestionsIterative({ logger, start: parseInt(oldest_unanswered_question), trySessionRefresh: true });
     logger?.info({ questions: questions.map(q => q.id), failures }, "Iterative fetch results");
     const success = await upsertQuestions(questions, { logger });
     if (success) {
