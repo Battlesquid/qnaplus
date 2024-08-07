@@ -34,7 +34,7 @@
     "domhandler": "^5.0.3",
     "sass": "^1.71.1",
     "typescript": "^5.2.2",
-    "vex-qna-archiver": "^11.1.5",
+    "vex-qna-archiver": "^12.0.0",
     "vite": "^5.2.10",
     "vite-plugin-pwa": "^0.20.0",
     "vue-tsc": "^2.0.28",
