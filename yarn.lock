@@ -6228,6 +6228,7 @@ vali-date@^1.0.0:
   resolved "https://registry.yarnpkg.com/vali-date/-/vali-date-1.0.0.tgz#1b904a59609fb328ef078138420934f6b86709a6"
   integrity sha512-sgECfZthyaCKW10N0fm27cg8HYTFK5qMWgypqkXMQ4Wbl/zZKx7xZICgcoxIIE+WFAP/MBL2EFwC/YvLxw3Zeg==
 
+<<<<<<< HEAD
 vex-qna-archiver@^11.1.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-11.1.0.tgz#dd3483dd53ce3c17f03548de167e99b37927c59e"
@@ -6242,6 +6243,12 @@ vex-qna-archiver@^11.1.1:
   version "11.1.1"
   resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-11.1.1.tgz#887375e3d207027be2403ae04e4cc4104116a9e8"
   integrity sha512-0C7trdCrd3kRlHbuTgFiRGY+ldFrCIaAhp9j+iSNeSQqKgwKatCYduusaxzOSiKAgoaax0Vo03nS/6XOoLiQnQ==
+=======
+vex-qna-archiver@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-12.0.0.tgz#24eee2771e2b8a767fb11518c405171735334cd0"
+  integrity sha512-FQCs3uMsjSMvLBFCPVarLIu/+EgZbRLA3QuPo0P7metu9h1loQRNTns0rJ6z2JGXMVf1WpGZ3mUAAkTgK/YXiw==
+>>>>>>> master
   dependencies:
     "@crawlee/core" "^3.7.2"
     cheerio "^1.0.0-rc.12"
