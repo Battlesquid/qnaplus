@@ -1913,13 +1913,6 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.7.2.tgz#0bdc211f8c2438cfadad26dc8c040a874d478aed"
   integrity sha512-RcdC3hOBOauLP+r/kRt27NrByYtDjsXyAuSbR87O6xpsvi763WI+5fbSIvYJrXnt9w4RuxhV6eAXfIs7aaf/FQ==
 
-"@types/node@^22.1.0":
-  version "22.1.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.1.0.tgz#6d6adc648b5e03f0e83c78dc788c2b037d0ad94b"
-  integrity sha512-AOmuRF0R2/5j1knA3c6G3HOk523Ga+l+ZXltX8SF1+5oqcXijjfTd8fY3XRZqSihEu9XhtQnKYLmkFaoxgsJHw==
-  dependencies:
-    undici-types "~6.13.0"
-
 "@types/phoenix@^1.5.4":
   version "1.6.4"
   resolved "https://registry.yarnpkg.com/@types/phoenix/-/phoenix-1.6.4.tgz#cceac93a827555473ad38057d1df7d06eef1ed71"
@@ -3848,11 +3841,6 @@ help-me@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/help-me/-/help-me-5.0.0.tgz#b1ebe63b967b74060027c2ac61f9be12d354a6f6"
   integrity sha512-7xgomUX6ADmcYzFik0HzAxh/73YlKR9bmFzf51CZwR+b6YtzU2m0u49hQCqV6SvlqIqsaxovfwdvbnsw3b/zpg==
-
-hono@^4.5.4:
-  version "4.5.4"
-  resolved "https://registry.yarnpkg.com/hono/-/hono-4.5.4.tgz#654be361a29eb7a3e7e5eb41f02ecbcef1e5b6a1"
-  integrity sha512-k2IguJfRgNCpDbAfpxk+o+fZBLFHl4+eIZUpjc1ItZWHeZ37SmT3efA1UpkIaC0hSf1NJg0E79/wWn6g9LQ4Cw==
 
 htmlparser2@^8.0.0, htmlparser2@^8.0.1:
   version "8.0.2"
@@ -6111,11 +6099,6 @@ unconfig@^0.3.11:
     defu "^6.1.4"
     jiti "^1.21.0"
 
-undici-types@~6.13.0:
-  version "6.13.0"
-  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.13.0.tgz#e3e79220ab8c81ed1496b5812471afd7cf075ea5"
-  integrity sha512-xtFJHudx8S2DSoujjMd1WeWvn7KKWFRESZTMeL1RptAYERu29D6jphMjjY+vn96jvN3kVPDNxU/E13VTaXj6jg==
-
 undici@6.13.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/undici/-/undici-6.13.0.tgz#7edbf4b7f3aac5f8a681d515151bf55cb3589d72"
@@ -6216,16 +6199,6 @@ vex-qna-archiver@^11.1.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-11.1.0.tgz#dd3483dd53ce3c17f03548de167e99b37927c59e"
   integrity sha512-Y/N7l9uOOuoC04r9tocCxYtXhRLb1qsarTsh5Zu7asmgFxY5mFy977km+b9O9S5Dhgwd9ItjOYFIeRd1j2PfFg==
-  dependencies:
-    "@crawlee/core" "^3.7.2"
-    cheerio "^1.0.0-rc.12"
-    got-scraping "^4.0.3"
-    pino "^8.17.2"
-
-vex-qna-archiver@^11.1.1:
-  version "11.1.1"
-  resolved "https://registry.yarnpkg.com/vex-qna-archiver/-/vex-qna-archiver-11.1.1.tgz#887375e3d207027be2403ae04e4cc4104116a9e8"
-  integrity sha512-0C7trdCrd3kRlHbuTgFiRGY+ldFrCIaAhp9j+iSNeSQqKgwKatCYduusaxzOSiKAgoaax0Vo03nS/6XOoLiQnQ==
   dependencies:
     "@crawlee/core" "^3.7.2"
     cheerio "^1.0.0-rc.12"

@@ -203,3 +203,6 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 
 [functions.precheck]
 verify_jwt = false
+
+[functions.qna-precheck]
+verify_jwt = false
