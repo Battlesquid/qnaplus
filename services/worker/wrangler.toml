@@ -1,0 +1,5 @@
+name = "precheck"
+compatibility_date = "08-05-2024"
+main = "src/index.ts"
+node_compat = true
+# compatibility_flags = [ "nodejs_compat" ]
