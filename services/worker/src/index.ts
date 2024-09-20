@@ -1,4 +1,4 @@
-import { getScrapingClient } from "./client";
+import { RequestBuilder } from "ts-curl-impersonate";
 import { corsHeaders } from "./cors";
 
 export default {
@@ -15,13 +15,19 @@ export default {
         if (program === undefined || season === undefined || id === undefined) {
             return new Response("", { status: 400, headers: corsHeaders });
         }
-        const client = getScrapingClient();
-        const response = await client.fetch(
-            `https://robotevents.com/${program}/${season}/QA/${id}`,
-        );
+        const response = await new RequestBuilder()
+            .url(`https://robotevents.com/${program}/${season}/QA/${id}`)
+            .send();
 
-        return new Response(`RobotEvents: ${response.statusCode}`, {
-            status: response.statusCode,
+        if (response.stderr !== undefined) {
+            return new Response(`RobotEvents: 500`, {
+                status: 500,
+                headers: corsHeaders,
+            });
+        }
+
+        return new Response(`RobotEvents: ${response.details.response_code}`, {
+            status: response.details.response_code,
             headers: corsHeaders,
         });
     },
