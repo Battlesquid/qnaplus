@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-    <div class="flex justify-between p-4">
+    <div class="flex justify-between py-3">
         <div></div>
         <div class="text-sm">{{ results }} results</div>
     </div>

@@ -6,7 +6,6 @@ import AccordionContent from "primevue/accordioncontent";
 import Badge from 'primevue/badge';
 import Button from 'primevue/button';
 import DatePicker from "primevue/datepicker";
-import Chips from "primevue/chips";
 import AutoComplete from 'primevue/autocomplete';
 import Dropdown from 'primevue/dropdown';
 import IconField from "primevue/iconfield";
@@ -51,13 +50,15 @@ const removeSelectedAdvancedOption = (index: number) => {
 
 <template>
 
-    <Accordion>
+    <Accordion :value="null">
         <AccordionPanel>
             <AccordionHeader>Search Options</AccordionHeader>
             <AccordionContent>
                 <Tabs value="0">
                     <TabList>
-                        <Tab value="0">Filter</Tab>
+                        <Tab class="flex gap-3" value="0">Filter
+                            <Badge :value="filterOptions.appliedFilterCount" />
+                        </Tab>
                         <Tab value="1">Sort</Tab>
                     </TabList>
                     <TabPanels>
@@ -65,17 +66,17 @@ const removeSelectedAdvancedOption = (index: number) => {
                             <template #header>
                                 <Badge class="ml-2" :value="filterOptions.appliedFilterCount.value" />
                             </template>
-                            <div class="flex flex-col flex-column gap-2">
-                                <div class="flex flex-wrap gap-2">
+                            <div class="flex flex-col gap-3">
+                                <div class="flex flex-wrap gap-3">
 
-                                    <div class="flex flex-wrap gap-2 flex-1">
-                                        <div class="field m-0 dropdown-flex">
+                                    <div class="flex flex-wrap gap-3 flex-1">
+                                        <div class="m-0 dropdown-flex">
                                             <label for="season">Season</label>
                                             <MultiSelect class="w-full" input-id="season"
                                                 v-model="filterOptions.filters.season" placeholder="Season"
                                                 :options="filterOptions.seasons" option-label="name" />
                                         </div>
-                                        <div class="field m-0 dropdown-flex">
+                                        <div class="m-0 dropdown-flex">
                                             <label for="program">Program</label>
                                             <MultiSelect class="w-full" input-id="program"
                                                 v-model="filterOptions.filters.program" placeholder="Program"
@@ -83,8 +84,8 @@ const removeSelectedAdvancedOption = (index: number) => {
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-1 flex-wrap gap-2">
-                                        <div class="field m-0 input-flex">
+                                    <div class="flex flex-1 flex-wrap gap-3">
+                                        <div class="m-0 input-flex">
                                             <label for="author">Author</label>
                                             <IconField>
                                                 <InputIcon class="pi pi-user" />
@@ -93,7 +94,7 @@ const removeSelectedAdvancedOption = (index: number) => {
                                             </IconField>
                                         </div>
 
-                                        <div class="field m-0 input-flex">
+                                        <div class="m-0 input-flex">
                                             <label for="Question State">Question State</label>
                                             <SelectButton class="select-button-flex" :allow-empty="false"
                                                 v-model="filterOptions.filters.state" :options="questionStateOptions"
@@ -102,23 +103,23 @@ const removeSelectedAdvancedOption = (index: number) => {
                                     </div>
                                 </div>
 
-                                <div class="flex flex-wrap gap-2 ">
-                                    <div class="flex flex-1 min-w-fit gap-2">
-                                        <div class="field m-0 flex-1">
+                                <div class="flex flex-wrap gap-3 ">
+                                    <div class="flex flex-1 min-w-fit gap-3">
+                                        <div class="m-0 flex-1">
                                             <label for="askedBefore">Asked Before</label>
                                             <DatePicker class="w-full" input-id="askedBefore"
                                                 v-model="filterOptions.filters.askedBefore" placeholder="Asked Before"
                                                 show-icon show-button-bar icon-display="input" />
                                         </div>
-                                        <div class="field m-0 flex-1">
+                                        <div class="m-0 flex-1">
                                             <label for="askedAfter">Asked After</label>
                                             <DatePicker class="w-full" input-id="askedAfter"
                                                 v-model="filterOptions.filters.askedAfter" placeholder="Asked After"
                                                 show-icon show-button-bar icon-display="input" />
                                         </div>
                                     </div>
-                                    <div class="flex flex-1 min-w-fit gap-2">
-                                        <div class="field m-0 flex-1">
+                                    <div class="flex flex-1 min-w-fit gap-3">
+                                        <div class="m-0 flex-1">
                                             <label for="answeredBefore" aria-label="Answered Before">Answered
                                                 Before</label>
                                             <DatePicker class="w-full" input-id="answeredBefore"
@@ -126,7 +127,7 @@ const removeSelectedAdvancedOption = (index: number) => {
                                                 placeholder="Answered Before" show-icon show-button-bar
                                                 icon-display="input" />
                                         </div>
-                                        <div class="field m-0 flex-1">
+                                        <div class="m-0 flex-1">
                                             <label for="answeredAfter" aria-label="Answered After">Answered
                                                 After</label>
                                             <DatePicker class="w-full" input-id="answeredAfter"
@@ -137,14 +138,14 @@ const removeSelectedAdvancedOption = (index: number) => {
                                     </div>
                                 </div>
 
-                                <div class="field m-0">
+                                <div class="m-0">
                                     <label for="tags">Tags</label>
                                     <InputGroup>
                                         <InputGroupAddon>
                                             <i class="pi pi-tags" aria-label="Tags" />
                                         </InputGroupAddon>
-                                        <AutoComplete :typeahead="false" multiple input-id="tags" v-model="filterOptions.filters.tags"
-                                            aria-label="Tags" placeholder="Tags" />
+                                        <AutoComplete class="autocomplete-group" :typeahead="false" multiple input-id="tags"
+                                            v-model="filterOptions.filters.tags" aria-label="Tags" placeholder="Tags" />
                                     </InputGroup>
                                 </div>
                                 <div>
@@ -156,29 +157,29 @@ const removeSelectedAdvancedOption = (index: number) => {
                             <template #header>
                                 <span style="height: 24px">Sort</span>
                             </template>
-                            <div class="flex flex-column gap-2">
-                                <div class="flex justify-content-end">
-                                    <div class="flex align-items-center gap-2">
+                            <div class="flex flex-col gap-3">
+                                <div class="flex justify-end">
+                                    <div class="flex items-center gap-3">
                                         <label for="advanced_toggle">Advanced Sorting</label>
                                         <InputSwitch v-model="sortOptions.advancedEnabled" input-id="advanced_toggle" />
                                     </div>
                                 </div>
-                                <div class="flex flex-wrap gap-2" v-if="!sortOptions.advancedEnabled">
-                                    <div class="field flex-1 m-0">
+                                <div class="flex flex-wrap gap-3" v-if="!sortOptions.advancedEnabled">
+                                    <div class="flex-1 m-0">
                                         <label for="basic_sort_option">Sort By</label>
                                         <Dropdown class="w-full" input-id="basic_sort_option"
                                             v-model="sortOptions.basic.sort" :options="sortOptionsList"
                                             option-label="name" />
                                     </div>
-                                    <div class="field flex-1 m-0">
+                                    <div class="flex-1 m-0">
                                         <label for="basic_sort_order">Order</label>
                                         <Dropdown class="w-full" input-id="basic_sort_order"
                                             v-model="sortOptions.basic.asc" :options="sortOrderList"
                                             option-label="name" />
                                     </div>
                                 </div>
-                                <div class="flex flex-column gap-2" v-else>
-                                    <div class="field flex-1">
+                                <div class="flex flex-col gap-3" v-else>
+                                    <div class="flex-1">
                                         <label for="sort_option">Sort Option</label>
                                         <Dropdown class="w-full" input-id="sort_option"
                                             :options="remainingAdvancedOptions" option-label="name"
@@ -187,21 +188,21 @@ const removeSelectedAdvancedOption = (index: number) => {
                                     <VueDraggable ref="el" v-model="sortOptions.advanced" ghostClass="sort-ghost"
                                         dragClass="sort-drag" :animation="150" handle=".handle">
                                         <div v-for="(option, index) in sortOptions.advanced">
-                                            <div class="flex flex-wrap gap-2">
-                                                <div class="flex flex-1 align-items-center">
+                                            <div class="flex flex-wrap gap-3">
+                                                <div class="flex flex-1 items-center">
                                                     <div class="handle cursor-move p-2 pi pi-bars ml-2"></div>
                                                     <span class="">{{ option.name }}</span>
                                                 </div>
-                                                <div class="flex flex-1 align-items-center gap-2">
-                                                    <div class="flex flex-1 align-items-center gap-2 m-0">
+                                                <div class="flex flex-1 items-center gap-3">
+                                                    <div class="flex flex-1 items-center gap-3 m-0">
                                                         <label :for="'advanced_sort_order_' + option.name">Order</label>
                                                         <Dropdown class="flex-1"
                                                             :input-id="'advanced_sort_order_' + option.name"
                                                             v-model="sortOptions.advanced[index].asc"
                                                             :options="sortOrderList" option-label="name" />
                                                     </div>
-                                                    <Button class="align-self-end" type="button" severity="secondary"
-                                                        rounded outlined aria-label="Remove Sort" icon="pi pi-times"
+                                                    <Button class="self-end" type="button" severity="secondary" rounded
+                                                        outlined aria-label="Remove Sort" icon="pi pi-times"
                                                         @click="removeSelectedAdvancedOption(index)" />
                                                 </div>
                                             </div>
