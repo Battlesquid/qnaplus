@@ -107,3 +107,7 @@ export const getAppData = async () => {
     }
     return data;
 }
+
+export const getQuestion = async (id: string) => {
+    return database.questions.get(id);
+}

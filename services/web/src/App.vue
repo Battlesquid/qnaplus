@@ -35,8 +35,10 @@ startup();
         <h3>{{ appname }}</h3>
         <ProgressSpinner class="w-8 h-8 m-0" strokeWidth="6" fill="transparent" animationDuration="0.5s" />
     </div>
-    <div v-else class="flex flex-col w-full h-screen">
-        <router-view class="w-full"></router-view>
+    <div v-else class="flex flex-column w-full h-screen">
+        <Suspense>
+            <router-view class="w-full"></router-view>
+        </Suspense>
     </div>
 </template>
 

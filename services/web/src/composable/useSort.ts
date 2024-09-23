@@ -89,8 +89,8 @@ export const useSort = (questions: MaybeRefOrGetter<Question[]>) => {
                     value: SortOptions.AskDate,
                 },
                 asc: {
-                    name: "Ascending",
-                    value: SortOrder.Ascending
+                    name: "Descending",
+                    value: SortOrder.Descending
                 },
             },
             advanced: [],

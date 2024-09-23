@@ -3,7 +3,8 @@ import Card from 'primevue/card';
 import Tag from 'primevue/tag';
 import Divider from 'primevue/divider';
 import { Question } from "vex-qna-archiver";
-import { applyWordLimit, isEmpty } from "../util/strings";
+import { applyWordLimit, isEmpty } from "../../util/strings";
+import { RouterLink } from "vue-router";
 
 const props = defineProps<Question>();
 
@@ -15,7 +16,7 @@ const limitedAnswer = applyWordLimit(props.answer, 100);
 <template>
     <Card :class="{ 'border-primary': answered, 'border-300': !answered }">
         <template #title>
-            <a :href="url" target="_blank">{{ title }}</a>
+            <router-link :to="`/${id}`">{{ title }}</router-link>
         </template>
         <template #subtitle>
             <div class="flex justify-between">

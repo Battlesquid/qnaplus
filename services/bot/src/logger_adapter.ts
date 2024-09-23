@@ -1,11 +1,11 @@
 import { ILogger as ISapphireLogger, LogLevel } from "@sapphire/framework";
-import pino, { Logger, LoggerExtras } from 'pino';
+import { Logger, LoggerExtras } from 'pino';
 
 export class PinoLoggerAdapter implements ISapphireLogger {
     private logger: Logger;
 
-    constructor(logger?: Logger) {
-        this.logger = logger ?? pino();
+    constructor(logger: Logger) {
+        this.logger = logger;
     }
 
     has(level: LogLevel): boolean {
@@ -51,7 +51,12 @@ export class PinoLoggerAdapter implements ISapphireLogger {
                 this.logger.warn({ values });
                 break;
             case LogLevel.Error:
-                this.logger.error({ values });
+                const [maybeError, ...otherValues] = values;
+                if (maybeError instanceof Error) {
+                    this.logger.error({ error: maybeError, otherValues });
+                } else {
+                    this.logger.error({ values });
+                }
                 break;
             case LogLevel.Fatal:
                 this.logger.fatal({ values });

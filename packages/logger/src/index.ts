@@ -10,6 +10,7 @@ export const getLoggerInstance = (stream: string, options?: LoggerOptions) => {
             pid: process.pid,
             hostname: os.hostname()
         },
+        errorKey: "error",
         transport: {
             targets: [
                 {

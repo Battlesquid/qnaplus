@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@qnaplus/logger": "1.0.0",
-    "vex-qna-archiver": "^10.1.0",
+    "vex-qna-archiver": "^12.0.0",
     "croner": "^8.0.2",
     "qnaplus": "1.0.0"
   },
