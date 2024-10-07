@@ -8,10 +8,10 @@ defineProps<{
 </script>
 
 <template>
-    <div class="surface-card p-3 border-left-3 border-blue-500 text-gray-300">
+    <blockquote class="prose-blockquote">
         <component :is="resolveQuestionComponent(child)" v-bind="resolveQuestionComponentProps(child)"
             v-for="child in children" />
-    </div>
+    </blockquote>
 </template>
 
 <style scoped>

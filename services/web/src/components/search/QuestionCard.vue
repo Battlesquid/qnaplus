@@ -1,33 +1,26 @@
 <script setup lang="ts">
 import Card from 'primevue/card';
 import Tag from 'primevue/tag';
-import Divider from 'primevue/divider';
 import { Question } from "vex-qna-archiver";
-import { applyWordLimit, isEmpty } from "../../util/strings";
 import { RouterLink } from "vue-router";
+import { applyWordLimit } from "../../util/strings";
+import QuestionDetails from '../question/QuestionDetails.vue';
 
-const props = defineProps<Question>();
+const question = defineProps<Question>();
 
-const limitedQuestion = applyWordLimit(props.question, 100);
-const limitedAnswer = applyWordLimit(props.answer, 100);
+const WORD_LIMIT = 75;
+const limitedQuestion = applyWordLimit(question.question, WORD_LIMIT);
+const limitedAnswer = applyWordLimit(question.answer, WORD_LIMIT);
 
 </script>
 
 <template>
-    <Card :class="{ 'border-primary': answered, 'border-300': !answered }">
+    <Card class="prose dark:prose-invert prose-slate max-w-none !bg-surface-900 border-surface mb-3 !rounded-sm">
         <template #title>
-            <router-link :to="`/${id}`">{{ title }}</router-link>
+            <router-link class="prose-a" :to="`/${id}`">{{ title }}</router-link>
         </template>
         <template #subtitle>
-            <div class="flex justify-between">
-                <span>Asked by <b>{{ author }}</b> on <b>{{ askedTimestamp }}</b></span>
-                <span v-if="answered" class="flex gap-2 text-green-500">
-                    <i class="pi pi-check " />
-                    <span v-if="!isEmpty(answeredTimestamp)">Answered on {{ answeredTimestamp }}</span>
-                    <span v-else>Answered</span>
-                </span>
-                <span v-else class="text-gray-400">Unanswered</span>
-            </div>
+            <question-details :question="question" />
         </template>
         <template #content>
             <div class="flex flex-col gap-2">
@@ -48,7 +41,10 @@ const limitedAnswer = applyWordLimit(props.answer, 100);
             </div>
         </template>
     </Card>
-    <Divider />
 </template>
 
-<style scoped></style>
+<style scoped>
+.border-1 {
+    border-width: 1px;
+}
+</style>

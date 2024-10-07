@@ -11,7 +11,7 @@ const query = defineModel<string>();
 <template>
     <IconField iconPosition="left">
         <InputIcon class="pi pi-search" />
-        <InputText class="w-full" v-model:model-value="query" placeholder="Search" aria-label="Search Query" />
+        <InputText class="w-full !rounded-sm" v-model:model-value="query" placeholder="Search" aria-label="Search Query" />
     </IconField>
 
 </template>

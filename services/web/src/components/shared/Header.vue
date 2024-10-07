@@ -6,12 +6,12 @@ const header = ref<HTMLDivElement | null>(null);
 const filler = ref<HTMLDivElement | null>(null);
 const update = () => {
     if (window.scrollY !== 0) {
-        header.value?.classList.add("header-sticky", "border-b-2", "border-blue-700");
-        header.value?.classList.remove("surface-border")
+        header.value?.classList.add("header-sticky", "border-b-1", "border-surface-600");
+        header.value?.classList.remove("border-surface-900")
         filler.value?.classList.remove("hidden")
     } else {
-        header.value?.classList.remove("header-sticky", "border-b-2", "border-blue-700");
-        header.value?.classList.add("surface-border")
+        header.value?.classList.remove("header-sticky", "border-b-1", "border-surface-600");
+        header.value?.classList.add("border-surface-900")
         filler.value?.classList.add("hidden")
     }
 }
@@ -22,16 +22,16 @@ const appname = import.meta.env.VITE_APP_NAME;
 </script>
 
 <template>
-    <div ref="filler" class="filler p-66 border-b-2 border-blue-800 hidden">
-        <div class="p-6"></div>
+    <div ref="filler" class="filler p-3 border-b-1 hidden">
+        <div class="p-3"></div>
     </div>
     <div ref="header"
-        class="flex w-full z-10 items-center justify-between gap-5 p-6 duration-1000 transition-colors bg-zinc-900 border-blue-700 border-b-2">
-        <h3 class="ml-1 font-semibold">{{ appname }}</h3>
+        class="flex w-full z-10 items-center justify-between gap-5 p-3 duration-1000 transition-colors border-surface-600 bg-surface-900 border-b-1">
+        <a href="/" class="ml-1 font-semibold">{{ appname }}</a>
         <div class="flex gap-2">
             <Button as="a" href="https://github.com/Battlesquid/qnaplus" target="_blank" class="header-btn"
                 icon="pi pi-github" aria-label="Github" outlined />
-            <Button class="header-btn" icon="pi pi-cog" aria-label="Settings" outlined />
+            <Button class="bg-surface-900 header-btn" icon="pi pi-cog" aria-label="Settings" outlined />
             <Button class="header-btn" icon="pi pi-info-circle" aria-label="About" outlined />
         </div>
     </div>
@@ -46,5 +46,9 @@ const appname = import.meta.env.VITE_APP_NAME;
 .header-btn {
     width: 32px !important;
     height: 32px !important;
+}
+
+.border-b-1 {
+    border-bottom-width: 1px;
 }
 </style>

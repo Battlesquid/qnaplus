@@ -2,14 +2,14 @@
 import { Node as ParserNode } from "domhandler";
 import * as htmlparser2 from "htmlparser2";
 import Divider from "primevue/divider";
+import Message from "primevue/message";
 import Tag from "primevue/tag";
 import sanitize from "sanitize-html";
+import { ref } from "vue";
+import QuestionDetails from "../components/question/QuestionDetails.vue";
 import { resolveQuestionComponent, resolveQuestionComponentProps } from "../composable/componentMap";
 import { getQuestion } from "../database";
-import { isEmpty } from "../util/strings";
 import Root from "./Root.vue";
-import Message from "primevue/message";
-import { ref } from "vue";
 
 const props = defineProps<{
   id: string;
@@ -46,9 +46,9 @@ const answerChildren = answerDom.children as ParserNode[];
 
 <template>
   <Root>
-    <div class="p-4">
-      <div class="flex flex-column align-items-center" v-if="question === undefined">
-        <h2>Uhhhhhhhhhh...</h2>
+    <div class="prose dark:prose-invert prose-slate max-w-none p-4">
+      <div class="flex flex-col items-center justify-center" v-if="question === undefined">
+        <h2>uhhhhhhhhhh...</h2>
         <h4>Couldn't find a question here.</h4>
       </div>
       <div v-else>
@@ -59,16 +59,7 @@ const answerChildren = answerDom.children as ParserNode[];
         <a :href="question.url" target="_blank">
           <h2>{{ question.title }}</h2>
         </a>
-        <div class="flex flex-column gap-1">
-          <span class="text-gray-400">Asked by <b>{{ question.author }}</b> on <b>{{ question.askedTimestamp
-              }}</b></span>
-          <span v-if="question.answered" class="flex gap-2 text-green-500">
-            <i class="pi pi-check " />
-            <span v-if="!isEmpty(question.answeredTimestamp)">Answered on <b>{{ question.answeredTimestamp }}</b></span>
-            <span v-else>Answered</span>
-          </span>
-          <span v-else class="text-gray-400">Unanswered</span>
-        </div>
+        <question-details :question="question" />
         <Divider />
         <div>
           <h3>Question</h3>
