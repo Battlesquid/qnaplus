@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import Card from 'primevue/card';
-import Tag from 'primevue/tag';
 import { Question } from "vex-qna-archiver";
 import { RouterLink } from "vue-router";
 import { applyWordLimit } from "../../util/strings";
 import QuestionDetails from '../question/QuestionDetails.vue';
+import QuestionTags from '../shared/QuestionTags.vue';
 
 const question = defineProps<Question>();
 
@@ -15,7 +15,7 @@ const limitedAnswer = applyWordLimit(question.answer, WORD_LIMIT);
 </script>
 
 <template>
-    <Card class="prose dark:prose-invert prose-slate max-w-none !bg-surface-900 border-surface mb-3 !rounded-sm">
+    <Card class="prose dark:prose-invert prose-slate max-w-none !bg-surface-900 border-surface mb-3 !rounded-md">
         <template #title>
             <router-link class="prose-a" :to="`/${id}`">{{ title }}</router-link>
         </template>
@@ -35,10 +35,8 @@ const limitedAnswer = applyWordLimit(question.answer, WORD_LIMIT);
                 <a v-if="limitedAnswer.applied || limitedQuestion.applied" :href="url">Read More</a>
             </div>
         </template>
-        <template #footer v-if="tags.length > 0">
-            <div class="flex gap-2">
-                <Tag v-for="tag in tags">{{ tag }}</Tag>
-            </div>
+        <template #footer>
+            <QuestionTags :tags="question.tags" :program="question.program" />
         </template>
     </Card>
 </template>

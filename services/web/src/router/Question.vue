@@ -3,10 +3,10 @@ import { Node as ParserNode } from "domhandler";
 import * as htmlparser2 from "htmlparser2";
 import Divider from "primevue/divider";
 import Message from "primevue/message";
-import Tag from "primevue/tag";
 import sanitize from "sanitize-html";
 import { ref } from "vue";
 import QuestionDetails from "../components/question/QuestionDetails.vue";
+import QuestionTags from "../components/shared/QuestionTags.vue";
 import { resolveQuestionComponent, resolveQuestionComponentProps } from "../composable/componentMap";
 import { getQuestion } from "../database";
 import Root from "./Root.vue";
@@ -57,20 +57,20 @@ const answerChildren = answerDom.children as ParserNode[];
         <Message v-if="archived === null" severity="warn" :closable="false">Warning: Unable to check if Q&A exists.
         </Message>
         <a :href="question.url" target="_blank">
-          <h2>{{ question.title }}</h2>
+          <h2 class="mb-1">{{ question.title }}</h2>
         </a>
         <question-details :question="question" />
         <Divider />
         <div>
           <h3>Question</h3>
-          <div class="text-gray-300">
+          <div class="text-surface-300">
             <component :is="resolveQuestionComponent(child)" v-bind="resolveQuestionComponentProps(child)"
               v-for="child in questionChildren" />
           </div>
         </div>
         <div>
-          <div v-if="question.answered" class="text-gray-300">
-            <div class="question-divider border-gray-400" />
+          <div v-if="question.answered" class="text-surface-300">
+            <!-- <div class="question-divider border-surface-400" /> -->
             <h3>Answer</h3>
             <div>
               <component :is="resolveQuestionComponent(child)" v-bind="resolveQuestionComponentProps(child)"
@@ -79,9 +79,7 @@ const answerChildren = answerDom.children as ParserNode[];
           </div>
         </div>
         <Divider />
-        <div class="flex gap-2 py-2">
-          <Tag v-for="tag in question.tags">{{ tag }}</Tag>
-        </div>
+        <QuestionTags :tags="question.tags" :program="question.program" />
       </div>
     </div>
   </Root>

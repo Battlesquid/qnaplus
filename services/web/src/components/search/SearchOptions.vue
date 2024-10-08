@@ -239,4 +239,7 @@ const removeSelectedAdvancedOption = (index: number) => {
 .sort-ghost {
     opacity: 0;
 }
+.border-1 {
+    border-width: 1px;
+}
 </style>

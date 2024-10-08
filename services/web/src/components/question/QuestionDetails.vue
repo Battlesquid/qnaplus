@@ -12,7 +12,7 @@ const { author, askedTimestamp, answered, answeredTimestamp } = question;
         <span><b>{{ author }}</b> on <b>{{ askedTimestamp }}</b></span>
         <span v-if="answered" class="flex gap-2 items-center text-green-500">
             <i class="pi pi-check " />
-            <span v-if="!isEmpty(answeredTimestamp)"><b>{{ answeredTimestamp }}</b></span>
+            <span v-if="!isEmpty(answeredTimestamp)">Answered on <b>{{ answeredTimestamp }}</b></span>
             <span v-else>Answered</span>
         </span>
         <span v-else class="text-muted-color">Unanswered</span>
