@@ -56,9 +56,7 @@ const answerChildren = answerDom.children as ParserNode[];
         </Message>
         <Message v-if="archived === null" severity="warn" :closable="false">Warning: Unable to check if Q&A exists.
         </Message>
-        <a :href="question.url" target="_blank">
-          <h2 class="mb-1">{{ question.title }}</h2>
-        </a>
+        <h2 class="mb-1">{{ question.title }}</h2>
         <question-details :question="question" />
         <Divider />
         <div>
@@ -70,7 +68,6 @@ const answerChildren = answerDom.children as ParserNode[];
         </div>
         <div>
           <div v-if="question.answered" class="text-surface-300">
-            <!-- <div class="question-divider border-surface-400" /> -->
             <h3>Answer</h3>
             <div>
               <component :is="resolveQuestionComponent(child)" v-bind="resolveQuestionComponentProps(child)"
@@ -79,15 +76,13 @@ const answerChildren = answerDom.children as ParserNode[];
           </div>
         </div>
         <Divider />
-        <QuestionTags :tags="question.tags" :program="question.program" />
+        <div class="flex justify-between">
+          <QuestionTags :tags="question.tags" :program="question.program" />
+          <a class="text-muted-color" :href="question.url" target="_blank">View on RobotEvents <i class=" ml-1 pi pi-external-link"></i></a>
+        </div>
       </div>
     </div>
   </Root>
 </template>
 
-<style scoped>
-.question-divider {
-  border-width: 1px;
-  border-style: dashed;
-}
-</style>
+<style scoped></style>

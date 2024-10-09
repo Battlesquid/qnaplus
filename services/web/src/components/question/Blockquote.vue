@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-    <blockquote class="prose-blockquote">
+    <blockquote class="p-3 border-l-2 bg-surface-900 border-l-surface-800 not-prose">
         <component :is="resolveQuestionComponent(child)" v-bind="resolveQuestionComponentProps(child)"
             v-for="child in children" />
     </blockquote>

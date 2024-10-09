@@ -7,16 +7,16 @@ const filler = ref<HTMLDivElement | null>(null);
 const update = () => {
     console.log("called")
     if (window.scrollY !== 0) {
-        header.value?.classList.add("header-sticky", "border-surface-800", "backdrop-blur-lg");
+        header.value?.classList.add("header-sticky");
         header.value?.classList.remove("border-transparent")
         filler.value?.classList.remove("hidden")
     } else {
-        header.value?.classList.remove("header-sticky", "border-surface-800", "backdrop-blur-lg");
+        header.value?.classList.remove("header-sticky");
         header.value?.classList.add("border-transparent")
         filler.value?.classList.add("hidden")
     }
 }
-onMounted(() => update())
+onMounted(() => update());
 useEventListener(document, "scroll", () => update());
 const appname = import.meta.env.VITE_APP_NAME;
 
@@ -28,7 +28,7 @@ const appname = import.meta.env.VITE_APP_NAME;
     </div>
     <div ref="header"
         class="flex w-full z-10 items-center justify-between gap-5 p-3 duration-500 transition-colors border-b-1 border-transparent">
-        <a href="/" class="ml-2 font-semibold">{{ appname }}</a>
+        <a href="/" class="text-color ml-2 font-semibold">{{ appname }}</a>
         <div class="flex gap-2">
             <Button as="a" href="https://github.com/Battlesquid/qnaplus" target="_blank" class="header-btn"
                 icon="pi pi-github" aria-label="Github" outlined text />
@@ -42,6 +42,7 @@ const appname = import.meta.env.VITE_APP_NAME;
 .header-sticky {
     position: fixed;
     top: 0;
+    @apply border-surface-800 backdrop-blur-lg bg-surface-950/30;
 }
 
 .header-btn {

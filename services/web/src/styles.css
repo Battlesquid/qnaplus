@@ -12,6 +12,12 @@ body {
     padding: 0;
 }
 
+@layer base {
+    a:hover {
+        @apply text-muted-color-emphasis;
+    }
+}
+
 /* for SearchFilters.vue */
 .select-button-flex>button {
     flex-grow: 1 !important;
