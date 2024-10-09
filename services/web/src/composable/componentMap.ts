@@ -36,7 +36,7 @@ export const resolveQuestionComponent = (node: ParserNode) => {
 
 export const resolveQuestionComponentProps = (node: ParserNode) => {
     if (isTag(node) && node.name === "img") {
-        return { src: node.attribs.src, height: 150, preview: true };
+        return { src: node.attribs.src, height: 250, preview: true };
     }
     if (isTag(node) && ["em", "p", "strong", "blockquote", "ol", "li"].includes(node.name)) {
         return { children: node.children };

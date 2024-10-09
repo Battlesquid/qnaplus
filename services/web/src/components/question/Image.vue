@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
     <div>
-        <Image image-class="fit-image" :src="src" :height="height" :preview="preview" />
+        <Image :src="src" :width="height" :preview="preview" />
     </div>
 </template>
 

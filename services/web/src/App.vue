@@ -31,17 +31,17 @@ startup();
 </script>
 
 <template>
-    <div v-if="loading" class="flex flex-row h-screen-mobile justify-content-center align-items-center column-gap-3">
-        <h3>{{ appname }}</h3>
-        <ProgressSpinner class="w-2rem h-2rem m-0" strokeWidth="6" fill="transparent" animationDuration="0.5s" />
+    <div v-if="loading" class="flex flex-row h-screen-mobile justify-center items-center gap-x-4">
+        <h1 class="text-xl font-semibold">{{ appname }}</h1>
+        <ProgressSpinner style="width: 40px; margin: 0;" strokeWidth="6" fill="transparent" animationDuration="0.5s" />
     </div>
-    <div v-else class="flex flex-column w-full h-screen">
+    <div v-else class="flex flex-column w-full h-screen p-component">
         <Suspense>
             <router-view class="w-full"></router-view>
         </Suspense>
     </div>
 </template>
 
-<style lang="scss">
+<style>
 @import "styles";
 </style>

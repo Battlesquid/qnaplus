@@ -33,13 +33,13 @@ const { sortedQuestions, sortOptions } = useSort(filteredQuestions)
 
 <template>
     <Root>
-        <div class="h-full flex flex-column gap-2 p-3">
-            <div class="flex flex-column gap-2">
+        <div class="h-full flex flex-col gap-3 p-4">
+            <div class="flex flex-col gap-3">
                 <QuestionListHeader :results="sortedQuestions.length" />
                 <SearchInput class="flex-1" v-model="query" />
                 <SearchOptions :filter-options="filterOptions" :sort-options="sortOptions" />
             </div>
-            <div class="h-full flex flex-column gap-2">
+            <div class="h-full flex flex-col gap-3">
                 <QuestionList :questions="sortedQuestions" />
                 <ScrollTop />
             </div>
