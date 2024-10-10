@@ -1,12 +1,11 @@
-import { config } from "@qnaplus/config";
-
-export const asEnvironmentResource = (resource: string) => {
-    return config.getenv("NODE_ENV") === "development"
-        ? `${resource}.development`
-        : `${resource}.production`;
+interface IQnaplusTables {
+    Questions: "questions";
+    Metadata: "metadata";
+    RenotifyQueue: "renotify_queue";
+    Failures: "failures";
 }
 
-export const QnaplusTables = {
+export const QnaplusTables: IQnaplusTables = {
     Questions: "questions",
     Metadata: "metadata",
     RenotifyQueue: "renotify_queue",

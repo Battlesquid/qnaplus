@@ -52,9 +52,16 @@ export const doDatabaseUpdate = async (_logger?: Logger) => {
     }
 
     const { current_season, oldest_unanswered_question } = data;
-    logger?.info(`Starting update from Q&A ${oldest_unanswered_question}`);
-    const { questions, failures } = await fetchQuestionsIterative({ logger, start: parseInt(oldest_unanswered_question), trySessionRefresh: true });
-    logger?.info({ questions: questions.map(q => q.id), failures }, "Iterative fetch results");
+    const failureUpdateResult = await handleFailureUpdate(current_season as Season, logger);
+    logger?.info(`Oldest failure question: ${failureUpdateResult.oldest}`);
+    logger?.info(`Stored oldest unanswered question: ${oldest_unanswered_question}`);
+
+    const start = failureUpdateResult.oldest !== undefined
+        ? Math.min(parseInt(failureUpdateResult.oldest.id), parseInt(oldest_unanswered_question))
+        : parseInt(oldest_unanswered_question);
+
+    logger?.info(`Starting update from Q&A ${start}`);
+    const { questions, failures } = await fetchQuestionsIterative({ logger, start });
     const success = await upsertQuestions(questions, { logger });
     if (success) {
         logger?.info(`Updated ${questions.length} questions.`);
@@ -81,14 +88,14 @@ export const doDatabaseUpdate = async (_logger?: Logger) => {
     }
 
     const oldest = failureUpdateResult.oldest !== undefined
-        ? getOldestUnansweredQuestion([failureUpdateResult.oldest, oldestUnansweredFromUpdate], current_season)
+        ? getOldestUnansweredQuestion([failureUpdateResult.oldest, oldestUnansweredFromUpdate], current_season as Season)
         : oldestUnansweredFromUpdate;
     if (oldest === undefined) {
         logger?.info("Unable to resolve an oldest unanswered question, skipping metadata update")
         return;
     }
 
-    const { error, status, statusText } = await saveMetadata({ oldest_unanswered_question: `${oldest.id}` });
+    const { error, status, statusText } = await saveMetadata({ ...data, oldest_unanswered_question: `${oldest.id}` });
     if (error) {
         logger?.error({ error, status, statusText, oldest_unanswered_id: oldest.id }, `Unable to save oldest unanswered question (${oldest.id}) to metadata`);
     } else {

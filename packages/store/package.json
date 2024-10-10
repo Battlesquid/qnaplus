@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@qnaplus/config": "1.0.0",
-    "@supabase/supabase-js": "^2.39.3",
+    "@supabase/supabase-js": "^2.45.4",
     "diff": "^5.1.0",
     "pino": "^8.17.2",
     "tus-js-client": "^4.1.0",

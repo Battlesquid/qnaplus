@@ -3,7 +3,7 @@ import { PaginatedFieldMessageEmbed } from "@sapphire/discord.js-utilities";
 import { Subcommand } from "@sapphire/plugin-subcommands";
 import Cron from "croner";
 import { EmbedBuilder, hyperlink, inlineCode } from "discord.js";
-import { QnaplusTables, asEnvironmentResource, config, getQuestion, getRenotifyQueue, getSupabaseInstance } from "qnaplus";
+import { QnaplusTables, config, getQuestion, getRenotifyQueue, getSupabaseInstance } from "qnaplus";
 import { Question } from "vex-qna-archiver";
 import { renotify } from "../interactions";
 import { PinoLoggerAdapter } from "../logger_adapter";
@@ -65,7 +65,7 @@ export class Renotify extends LoggerSubcommand {
             return;
         }
 
-        const { error, status, statusText } = await db.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
+        const { error, status, statusText } = await db.from(QnaplusTables.RenotifyQueue)
             .upsert({ id });
         if (error) {
             this.logErrorAndReply(
@@ -195,7 +195,7 @@ export class Renotify extends LoggerSubcommand {
     public async renotifyCancel(interaction: Subcommand.ChatInputCommandInteraction) {
         const logger = (this.container.logger as PinoLoggerAdapter).child({ label: "renotifyCancel" });
         const db = getSupabaseInstance();
-        const { count, error, status, statusText } = await db.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
+        const { count, error, status, statusText } = await db.from(QnaplusTables.RenotifyQueue)
             .delete({ count: "exact" })
             .neq("id", "0");
         if (error) {
@@ -221,7 +221,7 @@ export class Renotify extends LoggerSubcommand {
             error: questionsError,
             status: questionsStatus,
             statusText: questionStatusText
-        } = await db.from(asEnvironmentResource(QnaplusTables.Questions))
+        } = await db.from(QnaplusTables.Questions)
             .select("id")
             .eq("answered", true)
             .gte("askedTimestampMs", dateMs)
@@ -236,7 +236,7 @@ export class Renotify extends LoggerSubcommand {
             error: renotifyError,
             status: renotifyStatus,
             statusText: renotifyStatusText
-        } = await db.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
+        } = await db.from(QnaplusTables.RenotifyQueue)
             .upsert(ids, { count: "exact", ignoreDuplicates: true });
         if (renotifyError) {
             throw { error: renotifyError, status: renotifyStatus, statusText: renotifyStatusText };

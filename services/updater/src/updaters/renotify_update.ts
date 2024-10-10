@@ -1,17 +1,17 @@
 import { Logger } from "pino";
-import { QnaplusChannels, QnaplusEvents, QnaplusTables, asEnvironmentResource, getRenotifyQueue, getSupabaseInstance } from "qnaplus";
+import { QnaplusChannels, QnaplusEvents, QnaplusTables, getRenotifyQueue, getSupabaseInstance } from "qnaplus";
 
 export const onRenotifyQueueFlushAck = (_logger: Logger) => {
     const logger = _logger.child({ label: "renotifyQueueAck" });
     logger.info("Registering listener for RenotifyQueueFlushAck");
 
     const supabase = getSupabaseInstance();
-    supabase.channel(asEnvironmentResource(QnaplusChannels.RenotifyQueue))
+    supabase.channel(QnaplusChannels.RenotifyQueue)
         .on(
             "broadcast",
             { event: QnaplusEvents.RenotifyQueueFlushAck },
             async () => {
-                const { count, error, status, statusText } = await supabase.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
+                const { count, error, status, statusText } = await supabase.from(QnaplusTables.RenotifyQueue)
                     .delete({ count: "exact" })
                     .neq("id", "0");
                 if (error) {
@@ -37,7 +37,7 @@ export const doRenotifyUpdate = async (_logger: Logger) => {
         return;
     }
 
-    const broadcastResponse = await supabase.channel(asEnvironmentResource(QnaplusChannels.DbChanges))
+    const broadcastResponse = await supabase.channel(QnaplusChannels.DbChanges)
         .send({ type: "broadcast", event: QnaplusEvents.RenotifyQueueFlush, payload: { questions: payload } });
     switch (broadcastResponse) {
         case "ok":

@@ -1,5 +1,5 @@
 import { Logger } from "pino";
-import { asEnvironmentResource, getAllQuestions, QnaplusBuckets, upload, UploadMetadata } from "qnaplus";
+import { getAllQuestions, QnaplusBuckets, upload, UploadMetadata } from "qnaplus";
 
 export const doStorageUpdate = async (_logger?: Logger) => {
     const logger = _logger?.child({ label: "doStorageUpdate" });
@@ -8,7 +8,7 @@ export const doStorageUpdate = async (_logger?: Logger) => {
     // typed as any to address limitation in tus-js-client (https://github.com/tus/tus-js-client/issues/289)
     const buffer: any = Buffer.from(json, "utf-8");
     const metadata: UploadMetadata = {
-        bucket: asEnvironmentResource(QnaplusBuckets.Data),
+        bucket: QnaplusBuckets.Data,
         filename: "questions.json",
         type: "application/json"
     }

@@ -4,7 +4,7 @@ import { Logger } from "pino";
 import { Question, getAllQuestions as archiverGetAllQuestions, fetchCurrentSeason, getOldestQuestion, getOldestUnansweredQuestion } from "vex-qna-archiver";
 import { ChangeQuestion, classifyChanges } from "./change_classifier";
 import { PayloadQueue, RenotifyPayload, UpdatePayload } from "./payload_queue";
-import { QnaplusChannels, QnaplusEvents, QnaplusTables, asEnvironmentResource } from "./resources";
+import { QnaplusChannels, QnaplusEvents, QnaplusTables } from "./resources";
 import { Database } from "./supabase";
 
 const supabase = createClient<Database>(config.getenv("SUPABASE_URL"), config.getenv("SUPABASE_KEY"))
@@ -40,7 +40,7 @@ export const populateWithMetadata = async (logger?: Logger) => {
     logger?.info("Successfully populated database");
 
     const { error } = await supabase
-        .from(asEnvironmentResource(QnaplusTables.Metadata))
+        .from(QnaplusTables.Metadata)
         .upsert({ id: METADATA_ROW_ID, current_season: currentSeason, oldest_unanswered_question: oldestQuestionId });
 
     if (error) {
@@ -52,7 +52,7 @@ export const populateWithMetadata = async (logger?: Logger) => {
 
 export const getQuestion = async (id: Question["id"], opts?: StoreOptions): Promise<Question | null> => {
     const logger = opts?.logger?.child({ label: "getDocument" });
-    const row = await supabase.from(asEnvironmentResource(QnaplusTables.Questions)).select().eq("id", id).single();
+    const row = await supabase.from(QnaplusTables.Questions).select().eq("id", id).single();
     if (row.error !== null) {
         logger?.trace(`No question with id '${id}' found.`);
     }
@@ -69,7 +69,7 @@ export const getAllQuestions = async (opts?: StoreOptions): Promise<Question[]> 
         const from = page * LIMIT;
         const to = from + LIMIT;
         const rows = await supabase
-            .from(asEnvironmentResource(QnaplusTables.Questions))
+            .from(QnaplusTables.Questions)
             .select("*", { count: "exact" })
             .range(from, to);
         if (rows.error !== null) {
@@ -86,20 +86,20 @@ export const getAllQuestions = async (opts?: StoreOptions): Promise<Question[]> 
 
 export const insertQuestion = async (data: Question, opts?: StoreOptions) => {
     const logger = opts?.logger?.child({ label: "insertQuestion" });
-    const { error, status } = await supabase.from(asEnvironmentResource(QnaplusTables.Questions)).insert(data);
+    const { error, status } = await supabase.from(QnaplusTables.Questions).insert(data);
     logger?.trace({ error, status });
 }
 
 export const insertQuestions = async (data: Question[], opts?: StoreOptions) => {
     const logger = opts?.logger?.child({ label: "insertQuestions" });
-    const { error, status } = await supabase.from(asEnvironmentResource(QnaplusTables.Questions)).insert(data);
+    const { error, status } = await supabase.from(QnaplusTables.Questions).insert(data);
     logger?.trace({ error, status });
 }
 
 export const upsertQuestions = async (data: Question[], opts?: StoreOptions) => {
     const logger = opts?.logger?.child({ label: "upsertQuestions" });
     logger?.info(`Upserting ${data.length} questions`)
-    const { error, status } = await supabase.from(asEnvironmentResource(QnaplusTables.Questions)).upsert(data, { ignoreDuplicates: false });
+    const { error, status } = await supabase.from(QnaplusTables.Questions).upsert(data, { ignoreDuplicates: false });
     if (error !== null) {
         logger?.warn({ error, status })
     }
@@ -107,37 +107,36 @@ export const upsertQuestions = async (data: Question[], opts?: StoreOptions) => 
 }
 
 export const getMetadata = async () => {
-    return await supabase.from(asEnvironmentResource(QnaplusTables.Metadata))
+    return await supabase.from(QnaplusTables.Metadata)
         .select("*")
         .eq("id", METADATA_ROW_ID)
         .single();
 }
 
-// TODO add better typing
-export const saveMetadata = async (metadata: object) => {
-    return await supabase.from(asEnvironmentResource(QnaplusTables.Metadata))
+export const saveMetadata = async (metadata: Database["public"]["Tables"]["metadata"]["Insert"]) => {
+    return await supabase.from(QnaplusTables.Metadata)
         .upsert({ id: METADATA_ROW_ID, ...metadata });
 }
 
 export const getRenotifyQueue = async () => {
-    return await supabase.from(asEnvironmentResource(QnaplusTables.RenotifyQueue))
-        .select(`*, ..."${asEnvironmentResource(QnaplusTables.Questions)}" (*)`)
+    return await supabase.from(QnaplusTables.RenotifyQueue)
+        .select(`*, ..."${QnaplusTables.Questions}" (*)`)
         .returns<Question[]>(); // TODO remove once spread is fixed (https://github.com/supabase/postgrest-js/pull/531)
 }
 
 export const getFailures = async () => {
-    return await supabase.from(asEnvironmentResource(QnaplusTables.Failures))
+    return await supabase.from(QnaplusTables.Failures)
         .select("*")
         .returns<{ id: string }[]>();
 }
 
-export const updateFailures = async (failures: object) => {
-    return await supabase.from(asEnvironmentResource(QnaplusTables.Failures))
+export const updateFailures = async (failures: Database["public"]["Tables"]["failures"]["Insert"][]) => {
+    return await supabase.from(QnaplusTables.Failures)
         .upsert(failures, { ignoreDuplicates: false });
 }
 
 export const removeFailures = async (failures: string[]) => {
-    return await supabase.from(asEnvironmentResource(QnaplusTables.Failures))
+    return await supabase.from(QnaplusTables.Failures)
         .delete()
         .in("id", failures);
 }
@@ -157,13 +156,13 @@ export const onChange = (callback: ChangeCallback, logger?: Logger) => {
         }
     });
     return supabase
-        .channel(asEnvironmentResource(QnaplusChannels.DbChanges))
+        .channel(QnaplusChannels.DbChanges)
         .on<Question>(
             "postgres_changes",
             {
                 event: "UPDATE",
                 schema: "public",
-                table: asEnvironmentResource(QnaplusTables.Questions),
+                table: QnaplusTables.Questions,
             },
             payload => queue.push({ old: payload.old, new: payload.new })
         )
@@ -175,7 +174,7 @@ export const onChange = (callback: ChangeCallback, logger?: Logger) => {
                 const items = questions.map<UpdatePayload<Question>>(p => ({ old: { ...p, answered: false }, new: p }));
                 queue.push(...items);
                 const result = await supabase
-                    .channel(asEnvironmentResource(QnaplusChannels.RenotifyQueue))
+                    .channel(QnaplusChannels.RenotifyQueue)
                     .send({
                         type: "broadcast",
                         event: QnaplusEvents.RenotifyQueueFlushAck,
