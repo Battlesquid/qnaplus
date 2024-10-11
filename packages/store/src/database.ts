@@ -51,7 +51,7 @@ export const populateWithMetadata = async (logger?: Logger) => {
 }
 
 export const getQuestion = async (id: Question["id"], opts?: StoreOptions): Promise<Question | null> => {
-    const logger = opts?.logger?.child({ label: "getDocument" });
+    const logger = opts?.logger?.child({ label: "getQuestion" });
     const row = await supabase.from(QnaplusTables.Questions).select().eq("id", id).single();
     if (row.error !== null) {
         logger?.trace(`No question with id '${id}' found.`);

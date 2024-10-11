@@ -81,8 +81,11 @@ export const doDatabaseUpdate = async (_logger?: Logger) => {
         logger?.error({ error: failureError }, "Error while updating failures list.");
     }
 
-    const oldestUnansweredFromUpdate = getOldestUnansweredQuestion(questions, current_season as Season);
-    if (oldestUnansweredFromUpdate === undefined) {
+    const oldestUnansweredFromUpdate = validFailures.includes(`${start}`)
+        ? await getQuestion(`${start}`)
+        : getOldestUnansweredQuestion(questions, current_season as Season);
+
+    if (oldestUnansweredFromUpdate === undefined || oldestUnansweredFromUpdate === null) {
         logger?.info("Oldest unanswered question from update not found, skipping metadata update.")
         return;
     }
