@@ -4,7 +4,7 @@ import { Subcommand } from "@sapphire/plugin-subcommands";
 import Cron from "croner";
 import { EmbedBuilder, hyperlink, inlineCode } from "discord.js";
 import { QnaplusTables, config, getQuestion, getRenotifyQueue, getSupabaseInstance } from "qnaplus";
-import { Question } from "vex-qna-archiver";
+import { Question } from "@qnaplus/scraper";
 import { renotify } from "../interactions";
 import { PinoLoggerAdapter } from "../logger_adapter";
 import { formatDDMMMYYYY, isValidDate, mmmToMonthNumber } from "../util/date";

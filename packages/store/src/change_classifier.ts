@@ -1,5 +1,5 @@
 import { Change, diffSentences } from "diff";
-import { Question } from "vex-qna-archiver";
+import { Question } from "@qnaplus/scraper";
 import { UpdatePayload } from "./payload_queue";
 
 const CHANGE_EVENTS = ["answered", "answer_edited"] as const;

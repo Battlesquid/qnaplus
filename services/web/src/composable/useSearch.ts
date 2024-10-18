@@ -1,5 +1,5 @@
 import MiniSearch, { SearchResult } from "minisearch";
-import { Question } from "vex-qna-archiver";
+import { Question } from "@qnaplus/scraper";
 import { MaybeRefOrGetter, Ref, ref, toValue, watchEffect } from 'vue';
 import { isEmpty } from "../util/strings";
 

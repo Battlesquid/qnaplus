@@ -1,6 +1,6 @@
 import { Logger } from "pino";
 import { getFailures, getMetadata, getQuestion, removeFailures, saveMetadata, updateFailures, upsertQuestions } from "qnaplus";
-import { ITERATIVE_BATCH_COUNT, Question, Season, fetchQuestionRange, fetchQuestionsIterative, getOldestUnansweredQuestion, handleIterativeBatch, sleep } from "vex-qna-archiver";
+import { ITERATIVE_BATCH_COUNT, Question, Season, fetchQuestionRange, fetchQuestionsIterative, getOldestUnansweredQuestion, handleIterativeBatch, sleep } from "@qnaplus/scraper";
 
 // TODO: remove once utils are refactored into a package
 const chunk = <T>(items: T[], size: number): T[][] => {

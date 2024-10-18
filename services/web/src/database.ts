@@ -1,5 +1,5 @@
 import Dexie, { EntityTable } from "dexie";
-import { Question } from "vex-qna-archiver";
+import { Question } from "@qnaplus/scraper";
 import { elapsedHours } from "./util/date";
 
 const DATA_PRIMARY_KEY = "0";

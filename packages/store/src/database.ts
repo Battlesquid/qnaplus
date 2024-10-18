@@ -1,7 +1,7 @@
 import { config } from "@qnaplus/config";
 import { createClient } from "@supabase/supabase-js";
 import { Logger } from "pino";
-import { Question, getAllQuestions as archiverGetAllQuestions, fetchCurrentSeason, getOldestQuestion, getOldestUnansweredQuestion } from "vex-qna-archiver";
+import { Question, getAllQuestions as archiverGetAllQuestions, fetchCurrentSeason, getOldestQuestion, getOldestUnansweredQuestion } from "@qnaplus/scraper";
 import { ChangeQuestion, classifyChanges } from "./change_classifier";
 import { PayloadQueue, RenotifyPayload, UpdatePayload } from "./payload_queue";
 import { QnaplusChannels, QnaplusEvents, QnaplusTables } from "./resources";

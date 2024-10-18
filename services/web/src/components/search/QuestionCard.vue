@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Card from 'primevue/card';
-import { Question } from "vex-qna-archiver";
+import { Question } from "@qnaplus/scraper";
 import { RouterLink } from "vue-router";
 import { applyWordLimit } from "../../util/strings";
 import QuestionDetails from '../question/QuestionDetails.vue';

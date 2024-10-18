@@ -1,4 +1,4 @@
-import { Question } from "vex-qna-archiver";
+import { Question } from "@qnaplus/scraper";
 
 export type OnPayloadQueueFlush<T> = (items: T[]) => void | Promise<void>;
 

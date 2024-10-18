@@ -2,7 +2,7 @@
 import { useObservable } from "@vueuse/rxjs";
 import { liveQuery } from "dexie";
 import { from } from "rxjs";
-import { Question } from "vex-qna-archiver";
+import { Question } from "@qnaplus/scraper";
 import { Ref, inject, ref } from "vue";
 import QuestionList from "../components/search/QuestionList.vue";
 import QuestionListHeader from "../components/search/QuestionListHeader.vue";
